@@ -1,0 +1,8 @@
+### Distribuição probabilística normal  
+A distribuição probabilística normal, também conhecida como distribuição de gaussiana, é apenas uma das distribuições matemáticas de probabilidade. É caracterizada por ser parametrizada, possuir dados contínuos, concentração dos valores em torno da média, um desvio padrão (que caracteriza a distância média dos dados à média), simetria em torno do valor central e baixa frequência de valores extremos.  
+
+### Teorema do limite central  
+Postulado inicialmente pelo matemático francês Abraham de Moivre, o teorema conclui que uma série de dados que não possui comportamento semelhantes à uma distribuição probabilística normal, quando adicionados mais dados referente ao mesmo evento, sua curva de distribuição probabilística irá tender a assemelhar-se com uma distribuição normal.  
+
+### Gramática de dados  
+Após fase de coleta, é possível que a grande quantidade de dados não permita uma visualização clara dos eventos e desfechos avaliados, até por que muitos podem estar em forma de caracteres numéricos ou valores lógicos TRUE/FALSE ou YES/NO. Para isso, os recursos gráficos facilitam a interpretação dos dados. É muito comum que esses dados sejam representados em gráficos.

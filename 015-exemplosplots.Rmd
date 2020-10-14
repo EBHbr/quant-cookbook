@@ -1,4 +1,4 @@
-### 1.2.4.Gráficos
+# 1.2.4.Gráficos
 #### 1.2.4.1.Correlação
 ##### 1.2.4.1.1.Preditores contínuos
 Função: 
@@ -46,23 +46,23 @@ rug/jitter mostra a distribuição fina de frequência, na abscissa
 ### 1.2.5.Exercícios
 #### 1.2.5.1.Qual a idade materna média no grupo de fumantes e não fumantes?
 ``` {r}
-tapply(BD$`Idade materna (anos)`, BD$`Tagabismo durante a gravidez`, mean)
+tapply(BD$age, BD$smoke, mean)
 ```
 #### 1.2.5.2.Plote o gráfico da distribuição das idades maternas analisadas
 ``` {r}
-hist(BD$`Idade materna (anos)`, main = "Title", xlab = "Title", ylab = "Title", prob = T)
-rug(jitter(BD$`Idade materna (anos)`));lines( density(BD$`Idade materna (anos)`),col="red" )
+hist(BD$age, main = "Title", xlab = "Title", ylab = "Title", prob = T)
+rug(jitter(BD$age));lines( density(BD$age),col="red" )
 ```
 #### 1.2.5.3.Qual a mediana do peso materno entre as raças?
 ``` {r}
-tapply(BD$`Peso materno no último ciclo mestrual (kg)`, BD$Raça, median)
+tapply(BD$lwt, BD$race, median)
 ```
 #### 1.2.5.4.Qual a moda da idade materna entre os grupos com e sem hipertensão?
 ``` {r}
 library(modeest)
-tapply(BD$`Idade materna (anos)`, BD$`Hipertensão materna`, mfv)
+tapply(BD$age, BD$ht, mfv)
 ```
 #### 1.2.5.5.Plote o gráfico da correlação entre o peso materno e o peso ao nascer
 ``` {r}
-scatter.smooth(BD$`Peso materno no último ciclo mestrual (kg)`,BD$`Peso ao nascer (g)`,main="",xlab="",ylab="")
+scatter.smooth(BD$lwt,BD$bwt,main="",xlab="",ylab="")
 ```

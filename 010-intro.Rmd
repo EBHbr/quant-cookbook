@@ -1,0 +1,5 @@
+# 1. Análise exploratória
+
+##   1.1.Fundamentos teóricos
+
+É importante entender os tipos das variáveis consideradas, assim como a distribuição probabilística de origem.  

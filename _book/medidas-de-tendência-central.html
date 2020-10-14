@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>CookBook Ferramentas Estatísticas em R</title>
+  <title>Chapter 3 Medidas de tendência central | CookBook Ferramentas Estatísticas em R</title>
   <meta name="description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="CookBook Ferramentas Estatísticas em R" />
+  <meta property="og:title" content="Chapter 3 Medidas de tendência central | CookBook Ferramentas Estatísticas em R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="CookBook Ferramentas Estatísticas em R" />
+  <meta name="twitter:title" content="Chapter 3 Medidas de tendência central | CookBook Ferramentas Estatísticas em R" />
   
   <meta name="twitter:description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="análise-exploratória.html"/>
+<link rel="prev" href="análise-exploratória.html"/>
+<link rel="next" href="dispersão-estatística.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -180,23 +180,86 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">CookBook Ferramentas Estatísticas em R</h1>
-<p class="author"><em>LAC-FMB</em></p>
-<p class="date"><em>16/10/20</em></p>
+<div id="medidas-de-tendência-central" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Medidas de tendência central</h1>
+<p>As medidas de tendência central se referem a formas de definir um valor central dentro de uma distribuição probabilística, elas podem ser uma média, mediana ou moda. A média é a forma mais utilizada, ela representa um ponto que minimiza a distância total em relação a outros pontos.</p>
+<div id="média" class="section level4">
+<h4><span class="header-section-number">3.0.0.1</span> 1.2.3.1.Média</h4>
+<div id="média-simples" class="section level5">
+<h5><span class="header-section-number">3.0.0.1.1</span> 1.2.3.1.1.Média simples</h5>
+<pre><code>  Função: </code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="medidas-de-tendência-central.html#cb2-1"></a><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> T<span class="op">/</span>F)</span></code></pre></div>
+<p>x é a variável de entrada
+na.rm é utilizado para remover entradas com valores faltando.</p>
 </div>
-<div id="cookbook" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Cookbook</h1>
-<p>Coleção de referência com procedimentos estatísticos frequentemente usados.</p>
+<div id="média-entre-variáveis" class="section level5">
+<h5><span class="header-section-number">3.0.0.1.2</span> 1.2.3.1.2.Média entre variáveis</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="medidas-de-tendência-central.html#cb3-1"></a><span class="kw">tapply</span>(x, index, mean)</span></code></pre></div>
+<p>x é a variável a ser tirada a média.
+index é a variável de categorização.
+mean é a função de média.</p>
+</div>
+</div>
+<div id="mediana" class="section level4">
+<h4><span class="header-section-number">3.0.0.2</span> 1.2.3.2.Mediana</h4>
+<div id="mediana-simples" class="section level5">
+<h5><span class="header-section-number">3.0.0.2.1</span> 1.2.3.2.1.Mediana simples</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="medidas-de-tendência-central.html#cb4-1"></a><span class="kw">median</span>(x, <span class="dt">na.rm =</span> T<span class="op">/</span>F)</span></code></pre></div>
+<p>x é a variável de entrada.
+na.rm é utilizado para remover entradas com valores faltando.</p>
+</div>
+<div id="mediana-entre-variáveis" class="section level5">
+<h5><span class="header-section-number">3.0.0.2.2</span> 1.2.3.2.2.Mediana entre variáveis</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="medidas-de-tendência-central.html#cb5-1"></a><span class="kw">tapply</span>(x, index, median)</span></code></pre></div>
+<p>x é a variável a ser tirada a mediana.
+index é a variável de categorização.
+mean é a função de mediana.</p>
+</div>
+</div>
+<div id="moda" class="section level4">
+<h4><span class="header-section-number">3.0.0.3</span> 1.2.3.3.Moda</h4>
+<div id="moda-simples" class="section level5">
+<h5><span class="header-section-number">3.0.0.3.1</span> 1.2.3.3.1.Moda simples</h5>
+<p>No R puro não existe a função moda, então uma opção é criar uma função que avalie os valores, e identifique o de maior ocorrência.
+Função:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="medidas-de-tendência-central.html#cb6-1"></a>y &lt;-<span class="st"> </span>BD<span class="op">$</span>age</span>
+<span id="cb6-2"><a href="medidas-de-tendência-central.html#cb6-2"></a>moda &lt;-<span class="st"> </span><span class="cf">function</span>(y, <span class="dt">na.rm =</span> T<span class="op">/</span>F) {</span>
+<span id="cb6-3"><a href="medidas-de-tendência-central.html#cb6-3"></a>  <span class="cf">if</span>(na.rm){</span>
+<span id="cb6-4"><a href="medidas-de-tendência-central.html#cb6-4"></a>    y =<span class="st"> </span>y[<span class="op">!</span><span class="kw">is.na</span>(y)] </span>
+<span id="cb6-5"><a href="medidas-de-tendência-central.html#cb6-5"></a>    }</span>
+<span id="cb6-6"><a href="medidas-de-tendência-central.html#cb6-6"></a>  uy &lt;-<span class="st"> </span><span class="kw">unique</span>(y)</span>
+<span id="cb6-7"><a href="medidas-de-tendência-central.html#cb6-7"></a>  tab &lt;-<span class="st"> </span><span class="kw">tabulate</span>(<span class="kw">match</span>(y, uy))</span>
+<span id="cb6-8"><a href="medidas-de-tendência-central.html#cb6-8"></a>  uy[tab <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(tab)]</span>
+<span id="cb6-9"><a href="medidas-de-tendência-central.html#cb6-9"></a>}</span>
+<span id="cb6-10"><a href="medidas-de-tendência-central.html#cb6-10"></a><span class="kw">moda</span>(y)</span></code></pre></div>
+<p>x é a variável de entrada
+na.rm é utilizado para remover entradas com valores faltando.
+Outra opção é instalar bibliotecas que contenham ferramentas semelhantes.A modeest é uma opção. Vamos instalá-la e carregá-la:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="medidas-de-tendência-central.html#cb7-1"></a><span class="kw">library</span>(modeest)</span>
+<span id="cb7-2"><a href="medidas-de-tendência-central.html#cb7-2"></a><span class="kw">mfv</span>(x)</span></code></pre></div>
+<p>x é a variável de entrada</p>
+</div>
+<div id="moda-entre-variáveis" class="section level5">
+<h5><span class="header-section-number">3.0.0.3.2</span> #3.3.2.Moda entre variáveis</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="medidas-de-tendência-central.html#cb8-1"></a><span class="kw">tapply</span>(x, index, <span class="kw">mfv</span>(x))</span></code></pre></div>
+<p>x é a variável a ser tirada a moda.
+index é a variável de categorização.
+mean é a função de moda, podendo ser tanto a “moda” quanto a “mfv”.</p>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="análise-exploratória.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="análise-exploratória.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="dispersão-estatística.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
