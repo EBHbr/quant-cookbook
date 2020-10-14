@@ -1,0 +1,1176 @@
+---
+title: "CookBook Ferramentas Estatísticas em R"
+author: "LAC-FMB"
+date: "05/10/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.2.Códigos e prática
+
+### 1.2.1.Baixar e Instalar Bibliotecas
+  Para esta aula utilizaremos apenas* funções nativas do R, sem necessidade de instalar ou carregar bibliotecas adicionais.
+  
+  
+### 1.2.2.Banco de dados e variaveis
+####  1.2.2.1.Ler o banco de dados em excel
+``` {BD}
+BD <- read_excel("drive:/caminho/do/banco_de/dados.xlsx")
+```
+#### 1.2.2.2.Visualizar o banco de dados no RStudio
+``` {BD}
+View(BD)
+```
+#### 1.2.2.3.Definir os tipos de variáveis
+qualitativas: [b] categórica binária, [m] multi categórica
+quantitativas: [d] discreta, [c] contínua
+``` {BD}  
+low_input <- "digite_aqui_o_código_da_variável"
+age_input <- "digite_aqui_o_código_da_variável"
+lwt_input <- "digite_aqui_o_código_da_variável"
+race_input <- "digite_aqui_o_código_da_variável"
+smoke_input <- "digite_aqui_o_código_da_variável"
+ptl_input <- "digite_aqui_o_código_da_variável"
+ht_input <- "digite_aqui_o_código_da_variável"
+ui_input <- "digite_aqui_o_código_da_variável"
+ftv_input <- "digite_aqui_o_código_da_variável"
+bwt_input <- "digite_aqui_o_código_da_variável"
+```
+  
+#### 1.2.2.4.Verificar os tipos de variáveis
+01.LOW: qualitativa nominal - cat binária
+02.AGE: quantitativa contínua
+03.LWT: quantitativa contínua
+04.RACE: qualitativa nominal - multi cat
+05.SMOKE: qualitativa nominal - cat binária
+06.PTL: quantitativa discreta
+07.HT: qualitativa nominal - cat binária
+08.UI: qualitativa nominal - cat binária
+09.FTV: quantitativa discreta
+10.BWT: quantitativa contínua")
+          
+#### 1.2.2.5.Ajustar o BD para as classes das variáveis
+``` {BD}      
+BD[,c("low","race","smoke","ptl","ht","ui","ftv")] <- lapply(BD[,c("low","race","smoke","ptl","ht","ui","ftv")], as.factor)    
+BD$low <- factor(BD$low, levels = c(0,1), labels = c("Não", "Sim"))
+BD <- transform(BD, lwt=round(lwt*0.453592,1))
+BD$race <- factor(BD$race, levels = c(1,2,3), labels = c("Branca", "Negra","Outra"))
+BD$smoke <- factor(BD$smoke, levels = c(0,1), labels = c("Não", "Sim"))
+BD$ht <- factor(BD$ht, levels = c(0,1), labels = c("Não", "Sim"))
+BD$ui <- factor(BD$ui, levels = c(0,1), labels = c("Não", "Sim"))
+```     
+
+#### 1.2.2.5.Verificar as propriedades das variáveis 
+(verifica dados como ocorrência, quartis, média, mediana, limites etc):
+``` {BD}
+summary(BD)
+```
+(verificar existência de dados faltantes (NA) no banco de dados):
+``` {BD}
+NAs <- is.na(BD);which(TRUE == NAs)
+``` 
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 2.Teste de Hipóteses
+# BANCO DE DADOS: LBW 
+## 2.1.Fundamentos teóricos
+### 2.1.1.Baixar e Instalar Bibliotecas
+Para esta aula utilizaremos apenas* funções nativas do R, sem necessidade de instalar ou carregar bibliotecas adicionais.
+  
+### 2.1.2.Banco de dados e variaveis
+####  2.1.2.1.Ler o banco de dados em excel
+``` {BD}
+BD <- read_excel("drive:/caminho/do/banco_de/dados.xlsx")
+```
+#### 2.1.2.2.Visualizar o banco de dados no RStudio
+``` {BD}
+View(BD)
+```
+#### 2.1.2.3.Ajustar o BD para as classes das variáveis
+``` {BD}      
+BD[,c("low","race","smoke","ptl","ht","ui","ftv")] <- lapply(BD[,c("low","race","smoke","ptl","ht","ui","ftv")], as.factor)    
+BD$low <- factor(BD$low, levels = c(0,1), labels = c("Não", "Sim"))
+BD <- transform(BD, lwt=round(lwt*0.453592,1))
+BD$race <- factor(BD$race, levels = c(1,2,3), labels = c("Branca", "Negra","Outra"))
+BD$smoke <- factor(BD$smoke, levels = c(0,1), labels = c("Não", "Sim"))
+BD$ht <- factor(BD$ht, levels = c(0,1), labels = c("Não", "Sim"))
+BD$ui <- factor(BD$ui, levels = c(0,1), labels = c("Não", "Sim"))
+```     
+#### 2.1.2.4.Verificar as propriedades das variáveis 
+(verifica dados como ocorrência, quartis, média, mediana, limites etc):
+``` {BD}
+summary(BD)
+```
+(verificar existência de dados faltantes (NA) no banco de dados):
+``` {BD}
+NAs <- is.na(BD);which(TRUE == NAs)
+``` 
+   
+### 2.1.3. Hipótese I
+Para o primeiro exemplo, vamos supor que estamos tentando investigar a relação do tabagismo na gravidez com o peso do bebê ao nascer.
+Hipótese nula: Não há diferença no peso ao nascer de bebês de mães fumantes em em comparação com o peso ao nascer de bebês de mães não fumantes.
+Hipótese alternativa: Há diferença no peso ao nascer de bebês de mães fumantes em em comparação com o peso ao nascer de bebês de mães não fumantes.
+Nesse caso, temos uma variável categórica dicotômica como independente e uma variável contínua como dependente. 
+Qual seria a opção de teste paramétrico? E de teste não-paramétrico?
+
+#### 2.1.3.1. Pressupostos (Teste T)
+A utilização do Teste T depende de algumas condições.
+##### Homocedasticidade
+A cada nível das variáveis previsoras, a variância do termo residual deve ser constante. Isso significa que os resíduos a cada nível dos previsores devem ter a mesma variância (homocedasticidade): quando as variâncias são desiguais diz-se que existe heterocedasticidade. 
+###### Teste de Levene
+Função: LeveneTest(dados$vardependente~dados$varindependente)
+Df: Degrees of Freedom
+F value: Quanto mais distante de 1, maior é a diferença detectada entre as variâncias. O valor de p informa quando essa diferença é significativa ou não.
+Pr(>F): Valor de p para o teste de Levene em que a Ho é que as variâncias são iguais.
+``` {BD}
+install.packages("car")
+library(car)
+leveneTest(BD$bwt~BD$smoke)
+```
+
+##### 2.1.3.2. Normalidade
+###### Aspecto visual
+``` {BD}
+hist(BD$bwt)
+plot(density(BD$bwt), ylab='Densidade', xlab='Peso ao Nascer', main='')
+```
+###### Shapiro-wilk
+Função: Shapiro.test(dados$vardependente)
+W: Quanto mais próximo de 1, maior é a semelhança da curva estudada com a distribuição normal. O valor de p informa quando essa semelhança é significativa ou não.
+P-value: Valor de p para o teste SW em que a Ho é que não há diferença entre a distribuição estudada e uma distribuição normal.
+``` {BD}
+shapiro.test(BD$bwt)
+```  
+###### Kolmogorov-Smirnov
+Função: Ks.test(dados$vardependente,"pnorm", mean(dados$vardependente), sd(dados$vardependente))
+pnorm identifica que o KS vai comparar a distribuição da variável dependente com a normal
+D: Representa a distância vertical máxima entre a curva estudada e a curva de referência.
+Quando mais próximo de zero, maior a semelhança entre as duas distribuições.
+P-value: Valor de p para o teste KS em que a Ho é que não há diferença entre a distribuição estudada e uma distribuição normal.
+``` {BD}
+install.packages("dgof")
+library(dgof)
+ks.test(BD$bwt,"pnorm",mean(BD$bwt),sd(BD$bwt))
+``` 
+
+##### 2.1.3.3. Teste de hipótese - T não pareado
+Função: t.test(dados$varindependente~BD$vardependente)
+t: A diferença calculada entre as médias em unidades de desvio padrão;
+Df: Degrees of freedom;
+P-value: Valor de p para o teste KS em que a Ho é que não há diferença entre as médias dos dois grupos.
+``` {BD}
+t.test(BD$bwt~BD$smoke)
+```  
+
+
+### 2.1.4. Hipótese II
+Para o segundo exemplo, vamos supor que estamos tentando investigar a relação da raça da mãe com o peso ao nascer.
+Hipótese nula: Não há diferença no peso ao nascer de bebês de segundo a raça de suas mães.
+Hipótese alternativa: Há diferença no peso ao nascer de bebês de segundo a raça de suas mães.
+Nesse caso, temos uma variável categórica policotômica como independente e uma variável contínua como dependente.
+Quais seriam as opções para testes paramétricos e não-paramétricos?
+  
+#### 2.1.4.1 Pressupostos (One-way ANOVA)
+##### Homocedasticidade
+``` {BD}
+leveneTest(BD$bwt~BD$race)
+```
+##### 2.1.4.2. Normalidade
+###### Aspecto visual
+Distribuição da variável independente
+``` {BD}
+hist(BD$bwt)
+plot(density(BD$bwt), ylab='Densidade', xlab='Peso ao Nascer', main='')
+```  
+Variável independente x variável dependente
+``` {BD}
+plot(BD$bwt~BD$race, ylab ='Peso ao nascer', xlab='Raça', main='')
+```  
+###### Shapiro-wilk
+``` {BD}
+shapiro.test(BD$bwt)
+ks.test(BD$bwt,"pnorm",mean(BD$bwt),sd(BD$bwt))
+```
+##### 2.1.4.3. Teste de hipótese - One-way ANOVA
+###### Opção I - Função lm()
+Função: 
+``` {BD}
+summary(lm(BD$bwt~BD$race))
+```
+A função lm() é utilizada para construir modelos lineares de regressão.
+Sintaxe: lm(formula, data, weights, subset, na.action)
+A função summary() fornece os principais parâmetros do objeto.
+Retorno: Em termos de ANOVA, a parte de interesse do retorno é o F-statistic, que dá informação do F-value, dos DFs e p-value para a Ho de que todos os grupos têm médias iguais entre si.
+  
+###### Opção II - Função anova()
+Função:
+``` {BD}
+anova(lm(BD$bwt~BD$race))
+```  
+A função anova() é utilizada para construir uma tabela ANOVA do objeto fornaecido.
+Sintaxe: Anova(mod, ...) em que mod pode ser lm para a "linear model", aov para "análise de variância" e outras funções.
+Retorno: Informa Df, Sum sq, Mean Sq, F-value e p-value para a Ho de que todos os grupos têm médias iguais entre si.
+  
+##### Teste post-hoc (teste de Tuckey)
+Função:
+``` {BD}
+  TukeyHSD(aov(BD$bwt~BD$race))
+```   
+A função TukeyHSD() realiza o teste de Tukey no mod especificado (no caso, aov).
+Sintaxe: TukeyHSD(x, which, ordered = FALSE, conf.level = 0.95, …)
+Retorno: O elemento de maior interesse vai ser o p-value para identificar os grupos nos quais as diferenças são analisadas.
+  
+
+
+### 2.1.5. Hipótese III
+Para o último exemplo, vamos supor que estamos tentando investigar a relação do peso da mãe no último ciclo menstrual com o hábito de fumar.
+Hipótese nula: Não há diferença significativa no peso da mãe no último ciclo menstrual entre entre os grupos de mães fumantes e não fumantes.
+Hipótese alternativa: Há diferença significativa no peso da mãe no último ciclo menstrual entre entre os grupos de mães fumantes e não fumantes.
+Nesse caso, temos uma variável categórica dicotômica como independente e uma variável contínua como dependente. 
+Quais são algumas das opções teste de hipótese que podemos usar?
+
+#### 2.1.5.1 Pressupostos (One-way ANOVA)
+##### Homocedasticidade
+``` {BD}
+leveneTest(BD$lwt~BD$smoke)
+```
+##### 2.1.5.2. Normalidade
+###### Aspecto visual
+Distribuição da variável independente
+``` {BD}
+hist(BD$lwt)
+plot(density(BD$lwt), ylab='Densidade', xlab='Peso da mãe no último ciclo menstrual', main='')
+```
+###### Shapiro-wilk
+``` {BD}
+shapiro.test(BD$lwt)
+ks.test(BD$lwt,"pnorm",mean(BD$lwt),sd(BD$lwt))
+```
+Aqui temos que o pressuposto da normalidade não é atendido. Precisamos recorrer a um teste não paramétrico. O teste de Teste de Wilcoxon-Mann-Whitney é uma opção quando o pressuposto da normalidade não é atendido.
+  
+##### 2.1.5.3. Teste de hipótese - Wilcoxon-Mann-Whitney
+``` {BD}  
+  wilcox.test(BD$lwt~BD$smoke)
+```
+Valor de p para o teste WMW em que a Ho é que não há diferença entre as médias dos dois grupos.
+    
+    
+##   2.2.Códigos e prática
+### 2.2.1.Baixar e Instalar Bibliotecas
+``` {BD} 
+install.packages("labelled")
+install.packages("ggplot2")
+install.packages("nortest")
+install.packages("mordeest")
+install.packages("rstatix")
+library(labelled) # Para adição de subtítulos as tabelas 
+library(ggplot2) # Pacote gráfico
+library(nortest) # Pacote de testes que inclui o kolmogorov Smirnov
+library(modeest)
+library(tidyverse)
+library(rstatix) #Pacote util para análise pós-hoc do kruskall.wallis
+```    
+### 2.2.2.Banco de dados e variaveis
+####  2.2.2.1.Ler o banco de dados em excel
+``` {BD}
+BD <- read_excel("drive:/caminho/do/banco_de/dados.xlsx")
+```
+#### 2.2.2.2.Visualizar o banco de dados no RStudio
+``` {BD}
+View(BD)
+```    
+#### 2.2.2.5.Ajustar o BD para as classes das variáveis
+``` {BD}      
+BD[,c("low","race","smoke","ptl","ht","ui","ftv")] <- lapply(BD[,c("low","race","smoke","ptl","ht","ui","ftv")], as.factor)    
+BD$low <- factor(BD$low, levels = c(0,1), labels = c("Não", "Sim"))
+BD <- transform(BD, lwt=round(lwt*0.453592,1))
+BD$race <- factor(BD$race, levels = c(1,2,3), labels = c("Branca", "Negra","Outra"))
+BD$smoke <- factor(BD$smoke, levels = c(0,1), labels = c("Não", "Sim"))
+BD$ht <- factor(BD$ht, levels = c(0,1), labels = c("Não", "Sim"))
+BD$ui <- factor(BD$ui, levels = c(0,1), labels = c("Não", "Sim"))
+```     
+
+#### 2.2.2.5.Verificar as propriedades das variáveis 
+(verifica dados como ocorrência, quartis, média, mediana, limites etc):
+``` {BD}
+summary(BD)
+```
+(verificar existência de dados faltantes (NA) no banco de dados):
+``` {BD}
+NAs <- is.na(BD);which(TRUE == NAs)
+```     
+    
+#### 2.2.3. Exercícios
+##### 2.2.3.1. Questão 1: Faça uma análise exploratória de dados da associação entre tabagismo durante a gravidez e baixo peso ao nascer 
+``` {BD}
+df_low_smoke<-as.data.frame(table(BD$low,BD$smoke))
+colnames(df_low_smoke)[1:2]<-c("low","smoke")
+df_low_smoke
+```
+ou
+``` {BD}
+table (BD$low)
+round(prop.table(table (BD$low))*100)
+table (BD$smoke)
+round(prop.table(table (BD$smoke))*100)
+table (BD$low, BD$smoke)
+```
+##### 2.2.3.2. Questão 2: Plot a associação entre tabagismo e baixo peso ao nascer e interprete esse gráfico.
+Tabela 2x2 para visualizção das frequência de Tabagismo e/ou baixo peso ao nascer
+``` {BD}
+low_smoke<- table(BD$low,BD$smoke)
+```
+Utilizando recursos do R base para analisar essa associação
+``` {BD}
+barplot(height=low_smoke,names.arg = c("N?o fuma","Fuma"),ylab="N?mero de observa??es",xlab="H?bitos tabagistas",cex.axis=1.4,cex.lab=1.6, main = "Rela??o low vs smoke",ylim = c(0,150),col=c("blue","red"), beside=F)
+legend("topright",col=c("blue","red"),pch=16,legend=c("Sem baixo peso ao nascer","Com baixo peso ao nascer normal"))
+dev.off()
+```
+##### 2.2.3.3. Questão 3: Escreva um quadro de hipóteses para a análise da associação entre essas duas variáveis. Defina as     variáveis dependente e independente, classifique-as e avalie as possibilidade de testes para testagem da associação entre as variáveis. Apos escolher o teste, execute e interprete o resultado.
+###### Quadro de Hipóteses:
+Hipótese nula: Não há associação entre tabagismo na gravidez e baixo peso ao nascer do bebê.
+Hipótese alternativa: Há associação entre tabagismo na gravidez e baixo peso ao nascer do bebê.
+
+###### Classificação das variáveis:
+Tabagismo durante a gravidez --> independente
+Baixo peso ao nascer --> dependente
+Ambas são categóricas dicotômicas
+
+###### Testes:
+Quiquadrado
+``` {BD}
+chisq.test(BD$smoke,BD$low)
+```
+(teste quiquadrado com mais potência)
+``` {BD}
+chisq.test(BD$smoke,BD$low,simulate.p.value = T, B=2000)
+```
+
+Teste exato de Fisher
+``` {BD}
+fisher.test(BD$smoke,BD$low)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 3.Análise exploratória de dados
+# BANCO DE DADOS: LBW
+## 3.1.Fundamentos teóricos
+### 3.1.1.Baixar e Instalar Bibliotecas
+``` {BD}
+library(labelled) #para adicionar subtítulos nas variáveis
+library(tidyverse) #diversas funções, incluindo gráficos
+library(car) #qq-plot
+```
+### 3.1.2.Banco de dados e variaveis
+####  3.1.2.1.Ler o banco de dados
+``` {BD}
+getwd() #indica sua pasta de trabalho
+setwd("drive:/caminho/do/banco_de/dados") #ajusta sua pasta de trabalho
+BD <- read.table(file="banco_dados.txt", header=T, sep="\t") #lê o banco de dados
+```
+
+#### 3.1.2.2.Visualizar o banco de dados no RStudio
+``` {BD}
+View(BD)
+```
+
+#### 3.1.2.3.Ajustar o BD para as classes das variáveis
+``` {BD}      
+BD[,c("low","race","smoke","ptl","ht","ui","ftv")]<-lapply(BD[,c("low","race","smoke","ptl","ht","ui","ftv")], as.factor)
+var_label(BD)[1:11]<-c("Código de identificação", "Baixo peso ao nascer","Idade materna (anos)","Peso no último ciclo mestrual (kg)","Raça da mãe","Tabagismo durante a gravidez","Partos prematuros prévios","Hipertensão materna","Irritabilidade uterina","Qtd de Pré-Natais no 1o sems", "Peso ao nascer") #adiciona subtítuos nas variáveis
+```     
+
+#### 3.1.2.4.Verificar as propriedades das variáveis 
+(verifica dados como ocorrência, quartis, média, mediana, limites etc):
+``` {BD}
+summary(BD)
+```
+(verificar existência de dados faltantes (NA) no banco de dados):
+``` {BD}
+NAs <- is.na(BD);which(TRUE == NAs)
+``` 
+ 
+### 3.1.3.Correlações Lineares
+#### 3.1.3.1.O que são: 
+Verificação de relação entre duas variáveis (se alterações em uma variável gera alterção em outra)
+OBS: um ponto é formado por duas coordenadas (X, Y)
+A correlação pode ser positiva ou negativa -> se +, quando x aumenta, y aumenta
+Erros aleatórios existem porque NÃO conhecemos todas as variáveis
+
+#### 3.1.3.2.Quando são utilizadas: 
+Quando objetiva-se correlacionar duas variáveis contínuas
+
+#### 3.1.3.3.Tipos:
+##### PEARSON
+        a - versão paramétrica (baseado nos desvios em relação à média)
+        b - variáveis preditora deve ser contínua normal
+        c - variável desfecho deve ser contínua normal
+
+##### SPEARMAN
+        a - versão não-paramétrica (Pearson aplicado aos ranks)
+        b - variável preditora deve ser contínua
+        c - variável desfecho deve ser contínua
+    
+#### 3.1.3.4.Correlação de Pearson no R:
+##### Comando
+``` {BD}
+        cor.test(x,y, method = "pearson")
+```
+##### Inputs
+        # x -> variável preditora
+        # y -> desfecho
+
+##### Otputs
+        #cor -> índice de correlação -> pode ir de -1 a + 1
+        #intervalo de confiança
+        #p-value
+
+##### Exemplo prático
+Teste de normalidade
+``` {BD}
+shapiro.test(BD$age) #não normal
+qqnorm(BD$age);qqline(BD$age)
+hist(BD$age) 
+
+shapiro.test(BD$lwt) #não normal
+qqnorm(BD$lwt);qqline(BD$lwt)
+hist(BD$lwt)
+
+shapiro.test(BD$bwt) #normal
+qqnorm(BD$bwt);qqline(BD$bwt)
+hist(BD$bwt)
+``` 
+Aplicando
+``` {BD}
+cor.test(BD$age, BD$bwt, method = "pearson")
+``` 
+*Uso de BD$age apenas como exemplo, visto que esta variável não possui distribuição normal. 
+       
+##### Visualização gráfica
+Faça um gráfico com os pontos
+``` {BD}
+ggplot(BD, aes(age, bwt)) + geom_point()
+```         
+Produza
+``` {BD}
+ggplot(BD, aes(age, bwt)) + geom_point() + geom_smooth(method = "lm")
+``` 
+
+#### 3.1.3.5.Correlação de Spearman no R:
+##### Comando
+``` {BD}
+cor.test(x,y, method = "spearman")
+```        
+##### Inputs
+        # x -> variável preditora
+        # y -> desfecho
+        
+##### Otputs
+        #cor
+        #intervalo de confiança
+        #p-value
+        
+##### Aplicando
+``` {BD}
+cor.test(BD$lwt, BD$bwt, method = "spearman")
+```  
+Como tem empates, usar método de kendall
+``` {BD}        
+cor.test(BD$lwt, BD$bwt, method = "kendall")
+```       
+##### Visualização gráfica
+Faça um gráfico com os pontos
+``` {BD} 
+        ggplot(BD, aes(lwt, bwt)) + geom_point()
+```          
+Produza
+``` {BD}
+ggplot(BD, aes(lwt, bwt)) + geom_point() + geom_smooth(method = "lm")
+``` 
+#### 3.1.3.6.O que representa o índice de correlação: 
+O ÍNDICE DE CORRELAÇÃO representa a MAGNITUDE  e o SENTIDO de uma relação.
+Se X aumenta 10%, quanto muda Y?
+Se índice de correlação  = +1, Y aumenta 10% pela mudança de X
+Se índice de correlação  = -1, Y diminui 10% pela mudança de X
+Se índice de correlação  = 0, Y não muda pela mudança de X
+``` {BD}    
+cor(BD$age, BD$bwt, use = "complete.obs")  #sem executar teste estátistico
+```         
+#### 3.1.3.6.O que representa o valor de p: 
+Mensurar o quão improváveis são as observações em um cenário hipotético na vigência da hipótese nula (ARGOLO, 2020) - dada a hipótese nula de que o índice de correlação = 0 e que a hipótese alternativa de que o índice de correlação é diferente de 0.
+
+
+### 3.1.4.Regressões
+#### 3.1.4.1.O que são: 
+???????????
+#### 3.1.4.2.Quando são utilizadas: 
+Busca-se saber magnitude das causas para o efeito (causalidade) para PREDIZER "advinhar uma medida com base na outra" ARGOLO, F. 2020
+#### 3.1.3.3.Tipos:
+##### Linear
+        a - variável preditora contínua, categórica dicotômica, categórica policotômica
+        b - variável desfecho contínua
+        c - 5 pressupostos:
+            1. Independência
+            2. Normalidade dos resíduos
+            2. Homocedasticidade - resíduos simétricos
+            3. Colinearidade - modelo melhor explicado por linear
+            5. Aditividade - efeito aditivo (modificadores de efeito)
+
+##### Logística
+    a - variável preditora contínua, categórica, etc
+    b - variável desfecho categórica binária
+    c - pressupostos:
+        1 - Colinearidade
+        2 - Independência
+        3 - Modificador de efeito
+
+##### Outras
+Regressão mediana -> não normal e contínua
+Regressão ordinal ligística -> ordinal categórica
+Regressão multinominal -> não-ordinal categórica
+Regressão de Poisson ou negativa binominal -> números inteiros
+Regressão de Cox -> tempo até o evento
+
+#### 3.1.4.4.Regressão Linear no R:
+##### Comando
+``` {BD}
+nome <- lm (y ~ x1 + x2 + x3, data = a)
+```                             
+##### Inputs
+x1, x2, x3 -> variáveis preditoras
+y -> desfecho contínuo
+a -> banco de dados
+                            
+##### Otputs
+Distribuição dos resíduos
+Coeficientes:
+      a. Estimate = Beta
+      b. Pr(>|t|) = Valor de P
+Multiple R-squared -> coeficiente de determinação -> próximo a 1 indica resíduos próximos a 0
+                            
+##### Exemplo prático
+Para preditor de BAIXO peso ao nascer, precisa-se de REGRESSÃO LOGÍSTICA (binária). Preditor de peso ao nascer (contínua).
+``` {BD}    
+modelo.linear <- lm (bwt ~ age + lwt + race + smoke + ptl + ht + ui + ftv, data = BD)
+summary (modelo.linear)
+```      
+###### Testar pressupostos
+####### INDEPENDÊNCIA -> Todas variáveis preditoras são independentes entre si e do desfecho (peso ao nascer)
+####### NORMALIDADE
+Método 1
+``` {BD}
+qqPlot(modelo.linear, main = "QQ Plot")
+``` 
+Método 2 
+``` {BD}
+sresid <- studres(modelo.linear)
+#Histograma
+hist(sresid, freq = FALSE, main = "Distributions of Studentized Residuals")
+#Curva normal sobre histohgrama
+xfit <- seq(min(sresid), max (sresid), length = 40)
+yfit <- dnorm(xfit)
+lines (xfit, yfit)
+``` 
+Método 3
+``` {BD}
+skewness (sresid, na.rm = T)
+kurtosis (sresid, na.rm = T)
+shapiro.test(sresid)
+```
+Método 4
+``` {BD}
+          shapiro.test(residuals(modelo.linear))
+```
+####### HOMOCEDASTICIDADE
+``` {BD}
+      ncvTest(modelo.linear) #non-constant error variance test - homo if >0.05
+      spreadLevelPlot(modelo.linear) #plot studentized residuals vs. fitted values
+```    
+####### LINEARIDADE (de peso da mãe na última consulta)
+Testar quadrado
+``` {BD}
+modelo.linear.sq <- lm (bwt ~ lage + lwt + i (lwt*lwt) + race + smoke + ptl + ht + ui + ftv, data = BD)
+summary(modelo.linear.sq)#não significante
+```    
+####### ADITIVIDADE
+``` {BD}    
+rlinear3<- lm (bwt ~ age + lwt + race + smoke + ptl + ht + ui + ftv + smoke*ht, data = BD)
+summary (rlinear3) #não 
+summary(modelo.linear.sq)#não significante
+```
+#### 3.1.4.5.Regressão Logística no R:
+##### Exemplo prático
+Incluir todos os confundidores
+``` {BD}
+mylogit <- glm (low ~ age + lwt + race + smoke + ptl + ht + ftv,data = BD, family = "binomial" (link = "logit"))
+```                             
+Exponenciar para interpretar
+``` {BD}
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+#Resultado em Odds Ratio e Intervalo de Confiança -> interpretável
+```                            
+Teste de pressupostos
+1. Depende do desenho do estudo
+2. Verifica-se se variável é categórica dicotômica
+3. Teste de termos quadráticos ou cúbicos para preditores contínuos
+- quadrático
+``` {BD}
+mylogitsq <- glm (low ~ age + lwt + I (lwt*lwt) + race + smoke + ht + ftv,data = BD, family = "binomial"(link = "logit"))
+summary(mylogitsq) #não significante
+```
+4. Teste de termos de interação com base na literatura
+``` {BD}    
+mylogit3 <- glm (low ~ lwt + race + smoke + ht + smoke*ht, data = BD, family = "binomial"(link = "logit"))
+summary (mylogit3) #não significante
+```
+
+##   3.2.Códigos e prática
+### 3.2.1.Baixar e Instalar Bibliotecas
+``` {BD}
+library(labelled) # Adicionar subtítulos às tabela variáveis
+library(tidyverse) #diversas funções, incluindo gráficos
+library(car) #qq-plot
+```
+### 3.2.2.Banco de dados e variaveis
+####  3.2.2.1.Ler o banco de dados
+``` {BD}
+getwd()
+setwd("C:\\Users\\Caio\\Documents\\UFBA\\LAC\\2020\\Capacita??o em R\\Correla??o e regress?o")
+dir()
+#Ler primeira base de dados --> "Birthweight Data Set" ----
+
+dados0<-read.table(file="Data_frame_nn.txt", header=T, sep="\t") #Carregar base de dados
+
+##2.1 Agora vamos criar uma base de dados ficticia, "dados1", (sobre uso do cigarro eletrônico) a partir de "dados0"
+
+dados1<-dados0[,c("age", "race", "smoke", "lwt", "bwt")] #extrair variaveis para base de dados nova  
+
+head(dados1) #Acessar os primeiros valores da base de dados 
+```
+#### 3.2.2.2.Ajustar as variáveis (criação do BD I hipotético)
+``` {BD}
+dados1[,c("race","smoke")]<-lapply(dados1[,c("race","smoke")],as.factor) #modifica a classicação das variaveis caracteres para fatores
+
+dados1$smoke<-factor(dados1$smoke,levels=c("Sim", "N?o"),labels=c("comum","eletrico")) #modifica nossa variavel para fumar cigarro comum ou eletrônico
+
+colnames(dados1)[1:5]<- c("Idade","ra?a","Fumo","Qtde/m?s","ILCM")  #Mudando os nomes para o português
+
+var_label(dados1)[3:5]<-c("Tipo de fumo","quanidade de horas que fuma por m?s", "indice de lipidios carregados no macrofago") #Adiciona subtítulos
+
+dados1<-transform(dados1,ILCM=ILCM/12) #Aproximando com valores da realidade - parte 1
+
+dados1<-transform(dados1,ILCM=ILCM-15) #Aproximando com valores da realidade - parte 2
+
+dados1$ILCM<-as.integer(dados1$ILCM) #Aproximando com valores da realidade - parte 3
+
+dados1<-transform(dados1,Idade=Idade-5) #Aproximando com valores da realidade - parte 5
+
+summary(dados1) #Resumo de tendencia valores de central e medidas de dispersão de cada variavél da base de dados
+```
+### 3.2.3.Situação problema 1
+
+#### 3.2.3.1.Contextualização: 
+A lesão pulmonar associada ao vaping (VAPI) é uma doença respiratória grave associada ao uso de Cigarro eletrônico. Dois meses após sua descrição, a doença atingiu proporção epidêmica, afetando mais de 2.000 pessoas e resultando em uma série de mortes. Uma das possibilidades levantas atualmente para diagnostico dessa enfermidade é atravez do índice de lipídeo carregado com macrofago. Para termos de referência, esse índice varia de 0 a 400, e em uma criança saudável possui esse índice em torno de 100(vamos generalizar para fins didáticos esse VR para todas as faixas etárias). Visando ajudar na compreensão do problema tio Argolo e a LAC-FMB juntou uma base de dados com 198 participantes que fumam cigarros normais e eletrônicos. Eles farão análises exploratórias com esses dados:  
+
+#### 3.2.3.2.Sugestões de para melhor compreensão da situação(não é necessário para responder as perguntas): 
+https://www.sciencedirect.com/science/article/pii/S2213294519303424
+https://open.spotify.com/episode/2WTwQuAeiWjUBV9lEy9U9q
+https://open.spotify.com/episode/7AJIs8vQQcGJWaLA0sOFFt?si=NK4NfkwYQgmW3FypLgTPBQ
+
+#### 3.2.4.3.Pergunta: Existe alguma associação entre tempo de cigarro fumado e ILCM?
+
+##### QUESTÃO 1: Faça uma análise visual verificando a caracteristica da associação entre tempo de cigarro fumado e ILCM.
+##### QUESTÃO 2: Calcule a força dessa associação. Interprete o resultado obtido em poucas palavras.
+##### QUESTÃO 3: calcule um modelo linear que descreva essa associação para os fumantes de cigarro eletrônico.Interprete o resultado obtido em poucas palavras.
+##### QUESTÃO 4: Segundo seu modelo, se eu falar que um novo fumante de cigarro eletrônico chegou e ele apresenta um ILCM de 350, qual sua predição para o numero de horas por mes que ele fuma?   
+##### DESAFIO(Não é obrigatório): Diante desse contexto, crie uma hipótese nula e uma alternativa para situação.Não precisa calcular, mas qual teste você usaria? Ta bom, pode calcular então!   
+
+#### 3.2.4.4.Respostas:
+
+##### QUESTÃO 1:
+
+Método 1
+``` {BD}
+ggplot(dados1, aes(Qtde.m?s,ILCM))+
+  geom_point(size=2, position="identity", stat="identity")+
+  geom_smooth (method = lm)+
+  theme_classic()
+```
+Método 2
+``` {BD}
+scatter.smooth(dados1$Qtde.m?s, dados1$ILCM, xlab = "horas de fumo por mês", ylab = "ILCM") 
+```
+
+##### QUESTÃO 2:
+
+###### Testar normalidade das variaveis:
+
+Qtde.mês - Não normal
+``` {BD}
+shapiro.test(dados1$Qtde.m?s) 
+qqnorm(dados1$Qtde.m?s);qqline(dados1$Qtde.m?s)
+hist(dados1$Qtde.m?s, breaks = 20)
+summary(dados1$Qtde.m?s)
+```
+ILCM - Normal
+``` {BD}
+shapiro.test(dados1$ILCM) 
+qqnorm(dados1$ILCM);qqline(dados1$ILCM)
+hist(dados1$ILCM, breaks = 30)
+
+#pearson
+cor.test(dados1$Qtde.m?s,dados1$ILCM, method = "pearson")
+0.1866116 
+# Método 1
+cor.test(dados1$Qtde.m?s,dados1$ILCM, method = "spearman") #foi identificada uma associa??o significativa positiva de 0.2475684 (fraca) entre tempo de cigarro fumado e ILCM
+0.2475684 
+# Método 2 
+cor.test(dados1$Qtde.m?s,dados1$ILCM, method = "kendall")  #foi identificada uma associa??o significativa positiva de 0.1691681 (fraca) entre tempo de cigarro fumado e ILCM
+0.1691681 
+```
+##### QUESTÃO 3:
+
+#Método 1:
+``` {BD}
+lm(ILCM ~ Qtde.m?s, data=filter(dados1, Fumo == "eletrico"))
+
+#Visualizando regressão
+ggplot(data=filter(dados1, Fumo == "eletrico"), aes(Qtde.m?s,ILCM))+
+  geom_point(size=2)+ 
+  theme_classic()+
+  geom_smooth(method = "lm")
+```
+#Método 2: 
+``` {BD}
+#separando dados da variável do cigarro eletrico  
+dados11 <- split(dados1, dados1$Fumo)
+dados_ce <-(dados11[["eletrico"]])
+reg_eletrico<-lm(dados_ce$ILCM ~ dados_ce$Qtde.m?s)
+summary(reg_eletrico)
+
+#visualizando regressão 
+ggplot(dados_ce, aes(Qtde.m?s,ILCM))+
+  geom_point(size=2)+ 
+  theme_classic()+
+  geom_smooth(method = "lm")
+
+#Só por curiosidadde... Calculando correlação 
+cor.test(dados_ce$Qtde.m?s,dados_ce$ILCM, method = "spearman")
+```
+##### QUESTÃO 3:
+``` {BD}
+#Equação básica: Y = B0 +B1*X
+#Equação básica: dados1$ILCM = B0 +B1*dados1$Qtde.m?s
+summary(reg_eletrico) #encontrando BO e B1
+#Equação básica: 350 = 180.1455 +0.9930*dados1$Qtde.m?s
+(350-180.1455)/0.9930 = dados1$Qtde.m?s
+#171.0519 = dados1$Qtde.m?s
+
+reg_eletrico2<-lm(dados1$ILCM ~ dados1$Qtde.m?s)
+summary(reg_eletrico2)
+```
+
+
+
+
+
+
+
+
+### 3.2.5.Banco de dados e variaveis
+#### 3.2.5.1.Ajustar as variáveis (criação do BD II hipotético)
+``` {BD}
+#Vamos atribuir o banco de dados, "dados2", ao banco de dados original --> "dados0"
+dados2<-dados0
+
+#Agora vamos modificar a base de dados "dados2" para que se adeque a situação problema.
+
+dados2[,c("low", "race", "smoke", "ht", "ui")]<-lapply(dados2[,c("low", "race", "smoke", "ht", "ui")],as.factor) #Transformando caracteres em fatores
+
+colnames(dados2)[3:6]<- c("idade", "lwt","raca","fumante") #Traduzindo para o português os nomes das colunas
+
+var_label(dados2)[2]<- c("baixo peso ao nascer")
+var_label(dados2)[4]<- c("peso materno na ultima menstruacao")
+var_label(dados2)[7:11]<- c( "historia de parto prematuro", "hipertensao", "irritacao uterina", "numero de visitas ao medico","peso ao nascer" )
+
+#Vamos criar uma variável fictícia referente ao Apgar dos recem nascidos. 
+
+apgar<-matrix (c(4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,6,6,5,6,7,5,6,6,6,6,6,6,6,6,6,7,7,7,7,7,7,5,5,4,5,5,5,7,5,7,5,7,6,6,6,6,7,6,6,6,7,7,7,7,7,7,7,5,7,5,6,6,5,7,6,7,8,9,10,6,8,8,8,8,8,8,8,8,5,9,4,6,8,4,6,6,6,8,8,5,6,10,8,9,9,6,7,5,8,6,4,5,6,8,8,8,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,1,2,2,3,3,3,3,2,3,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,4,4,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,7,7,7,7,7,7,7,7,7,7,7,7,7), nrow = 189, ncol=1) #criando variável
+
+dados2$apgar<-apgar #inserindo o apgar a nosso banco de dados
+```
+### 3.2.6.Situação problema 2
+#### 3.2.6.1.Contextualização: 
+Em 1952, o Teste de Apgar foi criado. Este foi o primeiro método padronizado para avaliar a transição do recém-nascido para a vida fora do útero e marca o surgimento da Neonatologia, especialidade médica da área da pediatria que dedica-se à atenção ao recém-nascido, da sala de parto ao final do período neonatal (1º ao 28º dia de vida). A Escala de Apgar é medida no primeiro e no quinto minuto após o nascimento"(hospital do coracao). Tendo em vista essa escala, a LAC-FMB e tio Felipe ficaram curiosos. "Será que existir associação entre o resultado do teste de apgar no primerio minuto e o peso da criança ao nascer?". Após,coletar dados de 189 pacientes, chegou a hora de testar essa associação!
+
+#### 3.2.6.2.Sugestões de para melhor compreensão da situação(não é necessário para responder as perguntas): 
+https://www.sciencedirect.com/science/article/pii/S2213294519303424
+https://open.spotify.com/episode/2WTwQuAeiWjUBV9lEy9U9q
+https://open.spotify.com/episode/7AJIs8vQQcGJWaLA0sOFFt?si=NK4NfkwYQgmW3FypLgTPBQ
+
+#### 3.2.6.3.Pergunta: Existe associação entre o apgar do bebê no primeiro minuto e seu peso?
+##### QUESTÃO 1: Faça uma análise visual possivel associação.
+##### QUESTÃO 2: Calcule a força dessa associação. Interprete o resultado obtido em poucas palavras.
+##### QUESTÃO 3: É possivel calcular um modelo linear dessa relação? Se sim, demonstre.
+##### DICA: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6107969/
+
+#### 3.2.6.4.Respostas:
+
+##### QUESTÃO 1:
+Método 1
+``` {BD}
+ggplot(dados2, aes(dados2$bwt,dados2$apgar))+
+  geom_point(size=1, position="identity", stat="identity")+
+  geom_smooth(method = lm)+
+  theme_classic()
+```
+Método 2
+``` {BD}
+scatter.smooth(dados2$bwt, dados2$apgar, xlab = "peso ao nascer", ylab = "apgar" )
+```
+##### QUESTÃO 2:
+``` {BD}
+#bwt
+shapiro.test(dados2$bwt) 
+qqnorm(dados2$bwt);qqline(dados2$bwt)
+hist(dados2$bwt, breaks = 20)
+
+#Apgar
+shapiro.test(dados2$apgar) 
+qqnorm(dados2$apgar);qqline(dados2$apgar)
+hist(dados2$apgar, breaks = 10)
+```    
+Método 1:
+``` {BD}
+cor.test(dados2$bwt, dados2$apgar, method = "kendall")
+0.5701813 
+```
+Método 2:
+``` {BD}
+cor.test(dados2$bwt, dados2$apgar, method = "pearson")
+0.7641552 
+``` 
+Método 3:
+``` {BD}
+cor.test(dados2$bwt, dados2$apgar, method = "spearman")
+0.6853149 
+``` 
+
+##### QUESTÃO 3:
+
+Método 1:
+``` {BD}
+ggplot(dados2, aes(bwt,apgar))+
+  geom_point(size=3, alpha=0.3)+ 
+  theme_classic()+
+  geom_smooth(method = "lm")
+``` 
+Método 2:
+``` {BD}
+x<-lm(apgar ~ bwt, data  = dados2)
+round(0.001941*100, digits = 2)
+summary(x)
+#A cada 100 gramas do bebê, aumenta-se 0.19 pontos no apgar.
+``` 
+
+
+
+
+
+
+
+
+
+
+
+
+# 4.Teste de Hipóteses
+# BANCO DE DADOS: LBW 
+
+## NOTAS IMPORTANTES:
+Dicas Prévias
+0. Mantra da aula: "Clicar RUN é a parte mais fácil de fazer análise multivariada, mas sem o racional científico prévio à esse passo você irá CORRER, CORRER, mas não chegará a lugar algum!" - Tiago T. 10.2020
+1. Nunca ranqueie os coeficientes inferindo magnitude, pois as unidades dos preditores frenquentemente são diferentes, então se quiser fazer isso, terá que calcular os "coeficientes de regressão padronizados"- Não é do escopo desta aula.
+2. Pontos influência não é a mesma coisa de outlier. Um dado pode ser outilier e não influenciar muito no coeficiente, assim como pode não ser outliers e influenciar muito no coeficiente. Isso está relacionado com a dispersão e tamanho amostral, e as técnicas para verificar não são do escopo desta aula.
+3. Dizer que algo é preditor independente, quando controlado para x variáveis é perigoso, visto que o racional científico sempre deve ser considerado.
+
+## 4.1.Fundamentos teóricos
+### 4.1.1.Baixar e Instalar Bibliotecas
+```{BD}
+library(labelled) #para adicionar subtítulos nas variáveis
+library(tidyverse) #diversas funções, incluindo gráficos
+library(carData) #qq-plot
+install.packages("MASS")
+library(MASS)
+install.packages("lmtest")
+library(lmtest)
+install.package("ISLR")
+library(ISLR)
+install.packages("mlogit")
+library(mlogit)
+install.packages("ResourceSelection")
+library(ResourceSelection)
+```
+### 4.1.2.Banco de dados e variaveis
+####  4.1.2.1.Ler o banco de dados em excel
+``` {BD}
+getwd() #indica sua pasta de trabalho
+setwd("C:/Users/tiago/OneDrive/Documentos/Tiago/Medicina/LAC/R") #ajusta sua pasta de trabalho
+BD <- read.table(file="Data_frame_nn.txt", header=T, sep="\t") #lê o banco de dados
+```
+#### 2.1.2.2.Visualizar o banco de dados no RStudio
+``` {BD}
+View(BD)
+```
+#### 2.1.2.3.Ajustar o BD para as classes das variáveis
+``` {BD}      
+BD[,c("low","race","smoke","ptl","ht","ui","ftv")]<-lapply(BD[,c("low","race","smoke","ptl""ht""ui""ftv")],as.factor)#transforma variáveis em fatores
+var_label(BD)[1:11]<-c("Código de identificação","Baixo peso ao nascer""Idade materna (anos)","Peso no último ciclo mestrual (kg)","Raça da mãe","Tabagismo durante a gravidez","Partos prematuros prévios","Hipertensão materna","Irritabilidade uterina","Qtd de Pré-Natais no 1o sems","Peso ao nascer") #adiciona subtítuos nas variáveis
+```     
+#### 2.1.2.4.Verificar as propriedades das variáveis 
+(verifica dados como ocorrência, quartis, média, mediana, limites etc):
+``` {BD}
+summary(BD)
+```
+(verificar existência de dados faltantes (NA) no banco de dados):
+``` {BD}
+NAs <- is.na(BD);which(TRUE == NAs)
+``` 
+
+##
+# ANÁLISE MULTIVARIADA: ----
+# Vamos focar principalmente nas regressões multipla e Logistica binária;
+
+#Aspectos "filosóficos"
+# Seja parcimonioso com sua predição
+# Conheça seus dados: Examinar os dados é crucial em análises multivariadas, 
+# pois as distorções comprometem muito os resultados do modelo e sua interpretação. 
+# Além disso, as incoerências podem estar escondidas pela complexidade das 
+# inúmeras variáveis. Portanto, o investimento de tempo na investigação dos 
+# dados vai contribuir bastante para qualidade do modelo final.
+# Testar premissas para o modelo multivariado;
+# Avalie o tamanho amostral (Peduzzi) 
+# Estabeleça significância prática além de estatística.
+
+# 0. Visualização geral: Histogramas, scatterplots
+# 1. Outiliers: Boxplot, Scatterplot,
+# 2. Missing Data: Avaliar a extensão da perda, se foi missing aleatório ou não
+# aleatório, se podem ou não ser ignorados, e escolha do método de imputação.
+
+
+# Aspectos práticos (6 passos para construir um modelo preditor multivariado) ----
+#1. Definir problema de pesquisa, objetivos e técnica a seu usada
+#2. Desenvolver plano de análise: Variáveis, métodos de estimação
+#3. Avaliar as premissas!!
+#4. Estimar modelo multivariado e avaliar ajuste.
+#5. Interpretar os interceptos (natureza das relações)
+#6. Validar o modelo multivariado (não será do escopo da aula)
+
+
+# 1. PROBLEMA DE PESQUISA: ----
+# Vinícius gostaria de saber quais variáveis explicam a variação no peso da 
+# criança ao nascer. Para isso ele juntou colegas de turma que foram a 
+# maternidade coletar uma lista de 20 variáveis potenciais.
+
+# 2. PLANO DE ANÁLISE: ----
+# De acordo com a literatura prévia e com suas hipóteses,vinícius construiu um DAG 
+# para selecionar as melhores variáveis para o seu modelo e irá considerar os 
+# preditores (número de consultas no primeiro trimestre, peso materno na ultima 
+# menstruação, e idade materna), que são contínuas, e o seu desfecho 
+# (variável dependente) será o peso ao nascer;Como plano de análise ele escolheu
+# a Regressão Multipla (Linear multivariada);
+# 2.1. Porque não usar todas as 20 variáveis para fazer o melhor modelo?
+
+
+# 3. AVALIAR PREMISSAS: ----
+# Embora os seus dados tenham demandado um enorme esforço para coletar, vinícius
+# é um rapaz esperto e antes de definir seu modelo final ele avaliará as premissas:
+# Mas ele se perguntou: Quais premissas devo investigar?
+# 3.1. Verificar overffitig e multicoliearidade
+#   3.1.1 ScatterPlots;
+scatterplot(age~bwt, data = BD)
+ggplot(BD, aes(age, bwt)) + geom_point() + geom_smooth(method = "lm") #vs dependente
+ggplot(BD, aes(lwt, bwt)) + geom_point() + geom_smooth(method = "lm") #vs dependente
+ggplot(BD, aes(age, lwt)) + geom_point() + geom_smooth(method = "lm") #colinearidade
+#   3.1.2. Correlações: Performar o teste de hipóteses para confirmar o que vimos no gráfico: 
+cor.test(BD$age,BD$lwt, method = "pearson")
+cor.test(BD$lwt,BD$bwt, method = "kendall")
+cor.test(BD$bwt,BD$age, method = "pearson")
+#   3.1.3. Poderíamos ainda executar uma Regressão simples para cada variável.
+
+#4. MODELO MULTIVARIADO E AJUSTE ----
+# y = B0 + B1*a + B2*b + B3*c + erro (modelo) 
+#nome <- lm (y ~ x1 + x2 + x3, data = a)
+
+# 2 - Inputs
+# x1, x2, x3 -> variáveis preditoras
+# y -> desfecho contínuo
+# a -> banco de dados
+
+# 3 - Otputs
+# Distribuição dos resíduos
+# Coeficientes:
+#a. Estimate = Beta
+#b. Pr(>|t|) = Valor de P
+# Multiple R-squared
+
+# 4 - Exemplo prático de Pedro (adaptado) ----
+modelo.linear <- lm (bwt ~ age + lwt + race + smoke + ptl + ht + ui + ftv,
+                     data = BD)
+summary (modelo.linear)
+
+#exclusão de não significantes
+modelo.linear.limpo <- lm (bwt ~lwt + race + smoke + ht + ui,
+                           data = BD)
+summary (modelo.linear.limpo)
+
+#Testar pressupostos
+#1. Independência das variáveis: Já testamos
+#2. Normalidade dos resíduos:----
+sresid <- studres(modelo.linear.limpo)
+hist(sresid, freq = FALSE,
+     main = "Distributions of Studentized Residuals")
+xfit <- seq(min(sresid), max (sresid), length = 40) # Curva normal sobre histograma
+yfit <- dnorm(xfit)
+lines (xfit, yfit)
+# Outras formas:
+shapiro.test(sresid)
+shapiro.test(residuals(modelo.linear.limpo))
+#3. Homocedasticidade: ----
+# Variável dependente exprime igualdade de varâncias ao longo da dispersão das 
+# variáveis independentes (preditores)
+ncvTest(modelo.linear.limpo) #Testa heterocedasticidade - homo se >0.05
+slp(modelo.linear.limpo) #Gráfico studentized residuals vs. fitted values, podemos
+# ver outiliers, variancia dos erros, e linearidade
+plot(modelo.linear.limpo) #outra forma de ver os gráficos da regressão
+
+#4. colinearidade ----
+# O conceito de multicolinearidade significa o grau de correlação entre duas 
+# variáveis do modelo, o que pode resultar em efeito de confusão sobre o real 
+# efeito individual de cada variável no modelo. Aqui entra o conceito de variável
+# confundidora que vemos na literatura: Será que alguma variável está "confundido" o 
+# efeito de outra? Então a multicolinearidade é uma medida de compartilhamento de 
+# variância entre as variáveis do modelo;: Já aferimos previamente, mas uma estratégia 
+# de avaliar o quanto a multicolinearidade infla nosso modelo é por meio do VIF 
+# (Variance inflation Factor);
+Viftest <- car::vif(lm(bwt ~ lwt + age + ftv,
+                       data=BD))
+summary(Viftest)
+)
+#5. Aditividade e Linearidade (de peso da mãe na última consulta)----
+#Testar quadrado
+modelo.linear.limpo.sq <- lm (bwt ~ lwt + I(lwt*lwt) + race + smoke + ht + ui,
+                              data = BD)
+summary(modelo.linear.limpo.sq)
+#6. Ausência de erros correlacionados (teste de Durbin-Watson) ----
+dwtest(modelo.linear.limpo) #varia de 0-4; Hi = há erros correlacionados.
+
+#REGRESSÃO LOGÍSTICA BINÁRIA -----
+# Na regressão logística binária usamos um modelo, nós fazemos uma linearização de uma
+# distribuição não linear (Bernoulli - Binária), dai usamos uma varíavel dependente
+# categórica binária. 
+y = B0 + B1*a + B2*b + B3*c + e
+# Sendo Y uma variável categórica e "a", "b", "c" categórica ou numérica
+
+#Premissas:
+#1 - Linearidaade das variáveis preditoras contínuas
+#2 - Independência entre as observações
+
+# Depois de refletir bastante, Vinícius acredita que algumas varíaveis como 
+# desfecho low (variável binária de baixo peso ao nascer) lhe daria uma informação
+# mais relevante e talvez o seu modelo ficasse melhor. Para isso construiu um novo
+# DAG que subsidiou a escolha de novas variáveis e seus testes.
+
+Reg.Logistica <- glm(low ~ age + ui + ptl + lwt, data = BD, family = binomial)
+summary(Reg.Logistica)
+
+#Estatística qui-quadrado ----
+modelChi <- Reg.Logistica$null.deviance - Reg.Logistica$deviance
+modelChi
+chidf <- Reg.Logistica$df.null - Reg.Logistica$df.residual #graus de liberdade
+chidf
+chisq.prob <- 1 - pchisq(modelChi, chidf) #probabilidade (valor de p)
+chisq.prob
+
+# Teste de horsmer-Lemshow: Ajuste do modelo (análogo ao R squared)  
+`R2.hl<-modelChi/Reg.Logistica$null.deviance`
+`R2.hl`  
+# Avaliar os coeficientes e Odds Ratio para cada variável 
+Reg.Logistica$coefficients
+exp(cbind(OR = coef(Reg.Logistica), confint(Reg.Logistica))) #Definir o OR e IC 
+
+vif(Reg.Logistica)
+
+#Executando um segundo modelo ----
+Reg.Logistica2 <- glm(low ~ age + smoke + lwt, data = BD, family = binomial)
+summary(Reg.Logistica2)
+#Comparação entre modelos + AIC ----
+anova(Reg.Logistica, Reg.Logistica2)
+
+
+#FIM 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

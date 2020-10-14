@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1602607750359.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "979442079",
+    "id" : "5BB1CF53",
+    "lastKnownWriteTime" : 1602609501,
+    "last_content_update" : 1602609501552,
+    "path" : "~/lac/CookBook.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "23,4",
+        "marks" : "<:0,0\n>:1132,-1",
+        "scrollLine" : "17"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

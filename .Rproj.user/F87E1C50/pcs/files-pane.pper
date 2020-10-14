@@ -1,0 +1,9 @@
+{
+    "path" : "~/quant-cookbook",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

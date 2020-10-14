@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R</title>
+  <meta name="description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R" />
+  
+  <meta name="twitter:description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
+  
+
+<meta name="author" content="LAC-FMB" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="análise-exploratória-de-dados.html"/>
+<link rel="next" href="final-words.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Cookbook</a></li>
+<li class="chapter" data-level="2" data-path="análise-exploratória-de-dados.html"><a href="análise-exploratória-de-dados.html"><i class="fa fa-check"></i><b>2</b> 1.Análise exploratória de dados</a></li>
+<li class="chapter" data-level="3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html"><i class="fa fa-check"></i><b>3</b> BANCO DE DADOS: LBW</a><ul>
+<li class="chapter" data-level="3.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#fundamentos-teóricos"><i class="fa fa-check"></i><b>3.1</b> 1.1.Fundamentos teóricos</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#dispersão-estatística"><i class="fa fa-check"></i><b>3.1.1</b> Dispersão estatística</a></li>
+<li class="chapter" data-level="3.1.2" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#medidas-de-tendência-central"><i class="fa fa-check"></i><b>3.1.2</b> Medidas de tendência central</a></li>
+<li class="chapter" data-level="3.1.3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#distribuição-probabilística-normal"><i class="fa fa-check"></i><b>3.1.3</b> Distribuição probabilística normal</a></li>
+<li class="chapter" data-level="3.1.4" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#teorema-do-limite-central"><i class="fa fa-check"></i><b>3.1.4</b> Teorema do limite central</a></li>
+<li class="chapter" data-level="3.1.5" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#gramática-de-dados"><i class="fa fa-check"></i><b>3.1.5</b> Gramática de dados</a></li>
+<li class="chapter" data-level="3.1.6" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#pool-de-funções"><i class="fa fa-check"></i><b>3.1.6</b> 1.2.3.Pool de funções</a></li>
+<li class="chapter" data-level="3.1.7" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#gráficos"><i class="fa fa-check"></i><b>3.1.7</b> 1.2.4.Gráficos</a></li>
+<li class="chapter" data-level="3.1.8" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#exercícios"><i class="fa fa-check"></i><b>3.1.8</b> 1.2.5.Exercícios</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>4</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">CookBook Ferramentas Estatísticas em R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="banco-de-dados-lbw" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> BANCO DE DADOS: LBW</h1>
+<div id="fundamentos-teóricos" class="section level2">
+<h2><span class="header-section-number">3.1</span> 1.1.Fundamentos teóricos</h2>
+<div id="dispersão-estatística" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Dispersão estatística</h3>
+<p>É forma de caracterizar um conjunto de dados quanto ao seu comportamento aleatório de dispersão de valores. Existem vários modelos de caracterizar o quão disperso um conjunto de dados está, incluindo desvio padrão, coeficiente de variação, coeficiente de dispersão quartil, entre outros.</p>
+</div>
+<div id="medidas-de-tendência-central" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Medidas de tendência central</h3>
+<p>As medidas de tendência central se referem a formas de definir um valor central dentro de uma distribuição probabilística, elas podem ser uma média, mediana ou moda. A média é a forma mais utilizada, ela consiste em um ponto da distribuição probabilística que é igualmente próximo a todos os demais pontos dentro de uma curva probabilística.</p>
+</div>
+<div id="distribuição-probabilística-normal" class="section level3">
+<h3><span class="header-section-number">3.1.3</span> Distribuição probabilística normal</h3>
+<p>A distribuição probabilística normal, também conhecida como distribuição de gaussiana, é apenas uma das distribuições matemáticas de probabilidade. É caracterizada por ser parametrizada, possuir dados contínuos, concentração dos valores em torno da média, um desvio padrão (que caracteriza a distância média dos dados à média), simetria em torno do valor central e baixa frequência de valores extremos.</p>
+</div>
+<div id="teorema-do-limite-central" class="section level3">
+<h3><span class="header-section-number">3.1.4</span> Teorema do limite central</h3>
+<p>Postulado inicialmente pelo matemático francês Abraham de Moivre, o teorema conclui que uma série de dados que não possui comportamento semelhantes à uma distribuição probabilística normal, quando adicionados mais dados referente ao mesmo evento, sua curva de distribuição probabilística irá tender a assemelhar-se com uma distribuição normal.</p>
+</div>
+<div id="gramática-de-dados" class="section level3">
+<h3><span class="header-section-number">3.1.5</span> Gramática de dados</h3>
+<p>Após fase de coleta, é possível que a grande quantidade de dados não permita uma visualização clara dos eventos e desfechos avaliados, até por que muitos podem estar em forma de caracteres numéricos ou valores lógicos TRUE/FALSE ou YES/NO. Para isso, os recursos gráficos facilitam a interpretação dos dados. É muito comum que esses dados sejam representados em gráficos.</p>
+
+</div>
+<div id="pool-de-funções" class="section level3">
+<h3><span class="header-section-number">3.1.6</span> 1.2.3.Pool de funções</h3>
+<div id="média" class="section level4">
+<h4><span class="header-section-number">3.1.6.1</span> 1.2.3.1.Média</h4>
+<div id="média-simples" class="section level5">
+<h5><span class="header-section-number">3.1.6.1.1</span> 1.2.3.1.1.Média simples</h5>
+<pre><code>  Função: </code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="banco-de-dados-lbw.html#cb2-1"></a><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> T<span class="op">/</span>F)</span></code></pre></div>
+<p>x é a variável de entrada
+na.rm é utilizado para remover entradas com valores faltando.</p>
+</div>
+<div id="média-entre-variáveis" class="section level5">
+<h5><span class="header-section-number">3.1.6.1.2</span> 1.2.3.1.2.Média entre variáveis</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="banco-de-dados-lbw.html#cb3-1"></a><span class="kw">tapply</span>(x, index, mean)</span></code></pre></div>
+<p>x é a variável a ser tirada a média.
+index é a variável de categorização.
+mean é a função de média.</p>
+</div>
+</div>
+<div id="mediana" class="section level4">
+<h4><span class="header-section-number">3.1.6.2</span> 1.2.3.2.Mediana</h4>
+<div id="mediana-simples" class="section level5">
+<h5><span class="header-section-number">3.1.6.2.1</span> 1.2.3.2.1.Mediana simples</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="banco-de-dados-lbw.html#cb4-1"></a><span class="kw">median</span>(x, <span class="dt">na.rm =</span> T<span class="op">/</span>F)</span></code></pre></div>
+<p>x é a variável de entrada.
+na.rm é utilizado para remover entradas com valores faltando.</p>
+</div>
+<div id="mediana-entre-variáveis" class="section level5">
+<h5><span class="header-section-number">3.1.6.2.2</span> 1.2.3.2.2.Mediana entre variáveis</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="banco-de-dados-lbw.html#cb5-1"></a><span class="kw">tapply</span>(x, index, median)</span></code></pre></div>
+<p>x é a variável a ser tirada a mediana.
+index é a variável de categorização.
+mean é a função de mediana.</p>
+</div>
+</div>
+<div id="moda" class="section level4">
+<h4><span class="header-section-number">3.1.6.3</span> 1.2.3.3.Moda</h4>
+<div id="moda-simples" class="section level5">
+<h5><span class="header-section-number">3.1.6.3.1</span> 1.2.3.3.1.Moda simples</h5>
+<p>No R puro não existe a função moda, então uma opção é criar uma função que avalie os valores, e identifique o de maior ocorrência.
+Função:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="banco-de-dados-lbw.html#cb6-1"></a>y &lt;-<span class="st"> </span>BD<span class="op">$</span>age</span>
+<span id="cb6-2"><a href="banco-de-dados-lbw.html#cb6-2"></a>moda &lt;-<span class="st"> </span><span class="cf">function</span>(y, <span class="dt">na.rm =</span> T<span class="op">/</span>F) {</span>
+<span id="cb6-3"><a href="banco-de-dados-lbw.html#cb6-3"></a>  <span class="cf">if</span>(na.rm){</span>
+<span id="cb6-4"><a href="banco-de-dados-lbw.html#cb6-4"></a>    y =<span class="st"> </span>y[<span class="op">!</span><span class="kw">is.na</span>(y)] </span>
+<span id="cb6-5"><a href="banco-de-dados-lbw.html#cb6-5"></a>    }</span>
+<span id="cb6-6"><a href="banco-de-dados-lbw.html#cb6-6"></a>  uy &lt;-<span class="st"> </span><span class="kw">unique</span>(y)</span>
+<span id="cb6-7"><a href="banco-de-dados-lbw.html#cb6-7"></a>  tab &lt;-<span class="st"> </span><span class="kw">tabulate</span>(<span class="kw">match</span>(y, uy))</span>
+<span id="cb6-8"><a href="banco-de-dados-lbw.html#cb6-8"></a>  uy[tab <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(tab)]</span>
+<span id="cb6-9"><a href="banco-de-dados-lbw.html#cb6-9"></a>}</span>
+<span id="cb6-10"><a href="banco-de-dados-lbw.html#cb6-10"></a><span class="kw">moda</span>(y)</span></code></pre></div>
+<p>x é a variável de entrada
+na.rm é utilizado para remover entradas com valores faltando.
+Outra opção é instalar bibliotecas que contenham ferramentas semelhantes.A modeest é uma opção. Vamos instalá-la e carregá-la:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="banco-de-dados-lbw.html#cb7-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;modeest&quot;</span>, <span class="dt">dependencies =</span> T)</span>
+<span id="cb7-2"><a href="banco-de-dados-lbw.html#cb7-2"></a><span class="kw">library</span>(modeest)</span></code></pre></div>
+<p>Pronto, agora vamos descobrir a moda novamente:
+Função:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="banco-de-dados-lbw.html#cb8-1"></a><span class="kw">mfv</span>(x)</span></code></pre></div>
+<p>x é a variável de entrada</p>
+</div>
+<div id="moda-entre-variáveis" class="section level5">
+<h5><span class="header-section-number">3.1.6.3.2</span> #3.3.2.Moda entre variáveis</h5>
+<p>Função:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="banco-de-dados-lbw.html#cb9-1"></a><span class="kw">tapply</span>(x, index, <span class="kw">mfv</span>(x))</span></code></pre></div>
+<p>x é a variável a ser tirada a moda.
+index é a variável de categorização.
+mean é a função de moda, podendo ser tanto a “moda” quanto a “mfv”.</p>
+
+</div>
+</div>
+</div>
+<div id="gráficos" class="section level3">
+<h3><span class="header-section-number">3.1.7</span> 1.2.4.Gráficos</h3>
+<div id="correlação" class="section level4">
+<h4><span class="header-section-number">3.1.7.1</span> 1.2.4.1.Correlação</h4>
+<div id="preditores-contínuos" class="section level5">
+<h5><span class="header-section-number">3.1.7.1.1</span> 1.2.4.1.1.Preditores contínuos</h5>
+<p>Função:</p>
+<pre class="bd"><code>scatter.smooth(x,y,main=&quot;&quot;,xlab=&quot;&quot;,ylab=&quot;&quot;)</code></pre>
+<p>x é o preditor 1, na abscissa
+y é o preditor 2, na ordenada
+main é o título do gráfico
+xlab é o título da abscissa
+ylab é o título da ordenada</p>
+</div>
+<div id="preditores-categóricos" class="section level5">
+<h5><span class="header-section-number">3.1.7.1.2</span> 1.2.4.1.2.Preditores categóricos</h5>
+<p>Função:</p>
+<pre class="bd"><code>boxplot(y ~ x, data = k, main=&quot;Title&quot;, xlab=&quot;x Title&quot;, ylab=&quot;y Title&quot;)</code></pre>
+<p>x é o preditor 1, na abscissa
+y é o preditor 2, na ordenada
+main é o título do gráfico</p>
+<p>xlab é o título da abscissa</p>
+<p>ylab é o título da ordenada</p>
+<p>OBS: é possível identificar no boxplot os limites, outliers, terceiro, segundo (mediana) e primeiro quartis.</p>
+</div>
+</div>
+<div id="histogramas" class="section level4">
+<h4><span class="header-section-number">3.1.7.2</span> 1.2.4.2.Histogramas</h4>
+<p>Função:</p>
+<pre class="bd"><code>hist(BD$age, main = &quot;Title&quot;, xlab = &quot;Title&quot;, ylab = &quot;Title&quot;, prob = T)
+rug(jitter(BD$age));lines( density(x),col=&quot;red&quot; )</code></pre>
+<p>x é a variável de interesse
+main é o título do gráfico
+xlab é o título da abscissa (Variável)</p>
+<p>ylab é o título da ordenada (Frequência)</p>
+<p>Breaks são pontos de divisão de cada coluna, na abscissa</p>
+<p>rug/jitter mostra a distribuição fina de frequência, na abscissa</p>
+</div>
+</div>
+<div id="exercícios" class="section level3">
+<h3><span class="header-section-number">3.1.8</span> 1.2.5.Exercícios</h3>
+<div id="qual-a-idade-materna-média-no-grupo-de-fumantes-e-não-fumantes" class="section level4">
+<h4><span class="header-section-number">3.1.8.1</span> 1.2.5.1.Qual a idade materna média no grupo de fumantes e não fumantes?</h4>
+<pre class="bd"><code>tapply(BD$`Idade materna (anos)`, BD$`Tagabismo durante a gravidez`, mean)</code></pre>
+</div>
+<div id="plote-o-gráfico-da-distribuição-das-idades-maternas-analisadas" class="section level4">
+<h4><span class="header-section-number">3.1.8.2</span> 1.2.5.2.Plote o gráfico da distribuição das idades maternas analisadas</h4>
+<pre class="bd"><code>hist(BD$`Idade materna (anos)`, main = &quot;Title&quot;, xlab = &quot;Title&quot;, ylab = &quot;Title&quot;, prob = T)
+rug(jitter(BD$`Idade materna (anos)`));lines( density(BD$`Idade materna (anos)`),col=&quot;red&quot; )</code></pre>
+</div>
+<div id="qual-a-mediana-do-peso-materno-entre-as-raças" class="section level4">
+<h4><span class="header-section-number">3.1.8.3</span> 1.2.5.3.Qual a mediana do peso materno entre as raças?</h4>
+<pre class="bd"><code>tapply(BD$`Peso materno no último ciclo mestrual (kg)`, BD$Raça, median)</code></pre>
+</div>
+<div id="qual-a-moda-da-idade-materna-entre-os-grupos-com-e-sem-hipertensão" class="section level4">
+<h4><span class="header-section-number">3.1.8.4</span> 1.2.5.4.Qual a moda da idade materna entre os grupos com e sem hipertensão?</h4>
+<pre class="bd"><code>library(modeest)
+tapply(BD$`Idade materna (anos)`, BD$`Hipertensão materna`, mfv)</code></pre>
+</div>
+<div id="plote-o-gráfico-da-correlação-entre-o-peso-materno-e-o-peso-ao-nascer" class="section level4">
+<h4><span class="header-section-number">3.1.8.5</span> 1.2.5.5.Plote o gráfico da correlação entre o peso materno e o peso ao nascer</h4>
+<pre class="bd"><code>scatter.smooth(BD$`Peso materno no último ciclo mestrual (kg)`,BD$`Peso ao nascer (g)`,main=&quot;&quot;,xlab=&quot;&quot;,ylab=&quot;&quot;)</code></pre>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="análise-exploratória-de-dados.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-words.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["quant-cookbook.pdf", "quant-cookbook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

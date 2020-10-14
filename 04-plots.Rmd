@@ -1,0 +1,68 @@
+### 1.2.4.Gráficos
+#### 1.2.4.1.Correlação
+##### 1.2.4.1.1.Preditores contínuos
+Função: 
+``` {r,eval=F}
+scatter.smooth(x,y,main="",xlab="",ylab="")
+```
+x é o preditor 1, na abscissa
+y é o preditor 2, na ordenada
+main é o título do gráfico
+xlab é o título da abscissa
+ylab é o título da ordenada
+
+##### 1.2.4.1.2.Preditores categóricos    
+Função: 
+``` {r,eval=F}
+boxplot(y ~ x, data = k, main="Title", xlab="x Title", ylab="y Title")
+```
+x é o preditor 1, na abscissa
+y é o preditor 2, na ordenada
+main é o título do gráfico
+
+xlab é o título da abscissa
+
+ylab é o título da ordenada
+
+OBS: é possível identificar no boxplot os limites, outliers, terceiro, segundo (mediana) e primeiro quartis.
+  
+#### 1.2.4.2.Histogramas
+Função:  
+``` {r}
+BD <- readxl::read_excel("data/lbw.xlsx") # Requer lib reaxl
+hist(BD$age, main = "Title", xlab = "Title", ylab = "Title", prob = T)
+rug(jitter(BD$age))#;lines( density(x),col="red" )
+```
+x é a variável de interesse
+main é o título do gráfico
+xlab é o título da abscissa (Variável)
+
+ylab é o título da ordenada (Frequência)
+
+Breaks são pontos de divisão de cada coluna, na abscissa
+
+rug/jitter mostra a distribuição fina de frequência, na abscissa
+
+### 1.2.5.Exercícios
+#### 1.2.5.1.Qual a idade materna média no grupo de fumantes e não fumantes?
+``` {r}
+tapply(BD$`Idade materna (anos)`, BD$`Tagabismo durante a gravidez`, mean)
+```
+#### 1.2.5.2.Plote o gráfico da distribuição das idades maternas analisadas
+``` {r}
+hist(BD$`Idade materna (anos)`, main = "Title", xlab = "Title", ylab = "Title", prob = T)
+rug(jitter(BD$`Idade materna (anos)`));lines( density(BD$`Idade materna (anos)`),col="red" )
+```
+#### 1.2.5.3.Qual a mediana do peso materno entre as raças?
+``` {r}
+tapply(BD$`Peso materno no último ciclo mestrual (kg)`, BD$Raça, median)
+```
+#### 1.2.5.4.Qual a moda da idade materna entre os grupos com e sem hipertensão?
+``` {r}
+library(modeest)
+tapply(BD$`Idade materna (anos)`, BD$`Hipertensão materna`, mfv)
+```
+#### 1.2.5.5.Plote o gráfico da correlação entre o peso materno e o peso ao nascer
+``` {r}
+scatter.smooth(BD$`Peso materno no último ciclo mestrual (kg)`,BD$`Peso ao nascer (g)`,main="",xlab="",ylab="")
+```
