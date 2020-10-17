@@ -1,4 +1,4 @@
-# Medidas de tendência central  
+## Medidas de tendência central  
 
 As medidas de tendência central se referem a formas de definir um valor central dentro de uma distribuição probabilística, elas podem ser uma média, mediana ou moda. A média é a forma mais utilizada, ela representa um ponto que minimiza a distância total em relação a outros pontos.  
 

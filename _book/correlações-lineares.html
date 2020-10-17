@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 9 3.1.3.Correlações Lineares | CookBook Ferramentas Estatísticas em R</title>
+  <title>Chapter 5 3.1.3.Correlações Lineares | CookBook Ferramentas Estatísticas em R</title>
   <meta name="description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 9 3.1.3.Correlações Lineares | CookBook Ferramentas Estatísticas em R" />
+  <meta property="og:title" content="Chapter 5 3.1.3.Correlações Lineares | CookBook Ferramentas Estatísticas em R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 9 3.1.3.Correlações Lineares | CookBook Ferramentas Estatísticas em R" />
+  <meta name="twitter:title" content="Chapter 5 3.1.3.Correlações Lineares | CookBook Ferramentas Estatísticas em R" />
   
   <meta name="twitter:description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="banco-de-dados-lbw.html"/>
-
+<link rel="prev" href="associações.html"/>
+<link rel="next" href="análise-multivariada.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -133,33 +133,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Cookbook</a></li>
-<li class="chapter" data-level="2" data-path="análise-exploratória.html"><a href="análise-exploratória.html"><i class="fa fa-check"></i><b>2</b> 1. Análise exploratória</a><ul>
-<li class="chapter" data-level="2.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#fundamentos-teóricos"><i class="fa fa-check"></i><b>2.1</b> 1.1.Fundamentos teóricos</a><ul>
-<li class="chapter" data-level="2.1.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#distribuição-probabilística-normal"><i class="fa fa-check"></i><b>2.1.1</b> Distribuição probabilística normal</a></li>
-<li class="chapter" data-level="2.1.2" data-path="análise-exploratória.html"><a href="análise-exploratória.html#teorema-do-limite-central"><i class="fa fa-check"></i><b>2.1.2</b> Teorema do limite central</a></li>
-<li class="chapter" data-level="2.1.3" data-path="análise-exploratória.html"><a href="análise-exploratória.html#gramática-de-dados"><i class="fa fa-check"></i><b>2.1.3</b> Gramática de dados</a></li>
+<li class="chapter" data-level="1" data-path="análise-exploratória.html"><a href="análise-exploratória.html"><i class="fa fa-check"></i><b>1</b> Análise exploratória</a><ul>
+<li class="chapter" data-level="1.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#fundamentos-teóricos"><i class="fa fa-check"></i><b>1.1</b> Fundamentos teóricos</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#distribuição-probabilística-normal"><i class="fa fa-check"></i><b>1.1.1</b> Distribuição probabilística normal</a></li>
+<li class="chapter" data-level="1.1.2" data-path="análise-exploratória.html"><a href="análise-exploratória.html#teorema-do-limite-central"><i class="fa fa-check"></i><b>1.1.2</b> Teorema do limite central</a></li>
+<li class="chapter" data-level="1.1.3" data-path="análise-exploratória.html"><a href="análise-exploratória.html#gramática-de-dados"><i class="fa fa-check"></i><b>1.1.3</b> Gramática de dados</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="análise-exploratória.html"><a href="análise-exploratória.html#medidas-de-tendência-central"><i class="fa fa-check"></i><b>1.2</b> Medidas de tendência central</a></li>
+<li class="chapter" data-level="1.3" data-path="análise-exploratória.html"><a href="análise-exploratória.html#dispersão"><i class="fa fa-check"></i><b>1.3</b> Dispersão</a></li>
+<li class="chapter" data-level="1.4" data-path="análise-exploratória.html"><a href="análise-exploratória.html#assimetria"><i class="fa fa-check"></i><b>1.4</b> Assimetria</a></li>
+<li class="chapter" data-level="1.5" data-path="análise-exploratória.html"><a href="análise-exploratória.html#gráficos"><i class="fa fa-check"></i><b>1.5</b> 1.2.4.Gráficos</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#exercícios"><i class="fa fa-check"></i><b>1.5.1</b> 1.2.5.Exercícios</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="medidas-de-tendência-central.html"><a href="medidas-de-tendência-central.html"><i class="fa fa-check"></i><b>3</b> Medidas de tendência central</a></li>
-<li class="chapter" data-level="4" data-path="dispersão-estatística.html"><a href="dispersão-estatística.html"><i class="fa fa-check"></i><b>4</b> Dispersão estatística</a></li>
-<li class="chapter" data-level="5" data-path="assimetria.html"><a href="assimetria.html"><i class="fa fa-check"></i><b>5</b> Assimetria</a></li>
-<li class="chapter" data-level="6" data-path="gráficos.html"><a href="gráficos.html"><i class="fa fa-check"></i><b>6</b> 1.2.4.Gráficos</a><ul>
-<li class="chapter" data-level="6.0.1" data-path="gráficos.html"><a href="gráficos.html#exercícios"><i class="fa fa-check"></i><b>6.0.1</b> 1.2.5.Exercícios</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="teste-de-hipóteses.html"><a href="teste-de-hipóteses.html"><i class="fa fa-check"></i><b>7</b> 2.Teste de Hipóteses</a></li>
-<li class="chapter" data-level="8" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html"><i class="fa fa-check"></i><b>8</b> BANCO DE DADOS: LBW</a><ul>
-<li class="chapter" data-level="8.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#fundamentos-teóricos-1"><i class="fa fa-check"></i><b>8.1</b> 2.1.Fundamentos teóricos</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#baixar-e-instalar-bibliotecas"><i class="fa fa-check"></i><b>8.1.1</b> 2.1.1.Baixar e Instalar Bibliotecas</a></li>
-<li class="chapter" data-level="8.1.2" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#banco-de-dados-e-variaveis"><i class="fa fa-check"></i><b>8.1.2</b> 2.1.2.Banco de dados e variaveis</a></li>
-<li class="chapter" data-level="8.1.3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-i"><i class="fa fa-check"></i><b>8.1.3</b> 2.1.3. Hipótese I</a></li>
-<li class="chapter" data-level="8.1.4" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-ii"><i class="fa fa-check"></i><b>8.1.4</b> 2.1.4. Hipótese II</a></li>
-<li class="chapter" data-level="8.1.5" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-iii"><i class="fa fa-check"></i><b>8.1.5</b> 2.1.5. Hipótese III</a></li>
+<li class="chapter" data-level="2" data-path="teste-de-hipóteses.html"><a href="teste-de-hipóteses.html"><i class="fa fa-check"></i><b>2</b> Teste de Hipóteses</a></li>
+<li class="chapter" data-level="3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html"><i class="fa fa-check"></i><b>3</b> BANCO DE DADOS: LBW</a><ul>
+<li class="chapter" data-level="3.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#fundamentos-teóricos-1"><i class="fa fa-check"></i><b>3.1</b> 2.1.Fundamentos teóricos</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#baixar-e-instalar-bibliotecas"><i class="fa fa-check"></i><b>3.1.1</b> 2.1.1.Baixar e Instalar Bibliotecas</a></li>
+<li class="chapter" data-level="3.1.2" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#banco-de-dados-e-variaveis"><i class="fa fa-check"></i><b>3.1.2</b> 2.1.2.Banco de dados e variaveis</a></li>
+<li class="chapter" data-level="3.1.3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-i"><i class="fa fa-check"></i><b>3.1.3</b> 2.1.3. Hipótese I</a></li>
+<li class="chapter" data-level="3.1.4" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-ii"><i class="fa fa-check"></i><b>3.1.4</b> 2.1.4. Hipótese II</a></li>
+<li class="chapter" data-level="3.1.5" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-iii"><i class="fa fa-check"></i><b>3.1.5</b> 2.1.5. Hipótese III</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="correlações-lineares.html"><a href="correlações-lineares.html"><i class="fa fa-check"></i><b>9</b> 3.1.3.Correlações Lineares</a><ul>
-<li class="chapter" data-level="9.0.1" data-path="correlações-lineares.html"><a href="correlações-lineares.html#regressões"><i class="fa fa-check"></i><b>9.0.1</b> 3.1.4.Regressões</a></li>
+<li class="chapter" data-level="4" data-path="associações.html"><a href="associações.html"><i class="fa fa-check"></i><b>4</b> Associações</a></li>
+<li class="chapter" data-level="5" data-path="correlações-lineares.html"><a href="correlações-lineares.html"><i class="fa fa-check"></i><b>5</b> 3.1.3.Correlações Lineares</a><ul>
+<li class="chapter" data-level="5.0.1" data-path="correlações-lineares.html"><a href="correlações-lineares.html#regressões"><i class="fa fa-check"></i><b>5.0.1</b> 3.1.4.Regressões</a></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="análise-multivariada.html"><a href="análise-multivariada.html"><i class="fa fa-check"></i><b>6</b> Análise multivariada</a></li>
+<li class="chapter" data-level="7" data-path="inferência-bayesiana.html"><a href="inferência-bayesiana.html"><i class="fa fa-check"></i><b>7</b> Inferência Bayesiana</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -181,52 +183,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="correlações-lineares" class="section level1">
-<h1><span class="header-section-number">Chapter 9</span> 3.1.3.Correlações Lineares</h1>
+<h1><span class="header-section-number">Chapter 5</span> 3.1.3.Correlações Lineares</h1>
 <div id="o-que-são" class="section level4">
-<h4><span class="header-section-number">9.0.0.1</span> 3.1.3.1.O que são:</h4>
+<h4><span class="header-section-number">5.0.0.1</span> 3.1.3.1.O que são:</h4>
 <p>Verificação de relação entre duas variáveis (se alterações em uma variável gera alterção em outra)
 OBS: um ponto é formado por duas coordenadas (X, Y)
 A correlação pode ser positiva ou negativa -&gt; se +, quando x aumenta, y aumenta
 Erros aleatórios existem porque NÃO conhecemos todas as variáveis</p>
 </div>
 <div id="quando-são-utilizadas" class="section level4">
-<h4><span class="header-section-number">9.0.0.2</span> 3.1.3.2.Quando são utilizadas:</h4>
+<h4><span class="header-section-number">5.0.0.2</span> 3.1.3.2.Quando são utilizadas:</h4>
 <p>Quando objetiva-se correlacionar duas variáveis contínuas</p>
 </div>
 <div id="tipos" class="section level4">
-<h4><span class="header-section-number">9.0.0.3</span> 3.1.3.3.Tipos:</h4>
+<h4><span class="header-section-number">5.0.0.3</span> 3.1.3.3.Tipos:</h4>
 <div id="pearson" class="section level5">
-<h5><span class="header-section-number">9.0.0.3.1</span> PEARSON</h5>
+<h5><span class="header-section-number">5.0.0.3.1</span> PEARSON</h5>
 <pre><code>    a - versão paramétrica (baseado nos desvios em relação à média)
     b - variáveis preditora deve ser contínua normal
     c - variável desfecho deve ser contínua normal</code></pre>
 </div>
 <div id="spearman" class="section level5">
-<h5><span class="header-section-number">9.0.0.3.2</span> SPEARMAN</h5>
+<h5><span class="header-section-number">5.0.0.3.2</span> SPEARMAN</h5>
 <pre><code>    a - versão não-paramétrica (Pearson aplicado aos ranks)
     b - variável preditora deve ser contínua
     c - variável desfecho deve ser contínua</code></pre>
 </div>
 </div>
 <div id="correlação-de-pearson-no-r" class="section level4">
-<h4><span class="header-section-number">9.0.0.4</span> 3.1.3.4.Correlação de Pearson no R:</h4>
+<h4><span class="header-section-number">5.0.0.4</span> 3.1.3.4.Correlação de Pearson no R:</h4>
 <div id="comando" class="section level5">
-<h5><span class="header-section-number">9.0.0.4.1</span> Comando</h5>
+<h5><span class="header-section-number">5.0.0.4.1</span> Comando</h5>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="correlações-lineares.html#cb67-1"></a>        <span class="kw">cor.test</span>(x,y, <span class="dt">method =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
 </div>
 <div id="inputs" class="section level5">
-<h5><span class="header-section-number">9.0.0.4.2</span> Inputs</h5>
+<h5><span class="header-section-number">5.0.0.4.2</span> Inputs</h5>
 <pre><code>    # x -&gt; variável preditora
     # y -&gt; desfecho</code></pre>
 </div>
 <div id="otputs" class="section level5">
-<h5><span class="header-section-number">9.0.0.4.3</span> Otputs</h5>
+<h5><span class="header-section-number">5.0.0.4.3</span> Otputs</h5>
 <pre><code>    #cor -&gt; índice de correlação -&gt; pode ir de -1 a + 1
     #intervalo de confiança
     #p-value</code></pre>
 </div>
 <div id="exemplo-prático" class="section level5">
-<h5><span class="header-section-number">9.0.0.4.4</span> Exemplo prático</h5>
+<h5><span class="header-section-number">5.0.0.4.4</span> Exemplo prático</h5>
 <p>Teste de normalidade</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="correlações-lineares.html#cb70-1"></a><span class="kw">shapiro.test</span>(BD<span class="op">$</span>age) <span class="co">#não normal</span></span></code></pre></div>
 <pre><code>## 
@@ -274,7 +276,7 @@ Aplicando</p>
 <p>*Uso de BD$age apenas como exemplo, visto que esta variável não possui distribuição normal.</p>
 </div>
 <div id="visualização-gráfica" class="section level5">
-<h5><span class="header-section-number">9.0.0.4.5</span> Visualização gráfica</h5>
+<h5><span class="header-section-number">5.0.0.4.5</span> Visualização gráfica</h5>
 <p>Faça um gráfico com os pontos</p>
 <div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="correlações-lineares.html#cb84-1"></a><span class="kw">library</span>(ggplot2)</span>
 <span id="cb84-2"><a href="correlações-lineares.html#cb84-2"></a><span class="kw">ggplot</span>(BD, <span class="kw">aes</span>(age, bwt)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</span></code></pre></div>
@@ -286,26 +288,26 @@ Produza</p>
 </div>
 </div>
 <div id="correlação-de-spearman-no-r" class="section level4">
-<h4><span class="header-section-number">9.0.0.5</span> 3.1.3.5.Correlação de Spearman no R:</h4>
+<h4><span class="header-section-number">5.0.0.5</span> 3.1.3.5.Correlação de Spearman no R:</h4>
 <div id="comando-1" class="section level5">
-<h5><span class="header-section-number">9.0.0.5.1</span> Comando</h5>
+<h5><span class="header-section-number">5.0.0.5.1</span> Comando</h5>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="correlações-lineares.html#cb87-1"></a><span class="kw">cor.test</span>(x,y, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
 </div>
 <div id="inputs-1" class="section level5">
-<h5><span class="header-section-number">9.0.0.5.2</span> Inputs</h5>
+<h5><span class="header-section-number">5.0.0.5.2</span> Inputs</h5>
 <pre><code>    # x -&gt; variável preditora
     # y -&gt; desfecho
     </code></pre>
 </div>
 <div id="otputs-1" class="section level5">
-<h5><span class="header-section-number">9.0.0.5.3</span> Otputs</h5>
+<h5><span class="header-section-number">5.0.0.5.3</span> Otputs</h5>
 <pre><code>    #cor
     #intervalo de confiança
     #p-value
     </code></pre>
 </div>
 <div id="aplicando" class="section level5">
-<h5><span class="header-section-number">9.0.0.5.4</span> Aplicando</h5>
+<h5><span class="header-section-number">5.0.0.5.4</span> Aplicando</h5>
 <div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="correlações-lineares.html#cb90-1"></a><span class="kw">cor.test</span>(BD<span class="op">$</span>lwt, BD<span class="op">$</span>bwt, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning in cor.test.default(BD$lwt, BD$bwt, method = &quot;spearman&quot;): Cannot compute
 ## exact p-value with ties</code></pre>
@@ -331,7 +333,7 @@ Produza</p>
 ## 0.1696574</code></pre>
 </div>
 <div id="visualização-gráfica-1" class="section level5">
-<h5><span class="header-section-number">9.0.0.5.5</span> Visualização gráfica</h5>
+<h5><span class="header-section-number">5.0.0.5.5</span> Visualização gráfica</h5>
 <p>Faça um gráfico com os pontos</p>
 <div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="correlações-lineares.html#cb95-1"></a>        <span class="kw">ggplot</span>(BD, <span class="kw">aes</span>(lwt, bwt)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</span></code></pre></div>
 <p><img src="quant-cookbook_files/figure-html/unnamed-chunk-45-1.png" width="672" />
@@ -350,13 +352,13 @@ Se índice de correlação = 0, Y não muda pela mudança de X</p>
 </div>
 </div>
 <div id="o-que-representa-o-valor-de-p" class="section level4">
-<h4><span class="header-section-number">9.0.0.6</span> 3.1.3.6.O que representa o valor de p:</h4>
+<h4><span class="header-section-number">5.0.0.6</span> 3.1.3.6.O que representa o valor de p:</h4>
 <p>Mensurar o quão improváveis são as observações em um cenário hipotético na vigência da hipótese nula (ARGOLO, 2020) - dada a hipótese nula de que o índice de correlação = 0 e que a hipótese alternativa de que o índice de correlação é diferente de 0.</p>
 </div>
 <div id="regressões" class="section level3">
-<h3><span class="header-section-number">9.0.1</span> 3.1.4.Regressões</h3>
+<h3><span class="header-section-number">5.0.1</span> 3.1.4.Regressões</h3>
 <div id="o-que-são-1" class="section level4">
-<h4><span class="header-section-number">9.0.1.1</span> 3.1.4.1.O que são:</h4>
+<h4><span class="header-section-number">5.0.1.1</span> 3.1.4.1.O que são:</h4>
 <p>???????????
 #### 3.1.4.2.Quando são utilizadas:
 Busca-se saber magnitude das causas para o efeito (causalidade) para PREDIZER “advinhar uma medida com base na outra” ARGOLO, F. 2020
@@ -371,7 +373,7 @@ c - 5 pressupostos:
 3. Colinearidade - modelo melhor explicado por linear
 5. Aditividade - efeito aditivo (modificadores de efeito)</p>
 <div id="logística" class="section level5">
-<h5><span class="header-section-number">9.0.1.1.1</span> Logística</h5>
+<h5><span class="header-section-number">5.0.1.1.1</span> Logística</h5>
 <pre><code>a - variável preditora contínua, categórica, etc
 b - variável desfecho categórica binária
 c - pressupostos:
@@ -380,7 +382,7 @@ c - pressupostos:
     3 - Modificador de efeito</code></pre>
 </div>
 <div id="outras" class="section level5">
-<h5><span class="header-section-number">9.0.1.1.2</span> Outras</h5>
+<h5><span class="header-section-number">5.0.1.1.2</span> Outras</h5>
 <p>Regressão mediana -&gt; não normal e contínua
 Regressão ordinal ligística -&gt; ordinal categórica
 Regressão multinominal -&gt; não-ordinal categórica
@@ -389,19 +391,19 @@ Regressão de Cox -&gt; tempo até o evento</p>
 </div>
 </div>
 <div id="regressão-linear-no-r" class="section level4">
-<h4><span class="header-section-number">9.0.1.2</span> 3.1.4.4.Regressão Linear no R:</h4>
+<h4><span class="header-section-number">5.0.1.2</span> 3.1.4.4.Regressão Linear no R:</h4>
 <div id="comando-2" class="section level5">
-<h5><span class="header-section-number">9.0.1.2.1</span> Comando</h5>
+<h5><span class="header-section-number">5.0.1.2.1</span> Comando</h5>
 <div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="correlações-lineares.html#cb101-1"></a>nome &lt;-<span class="st"> </span><span class="kw">lm</span> (y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> a)</span></code></pre></div>
 </div>
 <div id="inputs-2" class="section level5">
-<h5><span class="header-section-number">9.0.1.2.2</span> Inputs</h5>
+<h5><span class="header-section-number">5.0.1.2.2</span> Inputs</h5>
 <p>x1, x2, x3 -&gt; variáveis preditoras
 y -&gt; desfecho contínuo
 a -&gt; banco de dados</p>
 </div>
 <div id="otputs-2" class="section level5">
-<h5><span class="header-section-number">9.0.1.2.3</span> Otputs</h5>
+<h5><span class="header-section-number">5.0.1.2.3</span> Otputs</h5>
 <p>Distribuição dos resíduos
 Coeficientes:
 a. Estimate = Beta
@@ -417,8 +419,8 @@ Multiple R-squared -&gt; coeficiente de determinação -&gt; próximo a 1 indica
           </div>
         </div>
       </div>
-<a href="banco-de-dados-lbw.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="associações.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="análise-multivariada.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

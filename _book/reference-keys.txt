@@ -1,9 +1,10 @@
-cookbook
+ingredientes
 análise-exploratória
 fundamentos-teóricos
+nota
+mínima-entropia-teorema-do-limite-central-e-curva-normal
 distribuição-probabilística-normal
-teorema-do-limite-central
-gramática-de-dados
+gramática-de-gráficos
 medidas-de-tendência-central
 média
 média-simples
@@ -14,7 +15,7 @@ mediana-entre-variáveis
 moda
 moda-simples
 moda-entre-variáveis
-dispersão-estatística
+dispersão
 assimetria
 gráficos
 correlação
@@ -27,8 +28,6 @@ plote-o-gráfico-da-distribuição-das-idades-maternas-analisadas
 qual-a-moda-da-idade-materna-entre-os-grupos-com-e-sem-hipertensão
 plote-o-gráfico-da-correlação-entre-o-peso-materno-e-o-peso-ao-nascer
 teste-de-hipóteses
-banco-de-dados-lbw
-fundamentos-teóricos-1
 baixar-e-instalar-bibliotecas
 banco-de-dados-e-variaveis
 ler-o-banco-de-dados-em-excel
@@ -56,6 +55,7 @@ homocedasticidade-1
 normalidade-2
 aspecto-visual-2
 teste-de-hipótese---wilcoxon-mann-whitney
+associações
 correlações-lineares
 o-que-são
 quando-são-utilizadas
@@ -83,3 +83,10 @@ regressão-linear-no-r
 comando-2
 inputs-2
 otputs-2
+análise-multivariada
+inferência-bayesiana
+kata
+kata---avaliar-distribuição-open-data-osf
+objetivo
+bibliotecas-e-dados
+análise-exploratória-1

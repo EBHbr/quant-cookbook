@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 8 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R</title>
+  <title>Chapter 3 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R</title>
   <meta name="description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 8 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R" />
+  <meta property="og:title" content="Chapter 3 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R" />
+  <meta name="twitter:title" content="Chapter 3 BANCO DE DADOS: LBW | CookBook Ferramentas Estatísticas em R" />
   
   <meta name="twitter:description" content="Cookbook em R sobre procedimentos estatísticos para análise quantitativa de dados para saúde baseada em evidências" />
   
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="teste-de-hipóteses.html"/>
-<link rel="next" href="correlações-lineares.html"/>
+<link rel="next" href="associações.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -133,33 +133,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Cookbook</a></li>
-<li class="chapter" data-level="2" data-path="análise-exploratória.html"><a href="análise-exploratória.html"><i class="fa fa-check"></i><b>2</b> 1. Análise exploratória</a><ul>
-<li class="chapter" data-level="2.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#fundamentos-teóricos"><i class="fa fa-check"></i><b>2.1</b> 1.1.Fundamentos teóricos</a><ul>
-<li class="chapter" data-level="2.1.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#distribuição-probabilística-normal"><i class="fa fa-check"></i><b>2.1.1</b> Distribuição probabilística normal</a></li>
-<li class="chapter" data-level="2.1.2" data-path="análise-exploratória.html"><a href="análise-exploratória.html#teorema-do-limite-central"><i class="fa fa-check"></i><b>2.1.2</b> Teorema do limite central</a></li>
-<li class="chapter" data-level="2.1.3" data-path="análise-exploratória.html"><a href="análise-exploratória.html#gramática-de-dados"><i class="fa fa-check"></i><b>2.1.3</b> Gramática de dados</a></li>
+<li class="chapter" data-level="1" data-path="análise-exploratória.html"><a href="análise-exploratória.html"><i class="fa fa-check"></i><b>1</b> Análise exploratória</a><ul>
+<li class="chapter" data-level="1.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#fundamentos-teóricos"><i class="fa fa-check"></i><b>1.1</b> Fundamentos teóricos</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#distribuição-probabilística-normal"><i class="fa fa-check"></i><b>1.1.1</b> Distribuição probabilística normal</a></li>
+<li class="chapter" data-level="1.1.2" data-path="análise-exploratória.html"><a href="análise-exploratória.html#teorema-do-limite-central"><i class="fa fa-check"></i><b>1.1.2</b> Teorema do limite central</a></li>
+<li class="chapter" data-level="1.1.3" data-path="análise-exploratória.html"><a href="análise-exploratória.html#gramática-de-dados"><i class="fa fa-check"></i><b>1.1.3</b> Gramática de dados</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="análise-exploratória.html"><a href="análise-exploratória.html#medidas-de-tendência-central"><i class="fa fa-check"></i><b>1.2</b> Medidas de tendência central</a></li>
+<li class="chapter" data-level="1.3" data-path="análise-exploratória.html"><a href="análise-exploratória.html#dispersão"><i class="fa fa-check"></i><b>1.3</b> Dispersão</a></li>
+<li class="chapter" data-level="1.4" data-path="análise-exploratória.html"><a href="análise-exploratória.html#assimetria"><i class="fa fa-check"></i><b>1.4</b> Assimetria</a></li>
+<li class="chapter" data-level="1.5" data-path="análise-exploratória.html"><a href="análise-exploratória.html#gráficos"><i class="fa fa-check"></i><b>1.5</b> 1.2.4.Gráficos</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="análise-exploratória.html"><a href="análise-exploratória.html#exercícios"><i class="fa fa-check"></i><b>1.5.1</b> 1.2.5.Exercícios</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="medidas-de-tendência-central.html"><a href="medidas-de-tendência-central.html"><i class="fa fa-check"></i><b>3</b> Medidas de tendência central</a></li>
-<li class="chapter" data-level="4" data-path="dispersão-estatística.html"><a href="dispersão-estatística.html"><i class="fa fa-check"></i><b>4</b> Dispersão estatística</a></li>
-<li class="chapter" data-level="5" data-path="assimetria.html"><a href="assimetria.html"><i class="fa fa-check"></i><b>5</b> Assimetria</a></li>
-<li class="chapter" data-level="6" data-path="gráficos.html"><a href="gráficos.html"><i class="fa fa-check"></i><b>6</b> 1.2.4.Gráficos</a><ul>
-<li class="chapter" data-level="6.0.1" data-path="gráficos.html"><a href="gráficos.html#exercícios"><i class="fa fa-check"></i><b>6.0.1</b> 1.2.5.Exercícios</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="teste-de-hipóteses.html"><a href="teste-de-hipóteses.html"><i class="fa fa-check"></i><b>7</b> 2.Teste de Hipóteses</a></li>
-<li class="chapter" data-level="8" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html"><i class="fa fa-check"></i><b>8</b> BANCO DE DADOS: LBW</a><ul>
-<li class="chapter" data-level="8.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#fundamentos-teóricos-1"><i class="fa fa-check"></i><b>8.1</b> 2.1.Fundamentos teóricos</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#baixar-e-instalar-bibliotecas"><i class="fa fa-check"></i><b>8.1.1</b> 2.1.1.Baixar e Instalar Bibliotecas</a></li>
-<li class="chapter" data-level="8.1.2" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#banco-de-dados-e-variaveis"><i class="fa fa-check"></i><b>8.1.2</b> 2.1.2.Banco de dados e variaveis</a></li>
-<li class="chapter" data-level="8.1.3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-i"><i class="fa fa-check"></i><b>8.1.3</b> 2.1.3. Hipótese I</a></li>
-<li class="chapter" data-level="8.1.4" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-ii"><i class="fa fa-check"></i><b>8.1.4</b> 2.1.4. Hipótese II</a></li>
-<li class="chapter" data-level="8.1.5" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-iii"><i class="fa fa-check"></i><b>8.1.5</b> 2.1.5. Hipótese III</a></li>
+<li class="chapter" data-level="2" data-path="teste-de-hipóteses.html"><a href="teste-de-hipóteses.html"><i class="fa fa-check"></i><b>2</b> Teste de Hipóteses</a></li>
+<li class="chapter" data-level="3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html"><i class="fa fa-check"></i><b>3</b> BANCO DE DADOS: LBW</a><ul>
+<li class="chapter" data-level="3.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#fundamentos-teóricos-1"><i class="fa fa-check"></i><b>3.1</b> 2.1.Fundamentos teóricos</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#baixar-e-instalar-bibliotecas"><i class="fa fa-check"></i><b>3.1.1</b> 2.1.1.Baixar e Instalar Bibliotecas</a></li>
+<li class="chapter" data-level="3.1.2" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#banco-de-dados-e-variaveis"><i class="fa fa-check"></i><b>3.1.2</b> 2.1.2.Banco de dados e variaveis</a></li>
+<li class="chapter" data-level="3.1.3" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-i"><i class="fa fa-check"></i><b>3.1.3</b> 2.1.3. Hipótese I</a></li>
+<li class="chapter" data-level="3.1.4" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-ii"><i class="fa fa-check"></i><b>3.1.4</b> 2.1.4. Hipótese II</a></li>
+<li class="chapter" data-level="3.1.5" data-path="banco-de-dados-lbw.html"><a href="banco-de-dados-lbw.html#hipótese-iii"><i class="fa fa-check"></i><b>3.1.5</b> 2.1.5. Hipótese III</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="correlações-lineares.html"><a href="correlações-lineares.html"><i class="fa fa-check"></i><b>9</b> 3.1.3.Correlações Lineares</a><ul>
-<li class="chapter" data-level="9.0.1" data-path="correlações-lineares.html"><a href="correlações-lineares.html#regressões"><i class="fa fa-check"></i><b>9.0.1</b> 3.1.4.Regressões</a></li>
+<li class="chapter" data-level="4" data-path="associações.html"><a href="associações.html"><i class="fa fa-check"></i><b>4</b> Associações</a><ul>
+<li class="chapter" data-level="4.1" data-path="associações.html"><a href="associações.html#correlações-lineares"><i class="fa fa-check"></i><b>4.1</b> Correlações Lineares</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="associações.html"><a href="associações.html#regressões"><i class="fa fa-check"></i><b>4.1.1</b> 3.1.4.Regressões</a></li>
 </ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="análise-multivariada.html"><a href="análise-multivariada.html"><i class="fa fa-check"></i><b>5</b> Análise multivariada</a></li>
+<li class="chapter" data-level="6" data-path="inferência-bayesiana.html"><a href="inferência-bayesiana.html"><i class="fa fa-check"></i><b>6</b> Inferência Bayesiana</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -181,25 +184,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="banco-de-dados-lbw" class="section level1">
-<h1><span class="header-section-number">Chapter 8</span> BANCO DE DADOS: LBW</h1>
+<h1><span class="header-section-number">Chapter 3</span> BANCO DE DADOS: LBW</h1>
 <div id="fundamentos-teóricos-1" class="section level2">
-<h2><span class="header-section-number">8.1</span> 2.1.Fundamentos teóricos</h2>
+<h2><span class="header-section-number">3.1</span> 2.1.Fundamentos teóricos</h2>
 <div id="baixar-e-instalar-bibliotecas" class="section level3">
-<h3><span class="header-section-number">8.1.1</span> 2.1.1.Baixar e Instalar Bibliotecas</h3>
+<h3><span class="header-section-number">3.1.1</span> 2.1.1.Baixar e Instalar Bibliotecas</h3>
 <p>Para esta aula utilizaremos apenas* funções nativas do R, sem necessidade de instalar ou carregar bibliotecas adicionais.</p>
 </div>
 <div id="banco-de-dados-e-variaveis" class="section level3">
-<h3><span class="header-section-number">8.1.2</span> 2.1.2.Banco de dados e variaveis</h3>
+<h3><span class="header-section-number">3.1.2</span> 2.1.2.Banco de dados e variaveis</h3>
 <div id="ler-o-banco-de-dados-em-excel" class="section level4">
-<h4><span class="header-section-number">8.1.2.1</span> 2.1.2.1.Ler o banco de dados em excel</h4>
+<h4><span class="header-section-number">3.1.2.1</span> 2.1.2.1.Ler o banco de dados em excel</h4>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="banco-de-dados-lbw.html#cb20-1"></a>BD &lt;-<span class="st"> </span>readxl<span class="op">::</span><span class="kw">read_excel</span>(<span class="st">&quot;data/lbw.xlsx&quot;</span>)</span></code></pre></div>
 </div>
 <div id="visualizar-o-banco-de-dados-no-rstudio" class="section level4">
-<h4><span class="header-section-number">8.1.2.2</span> 2.1.2.2.Visualizar o banco de dados no RStudio</h4>
+<h4><span class="header-section-number">3.1.2.2</span> 2.1.2.2.Visualizar o banco de dados no RStudio</h4>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="banco-de-dados-lbw.html#cb21-1"></a><span class="kw">View</span>(BD)</span></code></pre></div>
 </div>
 <div id="ajustar-o-bd-para-as-classes-das-variáveis" class="section level4">
-<h4><span class="header-section-number">8.1.2.3</span> 2.1.2.3.Ajustar o BD para as classes das variáveis</h4>
+<h4><span class="header-section-number">3.1.2.3</span> 2.1.2.3.Ajustar o BD para as classes das variáveis</h4>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="banco-de-dados-lbw.html#cb22-1"></a>BD[,<span class="kw">c</span>(<span class="st">&quot;low&quot;</span>,<span class="st">&quot;race&quot;</span>,<span class="st">&quot;smoke&quot;</span>,<span class="st">&quot;ptl&quot;</span>,<span class="st">&quot;ht&quot;</span>,<span class="st">&quot;ui&quot;</span>,<span class="st">&quot;ftv&quot;</span>)] &lt;-<span class="st"> </span><span class="kw">lapply</span>(BD[,<span class="kw">c</span>(<span class="st">&quot;low&quot;</span>,<span class="st">&quot;race&quot;</span>,<span class="st">&quot;smoke&quot;</span>,<span class="st">&quot;ptl&quot;</span>,<span class="st">&quot;ht&quot;</span>,<span class="st">&quot;ui&quot;</span>,<span class="st">&quot;ftv&quot;</span>)], as.factor)    </span>
 <span id="cb22-2"><a href="banco-de-dados-lbw.html#cb22-2"></a>BD<span class="op">$</span>low &lt;-<span class="st"> </span><span class="kw">factor</span>(BD<span class="op">$</span>low, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Não&quot;</span>, <span class="st">&quot;Sim&quot;</span>))</span>
 <span id="cb22-3"><a href="banco-de-dados-lbw.html#cb22-3"></a>BD &lt;-<span class="st"> </span><span class="kw">transform</span>(BD, <span class="dt">lwt=</span><span class="kw">round</span>(lwt<span class="op">*</span><span class="fl">0.453592</span>,<span class="dv">1</span>))</span>
@@ -209,7 +212,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-7"><a href="banco-de-dados-lbw.html#cb22-7"></a>BD<span class="op">$</span>ui &lt;-<span class="st"> </span><span class="kw">factor</span>(BD<span class="op">$</span>ui, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Não&quot;</span>, <span class="st">&quot;Sim&quot;</span>))</span></code></pre></div>
 </div>
 <div id="verificar-as-propriedades-das-variáveis" class="section level4">
-<h4><span class="header-section-number">8.1.2.4</span> 2.1.2.4.Verificar as propriedades das variáveis</h4>
+<h4><span class="header-section-number">3.1.2.4</span> 2.1.2.4.Verificar as propriedades das variáveis</h4>
 <p>(verifica dados como ocorrência, quartis, média, mediana, limites etc):</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="banco-de-dados-lbw.html#cb23-1"></a><span class="kw">summary</span>(BD)</span></code></pre></div>
 <pre><code>##        id         low           age             lwt             race    smoke    
@@ -232,14 +235,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <div id="hipótese-i" class="section level3">
-<h3><span class="header-section-number">8.1.3</span> 2.1.3. Hipótese I</h3>
+<h3><span class="header-section-number">3.1.3</span> 2.1.3. Hipótese I</h3>
 <p>Para o primeiro exemplo, vamos supor que estamos tentando investigar a relação do tabagismo na gravidez com o peso do bebê ao nascer.
 Hipótese nula: Não há diferença no peso ao nascer de bebês de mães fumantes em em comparação com o peso ao nascer de bebês de mães não fumantes.
 Hipótese alternativa: Há diferença no peso ao nascer de bebês de mães fumantes em em comparação com o peso ao nascer de bebês de mães não fumantes.
 Nesse caso, temos uma variável categórica dicotômica como independente e uma variável contínua como dependente.
 Qual seria a opção de teste paramétrico? E de teste não-paramétrico?</p>
 <div id="pressupostos-teste-t" class="section level4">
-<h4><span class="header-section-number">8.1.3.1</span> 2.1.3.1. Pressupostos (Teste T)</h4>
+<h4><span class="header-section-number">3.1.3.1</span> 2.1.3.1. Pressupostos (Teste T)</h4>
 <p>A utilização do Teste T depende de algumas condições.
 ##### Homocedasticidade
 A cada nível das variáveis previsoras, a variância do termo residual deve ser constante. Isso significa que os resíduos a cada nível dos previsores devem ter a mesma variância (homocedasticidade): quando as variâncias são desiguais diz-se que existe heterocedasticidade.
@@ -255,9 +258,9 @@ Pr(&gt;F): Valor de p para o teste de Levene em que a Ho é que as variâncias s
 ## group   1   1.371 0.2431
 ##       187</code></pre>
 <div id="normalidade" class="section level5">
-<h5><span class="header-section-number">8.1.3.1.1</span> 2.1.3.2. Normalidade</h5>
+<h5><span class="header-section-number">3.1.3.1.1</span> 2.1.3.2. Normalidade</h5>
 <div id="aspecto-visual" class="section level6">
-<h6><span class="header-section-number">8.1.3.1.1.1</span> Aspecto visual</h6>
+<h6><span class="header-section-number">3.1.3.1.1.1</span> Aspecto visual</h6>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="banco-de-dados-lbw.html#cb29-1"></a><span class="kw">hist</span>(BD<span class="op">$</span>bwt)</span></code></pre></div>
 <p><img src="quant-cookbook_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="banco-de-dados-lbw.html#cb30-1"></a><span class="kw">plot</span>(<span class="kw">density</span>(BD<span class="op">$</span>bwt), <span class="dt">ylab=</span><span class="st">&#39;Densidade&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;Peso ao Nascer&#39;</span>, <span class="dt">main=</span><span class="st">&#39;&#39;</span>)</span></code></pre></div>
@@ -274,7 +277,7 @@ P-value: Valor de p para o teste SW em que a Ho é que não há diferença entre
 ## W = 0.99244, p-value = 0.4346</code></pre>
 </div>
 <div id="kolmogorov-smirnov" class="section level6">
-<h6><span class="header-section-number">8.1.3.1.1.2</span> Kolmogorov-Smirnov</h6>
+<h6><span class="header-section-number">3.1.3.1.1.2</span> Kolmogorov-Smirnov</h6>
 <p>Função: Ks.test(dados<span class="math inline">\(vardependente,&quot;pnorm&quot;, mean(dados\)</span>vardependente), sd(dados$vardependente))
 pnorm identifica que o KS vai comparar a distribuição da variável dependente com a normal
 D: Representa a distância vertical máxima entre a curva estudada e a curva de referência.
@@ -293,7 +296,7 @@ P-value: Valor de p para o teste KS em que a Ho é que não há diferença entre
 </div>
 </div>
 <div id="teste-de-hipótese---t-não-pareado" class="section level5">
-<h5><span class="header-section-number">8.1.3.1.2</span> 2.1.3.3. Teste de hipótese - T não pareado</h5>
+<h5><span class="header-section-number">3.1.3.1.2</span> 2.1.3.3. Teste de hipótese - T não pareado</h5>
 <p>Função: t.test(dados<span class="math inline">\(varindependente~BD\)</span>vardependente)
 t: A diferença calculada entre as médias em unidades de desvio padrão;
 Df: Degrees of freedom;
@@ -314,16 +317,16 @@ P-value: Valor de p para o teste KS em que a Ho é que não há diferença entre
 </div>
 </div>
 <div id="hipótese-ii" class="section level3">
-<h3><span class="header-section-number">8.1.4</span> 2.1.4. Hipótese II</h3>
+<h3><span class="header-section-number">3.1.4</span> 2.1.4. Hipótese II</h3>
 <p>Para o segundo exemplo, vamos supor que estamos tentando investigar a relação da raça da mãe com o peso ao nascer.
 Hipótese nula: Não há diferença no peso ao nascer de bebês de segundo a raça de suas mães.
 Hipótese alternativa: Há diferença no peso ao nascer de bebês de segundo a raça de suas mães.
 Nesse caso, temos uma variável categórica policotômica como independente e uma variável contínua como dependente.
 Quais seriam as opções para testes paramétricos e não-paramétricos?</p>
 <div id="pressupostos-one-way-anova" class="section level4">
-<h4><span class="header-section-number">8.1.4.1</span> 2.1.4.1 Pressupostos (One-way ANOVA)</h4>
+<h4><span class="header-section-number">3.1.4.1</span> 2.1.4.1 Pressupostos (One-way ANOVA)</h4>
 <div id="homocedasticidade" class="section level5">
-<h5><span class="header-section-number">8.1.4.1.1</span> Homocedasticidade</h5>
+<h5><span class="header-section-number">3.1.4.1.1</span> Homocedasticidade</h5>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="banco-de-dados-lbw.html#cb38-1"></a><span class="kw">leveneTest</span>(BD<span class="op">$</span>bwt<span class="op">~</span>BD<span class="op">$</span>race)</span></code></pre></div>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##        Df F value Pr(&gt;F)
@@ -331,9 +334,9 @@ Quais seriam as opções para testes paramétricos e não-paramétricos?</p>
 ##       186</code></pre>
 </div>
 <div id="normalidade-1" class="section level5">
-<h5><span class="header-section-number">8.1.4.1.2</span> 2.1.4.2. Normalidade</h5>
+<h5><span class="header-section-number">3.1.4.1.2</span> 2.1.4.2. Normalidade</h5>
 <div id="aspecto-visual-1" class="section level6">
-<h6><span class="header-section-number">8.1.4.1.2.1</span> Aspecto visual</h6>
+<h6><span class="header-section-number">3.1.4.1.2.1</span> Aspecto visual</h6>
 <p>Distribuição da variável independente</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="banco-de-dados-lbw.html#cb40-1"></a><span class="kw">hist</span>(BD<span class="op">$</span>bwt)</span></code></pre></div>
 <p><img src="quant-cookbook_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
@@ -361,9 +364,9 @@ Variável independente x variável dependente</p>
 </div>
 </div>
 <div id="teste-de-hipótese---one-way-anova" class="section level5">
-<h5><span class="header-section-number">8.1.4.1.3</span> 2.1.4.3. Teste de hipótese - One-way ANOVA</h5>
+<h5><span class="header-section-number">3.1.4.1.3</span> 2.1.4.3. Teste de hipótese - One-way ANOVA</h5>
 <div id="opção-i---função-lm" class="section level6">
-<h6><span class="header-section-number">8.1.4.1.3.1</span> Opção I - Função lm()</h6>
+<h6><span class="header-section-number">3.1.4.1.3.1</span> Opção I - Função lm()</h6>
 <p>Função:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="banco-de-dados-lbw.html#cb48-1"></a><span class="kw">summary</span>(<span class="kw">lm</span>(BD<span class="op">$</span>bwt<span class="op">~</span>BD<span class="op">$</span>race))</span></code></pre></div>
 <pre><code>## 
@@ -391,7 +394,7 @@ A função summary() fornece os principais parâmetros do objeto.
 Retorno: Em termos de ANOVA, a parte de interesse do retorno é o F-statistic, que dá informação do F-value, dos DFs e p-value para a Ho de que todos os grupos têm médias iguais entre si.</p>
 </div>
 <div id="opção-ii---função-anova" class="section level6">
-<h6><span class="header-section-number">8.1.4.1.3.2</span> Opção II - Função anova()</h6>
+<h6><span class="header-section-number">3.1.4.1.3.2</span> Opção II - Função anova()</h6>
 <p>Função:</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="banco-de-dados-lbw.html#cb50-1"></a><span class="kw">anova</span>(<span class="kw">lm</span>(BD<span class="op">$</span>bwt<span class="op">~</span>BD<span class="op">$</span>race))</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
@@ -408,7 +411,7 @@ Retorno: Informa Df, Sum sq, Mean Sq, F-value e p-value para a Ho de que todos o
 </div>
 </div>
 <div id="teste-post-hoc-teste-de-tuckey" class="section level5">
-<h5><span class="header-section-number">8.1.4.1.4</span> Teste post-hoc (teste de Tuckey)</h5>
+<h5><span class="header-section-number">3.1.4.1.4</span> Teste post-hoc (teste de Tuckey)</h5>
 <p>Função:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="banco-de-dados-lbw.html#cb52-1"></a>  <span class="kw">TukeyHSD</span>(<span class="kw">aov</span>(BD<span class="op">$</span>bwt<span class="op">~</span>BD<span class="op">$</span>race))</span></code></pre></div>
 <pre><code>##   Tukey multiple comparisons of means
@@ -428,16 +431,16 @@ Retorno: O elemento de maior interesse vai ser o p-value para identificar os gru
 </div>
 </div>
 <div id="hipótese-iii" class="section level3">
-<h3><span class="header-section-number">8.1.5</span> 2.1.5. Hipótese III</h3>
+<h3><span class="header-section-number">3.1.5</span> 2.1.5. Hipótese III</h3>
 <p>Para o último exemplo, vamos supor que estamos tentando investigar a relação do peso da mãe no último ciclo menstrual com o hábito de fumar.
 Hipótese nula: Não há diferença significativa no peso da mãe no último ciclo menstrual entre entre os grupos de mães fumantes e não fumantes.
 Hipótese alternativa: Há diferença significativa no peso da mãe no último ciclo menstrual entre entre os grupos de mães fumantes e não fumantes.
 Nesse caso, temos uma variável categórica dicotômica como independente e uma variável contínua como dependente.
 Quais são algumas das opções teste de hipótese que podemos usar?</p>
 <div id="pressupostos-one-way-anova-1" class="section level4">
-<h4><span class="header-section-number">8.1.5.1</span> 2.1.5.1 Pressupostos (One-way ANOVA)</h4>
+<h4><span class="header-section-number">3.1.5.1</span> 2.1.5.1 Pressupostos (One-way ANOVA)</h4>
 <div id="homocedasticidade-1" class="section level5">
-<h5><span class="header-section-number">8.1.5.1.1</span> Homocedasticidade</h5>
+<h5><span class="header-section-number">3.1.5.1.1</span> Homocedasticidade</h5>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="banco-de-dados-lbw.html#cb54-1"></a><span class="kw">leveneTest</span>(BD<span class="op">$</span>lwt<span class="op">~</span>BD<span class="op">$</span>smoke)</span></code></pre></div>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##        Df F value Pr(&gt;F)
@@ -445,9 +448,9 @@ Quais são algumas das opções teste de hipótese que podemos usar?</p>
 ##       187</code></pre>
 </div>
 <div id="normalidade-2" class="section level5">
-<h5><span class="header-section-number">8.1.5.1.2</span> 2.1.5.2. Normalidade</h5>
+<h5><span class="header-section-number">3.1.5.1.2</span> 2.1.5.2. Normalidade</h5>
 <div id="aspecto-visual-2" class="section level6">
-<h6><span class="header-section-number">8.1.5.1.2.1</span> Aspecto visual</h6>
+<h6><span class="header-section-number">3.1.5.1.2.1</span> Aspecto visual</h6>
 <p>Distribuição da variável independente</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="banco-de-dados-lbw.html#cb56-1"></a><span class="kw">hist</span>(BD<span class="op">$</span>lwt)</span></code></pre></div>
 <p><img src="quant-cookbook_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
@@ -473,7 +476,7 @@ Quais são algumas das opções teste de hipótese que podemos usar?</p>
 </div>
 </div>
 <div id="teste-de-hipótese---wilcoxon-mann-whitney" class="section level5">
-<h5><span class="header-section-number">8.1.5.1.3</span> 2.1.5.3. Teste de hipótese - Wilcoxon-Mann-Whitney</h5>
+<h5><span class="header-section-number">3.1.5.1.3</span> 2.1.5.3. Teste de hipótese - Wilcoxon-Mann-Whitney</h5>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="banco-de-dados-lbw.html#cb63-1"></a>  <span class="kw">wilcox.test</span>(BD<span class="op">$</span>lwt<span class="op">~</span>BD<span class="op">$</span>smoke)</span></code></pre></div>
 <pre><code>## 
 ##  Wilcoxon rank sum test with continuity correction
@@ -494,7 +497,7 @@ Quais são algumas das opções teste de hipótese que podemos usar?</p>
         </div>
       </div>
 <a href="teste-de-hipóteses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="correlações-lineares.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="associações.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

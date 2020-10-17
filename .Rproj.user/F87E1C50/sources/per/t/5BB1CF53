@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "979442079",
+    "hash" : "1647786247",
     "id" : "5BB1CF53",
-    "lastKnownWriteTime" : 1602609501,
-    "last_content_update" : 1602609501552,
+    "lastKnownWriteTime" : 1602697742,
+    "last_content_update" : 1602697742,
     "path" : "~/lac/CookBook.Rmd",
     "project_path" : null,
     "properties" : {
         "cursorPosition" : "23,4",
-        "marks" : "<:0,0\n>:1132,-1",
-        "scrollLine" : "17"
+        "marks" : "<:0,0\n>:0,0",
+        "scrollLine" : "0"
     },
     "relative_order" : 2,
     "source_on_save" : false,

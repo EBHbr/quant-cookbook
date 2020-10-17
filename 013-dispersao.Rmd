@@ -1,2 +1,2 @@
-# Dispersão estatística
+### Dispersão  
 É forma de caracterizar um conjunto de dados quanto ao seu comportamento aleatório de dispersão de valores. Existem vários modelos de caracterizar o quão disperso um conjunto de dados está, incluindo desvio padrão, coeficiente de variação, coeficiente de dispersão quartil, entre outros.

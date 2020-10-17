@@ -1,6 +1,4 @@
-# 2.Teste de Hipóteses
-# BANCO DE DADOS: LBW 
-## 2.1.Fundamentos teóricos
+# Teste de Hipóteses
 ### 2.1.1.Baixar e Instalar Bibliotecas
 Para esta aula utilizaremos apenas* funções nativas do R, sem necessidade de instalar ou carregar bibliotecas adicionais.
   
