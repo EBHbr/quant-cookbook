@@ -15,6 +15,10 @@ https://ebhbr.github.io/
 * Análise multivariada e controle de confundidores
 * Análise Bayesiana
 
-#### Katas
+### Katas
 
 * [Avaliar distribuição com histogramas e densidade](https://ebhbr.github.io/kata.html#kata---avaliar-distribui%C3%A7%C3%A3o-open-data-osf)
+
+#### Videotutoriais
+
+[Introdução ao github em 30 minutos](https://www.youtube.com/watch?v=6ziAMLCazA4)
