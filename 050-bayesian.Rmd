@@ -1,1 +1,13 @@
 ## Inferência Bayesiana
+
+#### 2.3.1 A mudança de condicional
+
+#### 2.3.2 Priori, Posteriori e verossimilhança
+
+#### 2.3.3 Códigos
+
+##### 2.3.3.1 Best
+
+##### 2.3.3.2 Stan
+
+##### 2.3.3.1 glm
