@@ -1,14 +1,14 @@
 ## Associações
 
 ### Correlações Lineares
-#### O que são: 
+#### O que são:
 Verificação de relação entre duas variáveis (se alterações em uma variável gera alterção em outra)
 OBS: um ponto é formado por duas coordenadas (X, Y)
 A correlação pode ser positiva ou negativa -> se +, quando x aumenta, y aumenta
 Erros aleatórios existem porque NÃO conhecemos todas as variáveis
 
-#### Quando são utilizadas: 
-Quando objetiva-se correlacionar duas variáveis contínuas
+#### Quando são utilizadas:
+Quando objetiva correlacionar duas variáveis contínuas
 
 #### 3.1.3.3.Tipos:
 ##### PEARSON
@@ -20,7 +20,7 @@ Quando objetiva-se correlacionar duas variáveis contínuas
         a - versão não-paramétrica (Pearson aplicado aos ranks)
         b - variável preditora deve ser contínua
         c - variável desfecho deve ser contínua
-    
+
 #### 3.1.3.4.Correlação de Pearson no R:
 ##### Comando
 ``` {r,eval=F}
@@ -40,7 +40,7 @@ Teste de normalidade
 ``` {r}
 shapiro.test(BD$age) #não normal
 qqnorm(BD$age);qqline(BD$age)
-hist(BD$age) 
+hist(BD$age)
 
 shapiro.test(BD$lwt) #não normal
 qqnorm(BD$lwt);qqline(BD$lwt)
@@ -49,13 +49,13 @@ hist(BD$lwt)
 shapiro.test(BD$bwt) #normal
 qqnorm(BD$bwt);qqline(BD$bwt)
 hist(BD$bwt)
-``` 
+```
 Aplicando
 ``` {r}
 cor.test(BD$age, BD$bwt, method = "pearson")
-``` 
-*Uso de BD$age apenas como exemplo, visto que esta variável não possui distribuição normal. 
-       
+```
+*Uso de BD$age apenas como exemplo, visto que esta variável não possui distribuição normal.
+
 ##### Visualização gráfica
 Faça um gráfico com os pontos
 ``` {r}
@@ -65,7 +65,7 @@ ggplot(BD, aes(age, bwt)) + geom_point()
 Produza
 ``` {r}
 ggplot(BD, aes(age, bwt)) + geom_point() + geom_smooth(method = "lm")
-``` 
+```
 
 #### 3.1.3.5.Correlação de Spearman no R:
 ##### Comando
@@ -75,12 +75,12 @@ cor.test(x,y, method = "spearman")
 ##### Inputs
         # x -> variável preditora
         # y -> desfecho
-        
+
 ##### Otputs
         #cor
         #intervalo de confiança
         #p-value
-        
+
 ##### Aplicando
 ``` {r}
 cor.test(BD$lwt, BD$bwt, method = "spearman")
@@ -91,14 +91,14 @@ cor.test(BD$lwt, BD$bwt, method = "kendall")
 ```       
 ##### Visualização gráfica
 Faça um gráfico com os pontos
-``` {r} 
+``` {r}
         ggplot(BD, aes(lwt, bwt)) + geom_point()
 ```          
 Produza
 ``` {r}
 ggplot(BD, aes(lwt, bwt)) + geom_point() + geom_smooth(method = "lm")
-``` 
-#### 3.1.3.6.O que representa o índice de correlação: 
+```
+#### 3.1.3.6.O que representa o índice de correlação:
 O ÍNDICE DE CORRELAÇÃO representa a MAGNITUDE  e o SENTIDO de uma relação.
 Se X aumenta 10%, quanto muda Y?
 Se índice de correlação  = +1, Y aumenta 10% pela mudança de X
@@ -107,14 +107,14 @@ Se índice de correlação  = 0, Y não muda pela mudança de X
 ``` {r}    
 cor(BD$age, BD$bwt, use = "complete.obs")  #sem executar teste estátistico
 ```         
-#### 3.1.3.6.O que representa o valor de p: 
+#### 3.1.3.6.O que representa o valor de p:
 Mensurar o quão improváveis são as observações em um cenário hipotético na vigência da hipótese nula (ARGOLO, 2020) - dada a hipótese nula de que o índice de correlação = 0 e que a hipótese alternativa de que o índice de correlação é diferente de 0.
 
 
 ### 3.1.4.Regressões
-#### 3.1.4.1.O que são: 
+#### 3.1.4.1.O que são:
 ???????????
-#### 3.1.4.2.Quando são utilizadas: 
+#### 3.1.4.2.Quando são utilizadas:
 Busca-se saber magnitude das causas para o efeito (causalidade) para PREDIZER "advinhar uma medida com base na outra" ARGOLO, F. 2020
 #### 3.1.3.3.Tipos:
 ##### Linear
@@ -151,7 +151,7 @@ nome <- lm (y ~ x1 + x2 + x3, data = a)
 x1, x2, x3 -> variáveis preditoras
 y -> desfecho contínuo
 a -> banco de dados
-                            
+
 ##### Otputs
 Distribuição dos resíduos
 Coeficientes:
