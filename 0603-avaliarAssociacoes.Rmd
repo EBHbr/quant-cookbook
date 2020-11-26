@@ -5,7 +5,7 @@ output:
 ---
 ## Kata - Avaliar correlação linear entre variáveis e construir modelo de predição linear.
 
-https://osf.io/3bhuk/
+https://www.kaggle.com/uciml/pima-indians-diabetes-database
 
 Material do artigo "Using the ADAP Learning Algorithm to Forecast the Onset of Diabetes Mellitus", publicado na  Proceedings of the Annual Symposium on Computer Application in Medical Care, 1988
 
