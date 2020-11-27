@@ -18,7 +18,7 @@ install.packages("brms")
 
 
 ### 2.3.2 Introdução
-A estatística Bayesiana é baseada no Teorema de Bayes, que é descrito como P(A|B) = P(A).P(B|A)/P(B).O termo P(A|B), ou probabilidade de A dado B, é a chamada probabilidade posterior, P(A) é a probabilidade a priori, P(B|A) é a verossimilhança e P(B) é a probabilidade marginal, ela tem função de normalizar as quantidades e é calculada através de uma integral.
+A estatística Bayesiana é baseada no Teorema de Bayes, que é descrito como P(A|B) = P(A).P(B|A)/P(B). O termo P(A|B), ou probabilidade de A dado B, é a chamada probabilidade posterior, P(A) é a probabilidade a priori, P(B|A) é a verossimilhança e P(B) é a probabilidade marginal, que tem função de normalizar as quantidades.
 
 Um dos aspectos essenciais da estatística Bayesiana é a interpretação das probabilidades. A estatística frequentista faz uso do valor de p, que representa a probabilidade dos dados dada a hipótese nula P(D|H), para realizar suas inferências, como já foi estudado ao longo do livro. Por outro lado, a estatística Bayesiana foca na probabilidade condicional invertida, P(H|D). Ou seja, as inferências são realizadas através da distribuição probabilística do parâmetro avaliado, e não nos dados. Ao invés de nos perguntarmos qual a probabilidade dos achados dada a hipótese nula, nos perguntamos qual a probabilidade da hipótese dados os achados.
 
@@ -27,7 +27,6 @@ O termo P(D|H), na estatística Bayesiana, é a verossimilhança, que representa
 Vamos entender melhor esses conceitos com algumas situações-problema. 
 
 ### 2.3.3 Hipóteses dicotômicas
-#### 2.3.3.1 Hipótese I
 Vamos tratar da situação mais simples possível: uma hipótese dicotômica. Ou o sujeito está doente ou não está.
 
 Digamos que um paciente faz um teste para HIV que vem positivo. É assintomático. Busca o serviço de saúde porque teve relação sexual desprotegida na semana anterior. Vamos assumir que, nessa situação, um indivíduo qualquer tenha probabilidade a priori de ter a infecção em 1%, o teste tem sensibilidade de 93% e especificidade de 99%. Qual a probabilidade de ele ser infectado dado um teste positivo?
@@ -37,7 +36,7 @@ A nossa probabilidade a priori de infecção, P(I), é 1%. Vamos defini-la:
 prob_I <- 0.01
 ```
 
-E qual a nossa verossimilhança? Qual a probabilidade de testar positivo (nossos dados), dado que o indivíduo está doente (nossa hipótese)? Nossa verossimilhança P(P|I) é a nossa sensibilidade! Portanto:
+E qual a nossa verossimilhança? Qual a probabilidade de testar positivo (nossos dados), dado que o indivíduo está infectado (nossa hipótese)? Nossa verossimilhança P(P|I) é a nossa sensibilidade! Portanto:
 ```{r}
 prob_PI <- 0.93
 ```
@@ -55,11 +54,11 @@ prob_IP
 
 Paremos agora para pensar. Qual seria a interpretação Bayesiana e a interpretação frequentista dessas probabilidades? 
 
-Pela perspectiva frequentista, o diagnóstico seria definido se a probabilidade de encontrarmos estes dados, sendo a hipótese nula verdadeira, for baixa. Ou seja, se a probabilidade de testar positivo dado que o indivíduo não está infectado, P(P|NI), é baixa, o diagnóstico é confirmado. Esse termo é o complemento da nossa especificidade, que é a taxa de falsos positivos. Na situação apresentada, o indivíduo seria diagnosticado.
+Pela perspectiva frequentista, o diagnóstico seria definido se a probabilidade de encontrarmos estes dados, sendo a hipótese nula verdadeira, for baixa. Ou seja, se a probabilidade de testar positivo dado que o indivíduo não está infectado, P(P|NI), é baixa, o diagnóstico é confirmado. Esse termo é o complemento da nossa especificidade, que é a taxa de falsos positivos. Na situação apresentada, considerando a P(P|NI) de 1%, o indivíduo seria diagnosticado.
 
-Pela perspectiva Bayesiana, o diagnóstico seria definido se a probabilidade da hipótese, considerando os nossos dados, for alta. Ou seja, se a probabilidade de estar infectado, dado que o indivíduo testou positivo, P(I|P), é alta, o diagnóstico é confirmado. Na situação apresentada, o indivíduo não seria diagnosticado.
+Pela perspectiva Bayesiana, o diagnóstico seria definido se a probabilidade da hipótese, considerando os nossos dados, for alta. Ou seja, se a probabilidade de estar infectado, dado que o indivíduo testou positivo, P(I|P), é alta, o diagnóstico é confirmado. Na situação apresentada, considerando a P(I|P) de 48,5%, o indivíduo não seria diagnosticado.
 
-#### 2.3.3.2 Hipotése II
+### 2.3.4 Parâmetros com distribuições discretas
 Vamos dar um passo adiante e pensar um hipótese um pouco mais complexa que nos permita ver mais claramente a influência de cada um dos fatores do teorema de Bayes. 
 
 Antes precisamos entender o teorema substituindo A e B por parâmetro (theta) e dados (X), ficando, portanto, da seguinte forma: P(theta|X) = (P(X|theta) * P(theta))/P(X).
@@ -134,79 +133,93 @@ Mais uma vez, o teorema adequa a distribuição posterior conforme a intuição,
 
 Em situações mais complexas novas ferramentas entram, mas o pensamento base e a intuição continuam os mesmos.
 
-
-### 2.3.4 Parâmetros com distribuições discretas
-
 ### 2.3.5 Parâmetros com distribuições contínuas e os algoritmos MCMC
+Inicialmente, discutimos uma situação em que só haveria duas opções no nossos espaço probabilístico: Ou o indivíduo estava infectado ou não estava infectado. Depois, discutimos uma situação na qual tínham um espaço probabilístico com um parâmetro discreto que variava de 1-100.  Mas e quando o espaço probabilístico é contínuo e o parâmetro pode assumir infinitos valores?
+
+Nesses casos, a nossa probabilidade marginal é calculada através de uma integral.....
 
 ### 2.3.6 Baixando e ajustando nosso BD
+### 2.3.5 Baixando e ajustando nosso BD
 #### 2.3.5.1 Pacotes utilizados
-```{r warning=FALSE}
-library(labelled)
-```
+Todos os códigos desta sessão estão no pacote básico do R.
 
 #### 2.3.5.2 Ler o banco de dados
-```{r}
-BD <- read.table(file="Data_frame_nn.txt", header=T)
+```{r message=FALSE, warning=FALSE}
+BD <- read.table(file="X.txt", header=T)
 ```
-Ler o banco de dados em formato .txt. Este é o mesmo BD que foi utilizado ao longo do livro. O arquivo deve estar no seu diretório de trabalho.
+Ler o banco de dados em formato .txt. O arquivo "X.txt" deve estar no seu diretório de trabalho.
 
-#### 2.3.5.3 Transformar as variáveis em fatores
-```{r}
-BD[,c("low","race","smoke","ptl","ht","ui","ftv")] <- lapply(BD[,c("low",
-                                                                 "race",
-                                                                 "smoke",
-                                                                 "ptl",
-                                                                 "ht",
-                                                                 "ui",
-                                                                 "ftv")],
-                                                           as.factor)
-```
-
-#### 2.3.5.4 Adicionar subtítulos às variáveis
-```{r}
-var_label(BD)[1:11] <- c("Código de identificação",
-                       "Baixo peso ao nascer",
-                       "Idade materna (anos)",
-                       "Peso no último ciclo mestrual (kg)",
-                       "Raça da mãe",
-                       "Tabagismo durante a gravidez",
-                       "Partos prematuros prévios",
-                       "Hipertensão materna",
-                       "Irritabilidade uterina",
-                       "Qtd de Pré-Natais no 1o sems",
-                       "Peso ao nascer")
-```
-
-#### 2.3.5.5 Verificar a existência de NAs
-```{r}
+#### 2.3.5.3 Verificar a existência de NAs
+```{r message=FALSE, warning=FALSE}
 NAs <- is.na(BD);which(TRUE == NAs)
 ```
 
-### 2.3.7 Intervalo de credibilidade
-O intervalo de credibilidade, ou High Density Interval (HDI), é o equivalente Bayesiano do intervalo de confiança. Ele é derivado da distribuição posterior do parâmetro.
+### 2.3.6 Intervalo de credibilidade
+O intervalo de credibilidade, ou High Density Interval (HDI), é o equivalente Bayesiano ao intervalo de confiança. Ele é derivado da distribuição posterior do parâmetro. Justamente por isso, sua interpretação é consideravelmente mais intuitiva que aquela do intervalo de confiança. Podemos, de fato, dizer que há 95% de probabilidade do verdadeiro parâmetro populacional estar contido neste intervalo.
 
-#### 2.3.5.1 Pacotes utilizados
+#### 2.3.6.1 Pacotes utilizados
 ```{r message=FALSE, warning=FALSE}
 library(rjags)
 library(runjags)
 library(BEST)
 ```
-Além desses pacotes, o BEST necessita do software JAGS para rodar. Os links para download podem ser encontrados no endereço http://mcmc-jags.sourceforge.net/
+Além desses pacotes, o BEST necessita do software JAGS para rodar. Os links para download podem ser encontrados no endereço http://mcmc-jags.sourceforge.net/.
 
+#### 2.3.6.2 IC com priori não informativa
+Queremos saber qual é o valor provável de um parâmetro da população da qual essa amostra foi retirada, como por exemplo a média de idade. Para isso, estimaremos a distribuição posterior da média populacional, utilizando uma priori não informativa, e calcularemos o intervalo que inclui 95% da densidade de probabilidade dessa distribuição.
+```{r message=FALSE, warning=FALSE}
+Bayes_X_NI <- BESTmcmc(BD$X, priors = NULL)
+Bayes_X_NI
+```
+X é a variável do nosso BD para a qual queremos calcular parâmetros. O output da função nos dará a estimativa pontual do parâmetro da população (mean), o desvio padrão (sd), a mediana (median) e os limites inferior (HDIlo) e superior (HDIup) do intervalo de credibilidade da distribuição posterior para a média (mu) e o desvio padrão (sigma) da população.
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+Agora, vamos plotar o histograma da distribuição posterior e o HDI para a média populacional.
+```{r message=FALSE, warning=FALSE}
+plotPost(Bayes_X_NI$mu, xlab = "Média populacional da variável X")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+#### 2.3.6.3 IC com priori informativa
+Faremos o mesmo processo, porém dessa vez com uma distribuição a priori do parâmetro informativa. Digamos que, baseados em estudos prévios ou evidências indiretas de boa qualidade, consideremos que a média provável da população da qual essa amostra foi coletada seja Y, variando com um desvio-padrão de cerca de Z. Vamos adicionar essa informação ao nosso modelo!
+```{r}
+Bayes_X_I <- BESTmcmc(BD$X, priors = list(muM = Y, muSD = Z))
+Bayes_X_I
+```
+A média (mu) e o IC da média são modificados na direção da priori, devido à sua influência (é uma priori informativa).
 
+### 2.3.7 Comparação de médias de amostras independentes
+Agora, vamos fazer um processo similar ao teste t, porém utilizando a estimativa Bayesiana das distribuições posteriores das médidas de cada grupo, assim como da diferença entre elas.
 
-### 2.3.9 Correlação Linear
+#### 2.3.7.1 Pacotes utilizados
+```{r message=FALSE, warning=FALSE}
+library(rjags)
+library(runjags)
+library(BEST)
+library(dplyr)
+```
+Utilizaremos o mesmo pacote de análise Bayesiana, BEST. Por isso, para rodar este código é necessário que o software JAGS esteja instalado. Os links para download podem ser encontrados no endereço http://mcmc-jags.sourceforge.net/.
+
+#### 2.3.7.2 Estimativa dos parâmetros do modelo
+Vamos comparar as médias de uma variável entre dois grupos. Para isso, vamos gerar as distribuições posteriores dos parâmetros média, desvio-padrão e grau de liberdade para cada grupo. O BEST utiliza distribuições t para modelar a distribuição da variável para a população da qual cada grupo foi amostrado.
+```{r}
+Bayes_Y_X <- BESTmcmc(filter(BD, X == "Sim")$Y, 
+                              filter(BD, X == "Não")$Y, 
+                              priors = NULL)
+Bayes_Y_X
+```
+No exemplo, Y é a variável dependente do modelo, que será comparada entre os grupos. X é a variável independente dicotômica com valores "Sim" e "Não". 
+
+No output desta função, teremos informações sobre as distribuições posteriores da média do grupo 1 (mu1), média do grupo 2 (mu2), grau de liberdade (nu), desvio padrão do grupo 1 (sigma1) e desvio padrão do grupo 2 (sigma2). Para todas essas distribuições, temos a média (mean), desvio padrão (sd), mediana (median), e limites inferior (HDIlo) e superior (HDIup) do intervalo de credibilidade.
+
+#### 2.3.7.3 Análise gráfica das distribuições dos parâmetros e tamanhos de efeito
+O pacote BEST nos dá a opção e plotar as distribuições posteriores de todos os parâmetros discutidos anteriormente (mu1, mu2, sigma1, sigma2 e nu). Além disso, ele permite a análise gráfica dos tamanhos de efeito em diferença absoluta das médias e d de Cohen.
+```{r}
+plotAll(Bayes_Y_X)
+```
+Nos gráficos que ilustram o tamanho de efeito, é dada a probabilidade do verdadeiro tamanho de efeito ser menor ou igual a zero.
+
+No canto superior direito desse output, veremos também dois gráficos importantes com os títulos "Data group 1/2 w. Post. Pred.". Esses gráficos nos mostram a Checagem Preditiva Posterior. Esse conceito é bastante importante na estatística Bayesiana e consiste, basicamente, em checar se o modelo que foi desenvolvido a partir das distribuições posteriores dos parâmetros se adapta bem aos seus dados. É isso que vemos nesses gráficos. Os dados de cada grupo plotados nos histogramas com várias curvas de densidade construídas a partir de amostras das distribuições posteriores dos parâmetros, permitindo que seja comparado se o "encaixe" está adequado.
+
+### 2.3.8 Correlação Linear
 
 Para realizar uma correlação linear segundo uma inferência Bayesiana é preciso compilar nosso modelo em uma outra linguagem de programação que não o R, é preciso codifica-lo em Stan. Stan é uma linguagem de programação que tem como foco principal análises estatisticas, por isso é adequada para realizarmos as cadeias de Markov.
 
