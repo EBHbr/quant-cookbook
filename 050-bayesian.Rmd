@@ -1,13 +1,264 @@
-## Inferência Bayesiana
+## 2.3 Inferência Bayesiana
 
-#### 2.3.1 A mudança de condicional
+### 2.3.1 Baixar e Instalar Pacotes
+Nessa seção precisaremos de alguns pacotes para além dos nativos do R, por isso precisaremos baixar e instalar alguns. Além disso, para utilizar uma análise especifica é preciso baixar em seu computador um software chamado "JAGS". As bibliotecas serão carregada conforme uso.
 
-#### 2.3.2 Priori, Posteriori e verossimilhança
+```{r}
+install.packages("dplyr") 
+install.packages("labelled")
+install.packages("ggplot2")
+install.packages("rjags")
+install.packages("runjags")
+install.packages("BEST")
+install.packages("rstan")
+install.packages("bayesplot")
+install.packages("shinystan")
+install.packages("brms")
+```
 
-#### 2.3.3 Códigos
 
-##### 2.3.3.1 Best
+### 2.3.2 Introdução
+A estatística Bayesiana é baseada no Teorema de Bayes, que é descrito como P(A|B) = P(A).P(B|A)/P(B).O termo P(A|B), ou probabilidade de A dado B, é a chamada probabilidade posterior, P(A) é a probabilidade a priori, P(B|A) é a verossimilhança e P(B) é a probabilidade marginal, ela tem função de normalizar as quantidades e é calculada através de uma integral.
 
-##### 2.3.3.2 Stan
+Um dos aspectos essenciais da estatística Bayesiana é a interpretação das probabilidades. A estatística frequentista faz uso do valor de p, que representa a probabilidade dos dados dada a hipótese nula P(D|H), para realizar suas inferências, como já foi estudado ao longo do livro. Por outro lado, a estatística Bayesiana foca na probabilidade condicional invertida, P(H|D). Ou seja, as inferências são realizadas através da distribuição probabilística do parâmetro avaliado, e não nos dados. Ao invés de nos perguntarmos qual a probabilidade dos achados dada a hipótese nula, nos perguntamos qual a probabilidade da hipótese dados os achados.
 
-##### 2.3.3.1 glm
+O termo P(D|H), na estatística Bayesiana, é a verossimilhança, que representa o quão prováveis são os nossos dados considerando a hipótese em questão. A verossimilhança é utilizada para atualizar a nossa probabilidade a priori, transformando-a na probabilidade posterior.
+
+Vamos entender melhor esses conceitos com algumas situações-problema. 
+
+### 2.3.3 Hipóteses dicotômicas
+#### 2.3.3.1 Hipótese I
+Vamos tratar da situação mais simples possível: uma hipótese dicotômica. Ou o sujeito está doente ou não está.
+
+Digamos que um paciente faz um teste para HIV que vem positivo. É assintomático. Busca o serviço de saúde porque teve relação sexual desprotegida na semana anterior. Vamos assumir que, nessa situação, um indivíduo qualquer tenha probabilidade a priori de ter a infecção em 1%, o teste tem sensibilidade de 93% e especificidade de 99%. Qual a probabilidade de ele ser infectado dado um teste positivo?
+
+A nossa probabilidade a priori de infecção, P(I), é 1%. Vamos defini-la:
+```{r}
+prob_I <- 0.01
+```
+
+E qual a nossa verossimilhança? Qual a probabilidade de testar positivo (nossos dados), dado que o indivíduo está doente (nossa hipótese)? Nossa verossimilhança P(P|I) é a nossa sensibilidade! Portanto:
+```{r}
+prob_PI <- 0.93
+```
+
+Para conseguirmos todos os termos necessários para calcular nossa probabilidade posterior pelo Teorema de Bayes, só precisamos agora da probabilidade total do indivíduo testar positivo. O termo P(P) representa a soma das probabilidades de duas hipóteses: o teste é um verdadeiro positivo ou um falso positivo. A probabilidade de verdadeiro positivo é a probabilidade do indivíduo estar doente multiplicada pela sensibilidade. A probabilidade de falso positivo é a probabilidade do indivíduo não estar doente (100% - 1%) multiplicada pelo complemento da especificidade (que é nossa taxa de falsos positivos, sendo 100% - 99%). Portanto:
+```{r}
+prob_P <- 0.01*0.93 + 0.99*0.01
+```
+
+Basta, agora, aplicarmos todos os termos da fórmula para encontrar nossa probabilidade posterior. Ela representa a probabilidade do indivíduo estar infectado (nossa hipótese), dado o teste postivo (nossos dados). Portanto, P(I|P) é calculado por:
+```{r}
+prob_IP <- (prob_I*prob_PI)/prob_P
+prob_IP
+```
+
+Paremos agora para pensar. Qual seria a interpretação Bayesiana e a interpretação frequentista dessas probabilidades? 
+
+Pela perspectiva frequentista, o diagnóstico seria definido se a probabilidade de encontrarmos estes dados, sendo a hipótese nula verdadeira, for baixa. Ou seja, se a probabilidade de testar positivo dado que o indivíduo não está infectado, P(P|NI), é baixa, o diagnóstico é confirmado. Esse termo é o complemento da nossa especificidade, que é a taxa de falsos positivos. Na situação apresentada, o indivíduo seria diagnosticado.
+
+Pela perspectiva Bayesiana, o diagnóstico seria definido se a probabilidade da hipótese, considerando os nossos dados, for alta. Ou seja, se a probabilidade de estar infectado, dado que o indivíduo testou positivo, P(I|P), é alta, o diagnóstico é confirmado. Na situação apresentada, o indivíduo não seria diagnosticado.
+
+#### 2.3.3.2 Hipotése II
+Vamos dar um passo adiante e pensar um hipótese um pouco mais complexa que nos permita ver mais claramente a influência de cada um dos fatores do teorema de Bayes. 
+
+Antes precisamos entender o teorema substituindo A e B por parâmetro (theta) e dados (X), ficando, portanto, da seguinte forma: P(theta|X) = (P(X|theta) * P(theta))/P(X).
+
+Dito isso, vamos pensar na nossa situação-problema. Digamos que estamos testando a eficácia de um anticoncepcional oral X para o dia seguinte, tivemos 20 participantes e 4 delas engravidaram. Precisamos calcular as distribuições a priori, verossimilhança e posterior.
+
+Para isso temos que pensar da seguinte maneira, as propabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. A verossimilhança deve ser baseada nós nossos dados, ou seja, a cada 20 mulheres que tomaram o anticoncepcional em média 4 ficam grávidas, isso significa dizer que a verossimilhança é uma distribuição binominal com tamanho 20 - número de participantes -, média 4 - número de grávidas - e uma probabilidade de sucesso baseada na variação da nossa probabilidade, ou seja entre 0 e 1.
+
+Como é uma situação hipotética podemos estabeler nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1. Por fim probabilidade marginal, como na situação anterior, é igual ao priori * verossimilhança. 
+
+Quando levamos isso para o código e transformamos em um data.frame fica da seguinte maneira:
+
+```{r}
+var-prob <- seq(0, 1, length.out = 100)
+priori <- 1
+vero <- dbinom(x = 4, prob = rangep, size = 20)
+prob_marginal <- vero * priori
+posterior <- prob_marginal/sum(prob_marginal)
+
+tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
+```
+
+Se você plotar essa tabela vai ver um apanhado de número poucos intuitivos, para facilitar vamos colocar tudo isso em gráficos, antes tente pensar, se você estivesse realizando esse teste e tivesse um prior pouco significativo, onde colocaria sua confiança? Muito provavelmente nos dados, certo? Já que eles são sua fonte de contato com o fenômeno
+
+```{r}
+library(ggplot2)
+ggplot(tabela1, aes(x=rangep)) +
+  geom_line(y = vero, color = "black") + 
+  geom_line(y = priori, color = "red") +
+  geom_line(y = posterior, color = "green") +
+  labs(x = "P(gravida)", y = "Densidade")
+```
+
+Veja que o teorema de Bayes realiza, matematicamente, justamente o que pensamos por inferência, isso é o posterior segue a tendência da verossimilhança, uma vez que o prior não tem significância. A curva do posterior está mais abaixo que a da verossimilhança pois esse é o que chamamos de posterior padronizado ou normalizado, uma vez que ele está sendo divido pela probabilidade marginal. Se tivessemos uma linha nesse gráfico para numerador da equação ela estaria exatamente sobre a linha da verossimilhança. Por fim a linha do posterior aparece constante e em cima justamente pois ele é um para todas as possibilidades.
+
+Vamos prosseguir e mudar a situação um pouco, digamos que com os mesmos dados que obtivemos antes, ou seja, entre 20 participantes 4 ficaram gravidas, temos um priori significativo, confiável e que tem informações bem diferentes dos dados. Pensando que temos razões para confiar no priori e nos nossos dados, onde por intuição você colocaria sua distribuição a posterior? Se você pensou entre os dados e o priori você está entendendo a intuição do teorema.
+
+Para realizar o cálculo dessa vez precisamos ter o priori em forma de distribuição, digamos que nosso a priori diz que em média 80% das mulheres engravidam para isso teremos uma distribuição normal com média 0.8 e desvio-padrão 0.1, o código ficará da seguinte maneira:
+
+```{r}
+priori <- dnorm(x = rangep, mean = .8, sd = .1)
+prob_marginal <- vero * priori
+posterior <- prob_marginal/sum(prob_marginal)
+tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
+
+ggplot(tabela1, aes(x=rangep)) +
+  geom_line(y = vero) + 
+  geom_line(y = priori/20, color = "red") + #divido o priori por uma constante por fins de escala
+  geom_line(y = posterior, color = "green") + 
+  labs(x = "P(gravida)", y = "Densidade")
+```
+
+Veja como novamente o teorema ajustou a distribuição do posterior, justamnete como nós intuimos.
+
+Por fim, vamos ao último exemplo dessa situação problema, o que aconteceria se tivessemos dados poucos informativos, ou seja, se tivessemos poucas observações, por exemplo, três com duas grávidas e um priori mais condizente com observações anteriores, ou seja, que descrevesse uma probabilidade de 25% de se estar grávida?
+
+```{r}
+priori <- dnorm(x = rangep, mean = .25, sd = .1)
+vero <- dbinom(x = 2, prob = rangep, size = 3)
+prob_marginal <- lik * priori
+posterior <- prob_marginal/sum(prob_marginal)
+tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
+
+ggplot(tabela1, aes(x=rangep)) +
+  geom_line(y = lik) + 
+  geom_line(y = priori/20, color = "red") + 
+  geom_line(y = posterior, color = "green") + 
+  labs(x = "P(gravida)", y = "Densidade")
+```
+
+Mais uma vez, o teorema adequa a distribuição posterior conforme a intuição, ou seja o mais próximo de nosso conhecimento prévio que nesse caso é muito mais confiavel que nossos dados. Essa, inclusive é uma das vantagens de se usar a inferência bayesiana, que com observações muito pequenas, a utilização de um priori adequa a probabilidade posterior. Vale ressaltar que caso priori e verossimilhança sejam condizentes o posterior vai se comportar de forma muito semelhante a eles. 
+
+Em situações mais complexas novas ferramentas entram, mas o pensamento base e a intuição continuam os mesmos.
+
+
+### 2.3.4 Parâmetros com distribuições discretas
+
+### 2.3.5 Parâmetros com distribuições contínuas e os algoritmos MCMC
+
+### 2.3.6 Baixando e ajustando nosso BD
+#### 2.3.5.1 Pacotes utilizados
+```{r warning=FALSE}
+library(labelled)
+```
+
+#### 2.3.5.2 Ler o banco de dados
+```{r}
+BD <- read.table(file="Data_frame_nn.txt", header=T)
+```
+Ler o banco de dados em formato .txt. Este é o mesmo BD que foi utilizado ao longo do livro. O arquivo deve estar no seu diretório de trabalho.
+
+#### 2.3.5.3 Transformar as variáveis em fatores
+```{r}
+BD[,c("low","race","smoke","ptl","ht","ui","ftv")] <- lapply(BD[,c("low",
+                                                                 "race",
+                                                                 "smoke",
+                                                                 "ptl",
+                                                                 "ht",
+                                                                 "ui",
+                                                                 "ftv")],
+                                                           as.factor)
+```
+
+#### 2.3.5.4 Adicionar subtítulos às variáveis
+```{r}
+var_label(BD)[1:11] <- c("Código de identificação",
+                       "Baixo peso ao nascer",
+                       "Idade materna (anos)",
+                       "Peso no último ciclo mestrual (kg)",
+                       "Raça da mãe",
+                       "Tabagismo durante a gravidez",
+                       "Partos prematuros prévios",
+                       "Hipertensão materna",
+                       "Irritabilidade uterina",
+                       "Qtd de Pré-Natais no 1o sems",
+                       "Peso ao nascer")
+```
+
+#### 2.3.5.5 Verificar a existência de NAs
+```{r}
+NAs <- is.na(BD);which(TRUE == NAs)
+```
+
+### 2.3.7 Intervalo de credibilidade
+O intervalo de credibilidade, ou High Density Interval (HDI), é o equivalente Bayesiano do intervalo de confiança. Ele é derivado da distribuição posterior do parâmetro.
+
+#### 2.3.5.1 Pacotes utilizados
+```{r message=FALSE, warning=FALSE}
+library(rjags)
+library(runjags)
+library(BEST)
+```
+Além desses pacotes, o BEST necessita do software JAGS para rodar. Os links para download podem ser encontrados no endereço http://mcmc-jags.sourceforge.net/
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+### 2.3.9 Correlação Linear
+
+Para realizar uma correlação linear segundo uma inferência Bayesiana é preciso compilar nosso modelo em uma outra linguagem de programação que não o R, é preciso codifica-lo em Stan. Stan é uma linguagem de programação que tem como foco principal análises estatisticas, por isso é adequada para realizarmos as cadeias de Markov.
+
+Primeiro é importante que entendamos como o Stan se estrutura. Um código em Stan tem quarto partes: data, parameters, model e generated quantities. A primeira, como o proprio nome sugere, se refere aos nossos dados, a segunda aos parametros, a terceira (model) são os priors e verossimilhança e na ultima dizemos o que queremos que o código gere, ou seja, o que estamos analisando. Em cada uma dessas partes precisamos declara variaveis ou atribuir suas distribuições, desse modo, por exemplo na parte data nós devemos declarar as variáveis de nossos que iremos usar, como N, nos parameters declaramos nosso desvio padrão e no model atribuimos uma distribuição a priori para esse desvio padrão.
+
+Em Stan, nós atribuimos nossas variáveis segundo tipos númericos, como inteiro (int), real (real), vetor (vector), matriz, etc. Além disso ao final de cada linha deve haver um ponto e vírgula (;) e os comentários são feito com duas barras (//).
+
+Não se preocupe se forem muitas informações agora, o importante é você entender que é uma outra linguagem de programação, portanto tem suas especificidades, na prática algumas dúvidas vão desaparecer.
+
+Vamos realizar uma correlação linear entre peso da mãe no ultimo ciclo menstrual e o peso do bebê ao nascer. Para isso utilizaremos uma código em Stan em funções do rstan para rodar as cadeias de Markov. Há duas maneiras de ncluir um código de Stan no R, através de um arquivo externo ou ao atribuir o código a uma variável string, utilizaremos aqui a segunda opção.
+
+```{r}
+scode_cor <- " data {
+        
+        int <lower=1> N;
+        vector[2] x[N];
+
+}
+
+parameters {
+
+        vector [2] mu;
+        real<lower = 0> sigma[2];
+        real<lower=-1, upper=1> rho;
+        
+}
+
+transformed parameters {
+//matriz de covariancia
+        cov_matrix[2] cov = [[ sigma[1] ^ 2, sigma[1] * sigma[2] * rho], [sigma[1] * sigma[2] * rho, sigma[2] ^ 2 ]];
+
+}
+model {
+//priors
+        sigma ~ normal(0,1);
+        mu[1] ~ normal(60, 5);
+        mu[2] ~ normal(3000, 200);
+        
+//verossimilhança
+x ~ multi_normal_lpdf(mu, cov);
+}
+
+generated quantities {
+
+vector[2] x_rand;
+x_rand =  multi_normal_rng(mu, cov);
+}"
+
+vec_2 <- matrix(data = c(BD$lwt,BD$bwt), ncol = 2, nrow = 189)
+lista <- list(N=nrow(BD), x = vec_2)
+Corr_Lin <- stan(model_code = scode_cor, data = lista, 
+                 iter = 2000, warmup = 500, chains = 4)
+```
+
+Perceba que uma outra parte surgiu no código em Stan, o "transformed parameters" isso acontece aqui, pois especificamente em relação a correlações lineares nós precisamos calcular a matriz de covariância, uma medida estatística que está "por trás" de qualquer análise de correlação, como Pearson e Spearman.
