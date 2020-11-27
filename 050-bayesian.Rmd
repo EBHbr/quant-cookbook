@@ -16,7 +16,6 @@ install.packages("shinystan")
 install.packages("brms")
 ```
 
-
 ### 2.3.2 Introdução
 A estatística Bayesiana é baseada no Teorema de Bayes, que é descrito como P(A|B) = P(A).P(B|A)/P(B). O termo P(A|B), ou probabilidade de A dado B, é a chamada probabilidade posterior, P(A) é a probabilidade a priori, P(B|A) é a verossimilhança e P(B) é a probabilidade marginal, que tem função de normalizar as quantidades.
 
@@ -136,10 +135,9 @@ Em situações mais complexas novas ferramentas entram, mas o pensamento base e 
 ### 2.3.5 Parâmetros com distribuições contínuas e os algoritmos MCMC
 Inicialmente, discutimos uma situação em que só haveria duas opções no nossos espaço probabilístico: Ou o indivíduo estava infectado ou não estava infectado. Depois, discutimos uma situação na qual tínham um espaço probabilístico com um parâmetro discreto que variava de 1-100.  Mas e quando o espaço probabilístico é contínuo e o parâmetro pode assumir infinitos valores?
 
-Nesses casos, a nossa probabilidade marginal é calculada através de uma integral.....
+Nesses casos, a nossa probabilidade marginal é calculada através de uma integral.... VAMOS ESCREVER ESSA PARTES JUNTOS
 
 ### 2.3.6 Baixando e ajustando nosso BD
-### 2.3.5 Baixando e ajustando nosso BD
 #### 2.3.5.1 Pacotes utilizados
 Todos os códigos desta sessão estão no pacote básico do R.
 
@@ -273,5 +271,9 @@ lista <- list(N=nrow(BD), x = vec_2)
 Corr_Lin <- stan(model_code = scode_cor, data = lista, 
                  iter = 2000, warmup = 500, chains = 4)
 ```
+
+### 2.3.9 Regressão linear
+
+
 
 Perceba que uma outra parte surgiu no código em Stan, o "transformed parameters" isso acontece aqui, pois especificamente em relação a correlações lineares nós precisamos calcular a matriz de covariância, uma medida estatística que está "por trás" de qualquer análise de correlação, como Pearson e Spearman.
