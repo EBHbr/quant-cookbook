@@ -234,59 +234,131 @@ No canto superior direito desse output, veremos também dois gráficos important
 
 ### 2.3.8 Correlação Linear
 
-Para realizar uma correlação linear segundo uma inferência Bayesiana é preciso compilar nosso modelo em uma outra linguagem de programação que não o R, é preciso codifica-lo em Stan. Stan é uma linguagem de programação que tem como foco principal análises estatisticas, por isso é adequada para realizarmos as cadeias de Markov.
+#### 2.3.8.1 Pacotes utilizados
 
-Primeiro é importante que entendamos como o Stan se estrutura. Um código em Stan tem quarto partes: data, parameters, model e generated quantities. A primeira, como o proprio nome sugere, se refere aos nossos dados, a segunda aos parametros, a terceira (model) são os priors e verossimilhança e na ultima dizemos o que queremos que o código gere, ou seja, o que estamos analisando. Em cada uma dessas partes precisamos declara variaveis ou atribuir suas distribuições, desse modo, por exemplo na parte data nós devemos declarar as variáveis de nossos que iremos usar, como N, nos parameters declaramos nosso desvio padrão e no model atribuimos uma distribuição a priori para esse desvio padrão.
+```{r}
+library(rstan)
+library(bayesplot)
+```
 
-Em Stan, nós atribuimos nossas variáveis segundo tipos númericos, como inteiro (int), real (real), vetor (vector), matriz, etc. Além disso ao final de cada linha deve haver um ponto e vírgula (;) e os comentários são feito com duas barras (//).
+#### 2.3.8.2 Estimativa dos coeficientes do modelo
+
+Para realizar uma correlação linear segundo uma inferência Bayesiana é preciso compilar nosso modelo em uma outra linguagem de programação que não o R, é preciso codifica-lo em Stan. Stan é uma linguagem de programação que tem como foco principal análises estatísticas, por isso é adequada para realizarmos as cadeias de Markov. Stan utiliza o modelo hamiltoninano do MCMC.
+
+Primeiro é importante que entendamos como o Stan se estrutura. Um código em Stan tem quarto partes: data, parameters, model e generated quantities. A primeira, como o nome sugere, se refere aos nossos dados, a segunda aos parâmetros, a terceira (model) são os prioris e verossimilhança e na ultima dizemos o que queremos que o código gere, ou seja, o que estamos analisando. Em cada uma dessas partes precisamos declara variáveis ou atribuir suas distribuições, desse modo, por exemplo na parte data nós devemos declarar as variáveis de nossos que iremos usar, como N, nos parameters declaramos nosso desvio padrão e no model atribuímos uma distribuição a priori para esse desvio padrão.
+
+Em Stan, nós atribuímos nossas variáveis segundo tipos numéricos, como inteiro (int), real (real), vetor (vector), matriz, etc. Além disso ao final de cada linha deve haver um ponto e vírgula (;) e os comentários são feito com duas barras (//).
 
 Não se preocupe se forem muitas informações agora, o importante é você entender que é uma outra linguagem de programação, portanto tem suas especificidades, na prática algumas dúvidas vão desaparecer.
 
-Vamos realizar uma correlação linear entre peso da mãe no ultimo ciclo menstrual e o peso do bebê ao nascer. Para isso utilizaremos uma código em Stan em funções do rstan para rodar as cadeias de Markov. Há duas maneiras de ncluir um código de Stan no R, através de um arquivo externo ou ao atribuir o código a uma variável string, utilizaremos aqui a segunda opção.
+Vamos realizar uma correlação linear, para isso, lembre-se, precisamos de duas variáveis continuas. Utilizaremos um código em Stan e funções do rstan para rodar as cadeias de Markov. Há duas maneiras de incluir um código de Stan no R, através de um arquivo externo ou ao atribuir o código a uma variável string, utilizaremos aqui a segunda opção.
 
 ```{r}
-scode_cor <- " data {
-
-        int <lower=1> N;
-        vector[2] x[N];
-
+scode <- "data {
+  //dados
+    int<lower=1> N;  // cria uma variável N do tipo inteiro com o valor mínimo de um para o Número de observações
+    vector[2] Z[N];  // cria uma variável vetor Z de dois elementos (variável independente e dependente) de tamanho N
 }
 
 parameters {
-
-        vector [2] mu;
-        real<lower = 0> sigma[2];
-        real<lower=-1, upper=1> rho;
-
+  // Parâmetros do modelo para os dados.
+  // Nosso modelo aceita os parâmetros mu (média), sigma (DP), nu (grau de liberdade) e rho (coeficiente de correlação).
+    vector[2] mu;                 // cria uma variável vetor de dois elementos para as médias
+    real<lower=0> sigma[2];       // cria uma variável do tipo real e valor mínimo de 0 e dois elementos para os desvios-padrão
+    real<lower=1> nu;             // cria uma variável do tipo real, com valor mínimo de 1, para o grau de liberdade
+    real<lower=-1, upper=1> rho;  // cria uma variável do tipo real, que varia entre -1 e 1, para o coeficiente de correlação (rho)
 }
 
 transformed parameters {
-//matriz de covariancia
-        cov_matrix[2] cov = [[ sigma[1] ^ 2, sigma[1] * sigma[2] * rho], [sigma[1] * sigma[2] * rho, sigma[2] ^ 2 ]];
-
+    // Matriz de covariância
+    cov_matrix[2] cov = [[      sigma[1] ^ 2       , sigma[1] * sigma[2] * rho],
+                         [sigma[1] * sigma[2] * rho,       sigma[2] ^ 2       ]];
 }
-model {
-//priors
-        sigma ~ normal(0,1);
-        mu[1] ~ normal(40, 100);
-        mu[2] ~ normal(3000, 10000);
 
-//verossimilhança
-x ~ multi_normal_lpdf(mu, cov);
+model {
+// O modelo a ser estimado.
+// Nós estamos modelamos a saída Z como uma distribuição t de Student bivariada.
+// Uma vez que utiliza essa distribuição cria um modelo mais robusto, sobretudo, para presença de outliers
+
+  // Verossimilhança
+  Z ~ multi_student_t(nu, mu, cov);
+
+  // Prioris não informativos para todos os parâmetros
+  // médias desvios-padrão tem distribuição normal e grau de liberdade de distribuição gamma.
+  sigma ~ normal(0,100);
+  mu[1] ~ normal(0, 100);
+  mu[2] ~ normal(0, 100);
+  nu ~ gamma(2, 0.1);
 }
 
 generated quantities {
-
-vector[2] x_rand;
-x_rand =  multi_normal_rng(mu, cov);
+// Gera amostras aleatórias da distribuição t bivariada para fazer a checagem de predição posterior
+  vector[2] Z_rand;
+  Z_rand = multi_student_t_rng(nu, mu, cov);
 }"
 
-vec_2 <- matrix(data = c(BD$lwt,BD$bwt), ncol = 2, nrow = 189)
-lista <- list(N=nrow(BD), x = vec_2)
-Corr_Lin <- stan(model_code = scode_cor, data = lista,
+vec_2 <- matrix(data = c(X$a,X$b), ncol = 2, nrow = length(X))
+lista <- list(N=nrow(X), Z = vec_2)
+Corr_Lin <- stan(model_code = scode, data = lista,
                  iter = 2000, warmup = 500, chains = 4)
 ```
-Perceba que uma outra parte surgiu no código em Stan, o "transformed parameters" isso acontece aqui, pois especificamente em relação a correlações lineares nós precisamos calcular a matriz de covariância, uma medida estatística que está "por trás" de qualquer análise de correlação, como Pearson e Spearman.
+
+Antes de tudo você deve ter notado que estamos utilizando um modelo que tem como saída parâmetros com distribuição t de Student, ao fazermos isso estamos seguindo uma recomendação de Kruschke (2015) para ter um exemplo mais robusto para diversos modelos possíveis, sobretudo aqueles que apresentam outliers. Contudo, você também deve ter percebido no código que é possível designar outras distribuições de modo bem simples com Stan, logo você pode escolher a que se adeque melhor a seu modelo.
+
+Além disso, perceba que uma outra parte surgiu no código em Stan, o "transformed parameters" isso acontece aqui, pois especificamente em relação a correlações lineares nós precisamos calcular a matriz de covariância, uma medida estatística que está "por trás" de qualquer análise de correlação, como Pearson e Spearman.
+
+Para utilizar o Stan no R é preciso seguir alguns passos que vão além da lógica do código em Stan. Primeiro é preciso construir uma matriz que contenha somente os dados a serem utilizados no modelo. Depois transformar essa matriz em uma lista, pois o rstan só aceita dados em forma de lista. Por fim é preciso criar uma variável com as cadeias de Markov e para realizar as cadeis é preciso utilizar a função stan, presente no pacote rstan. Nos argumentos dessa função você deve indicar o código em Stan, os dados em forma de lista, o número de "passos" a serem dados, quantos passos iniciai serão descartados e quantas cadeias haverão, respectivamente.
+
+#### 2.3.8.3 Verificação dos pressupostos
+
+Como dito anteriormente, para realizar uma análise em inferência bayesiana, precisamos verificar algumas coisas antes, a convergência, a variância intracadeias e a independência entre as amostras.
+
+O pacote "bayesplot" nos permite fazer análises gráficas dos coeficientes. A função "mcmc_trace" é utilizada para realizar um trace plot que permite analisar a convergência do modelo, podemos utilizar argumentos para plotar os gráficos de todos os parâmetros ou de apenas alguns que selecionarmos, da seguinte forma:
+
+```{r}
+mcmc_trace(Corr_Lin)
+mcmc_trace(Corr_Lin, pars = "rho")
+```
+
+Para avaliar a variância intracadeias o pacote também oferece uma função com representação gráfica, a mcmc_rhats, contudo antes precisamos separar os Rhat's de cada parâmetro:
+
+```{r}
+rhats <- rhat(Corr_Lin)
+print(rhats)
+mcmc_rhat(rhats)
+```
+
+Por fim, temos a verificação de independência das amostras, o neff, para isso utilizamos a função mcmc_reff e também precisamos separar os indicadores de cada parâmetro:
+
+```{r}
+neff_r <- neff_ratio(Corr_Lin)
+print(neff_r)
+mcmc_neff(neff_r)
+```
+
+#### 2.3.8.4 Análise gráfica dos parâmetros
+Chegamos então a avaliação das distribuições posteriores parâmetros, o que nos permite tirar conclusões de nosso modelo e, por conseguinte, verificar nossa hipótese. Para isso também realizaremos instrumentos gráficos, como fizemos com o BEST, através do pacote bayesplot. Comecemos pelo histograma:
+
+```{r}
+stan_hist(Corr_Lin, pars = c("rho", "mu", "sigma", "nu"))
+```
+Perceba que o argumento "pars" nos permite escolher quais parâmetros serão plotados, caso omitamos esse argumento serão plotados os histogramas de todos os parâmetros.
+
+Também recomendamos que plote o intervalo de confiaça dos parâmetros, para complementar o histograma plotado acima, vamos fazer isso com o rho, novamente utilizando o argumento "pars":
+
+```{r}
+stan_plot(fit_stan3, pars = c("rho"))
+```
+#### 2.3.9.5 Checagem preditiva posterior
+Já introduzimos o conceito de checagem preditiva posterior anteriormente. A ideia é simples: se um modelo é adequado para a descrição dos dados, devemos ser capazes de gerar novos dados através do modelo semelhantes aos dados observados. para isso utilizamos uma função do bayesplot chamada pp_check.
+
+A função "pp_check" pode ser usada para criar diferentes tipos de checagem preditiva posterior graficamente.
+
+```{r}
+pp_check(Corr_Lin, type = "dens_overlay")
+```
+
+O argumento "type" aceita diferentes tipos de gráficos para checagem preditiva posterior. O "dens_overlay" cria gráficos de densidade para os dados simulados através dos modelos gerados pela amostragem das distribuições posteriores dos parâmetros e os compara com o gráfico de densidade dos nossos dados observados. Dessa forma, podemos ver o quão bem estes modelos estão se adequando aos nossos dados.
 
 ### 2.3.9 Regressão linear
 A regressão linear possui o mesmo formato dos modelos lineares generalizados que estudamos anteriormente. A diferença básica é a forma de estimar os coeficientes. Anteriormente, estudamos modelos cujos coeficientes são estimados por métodos de mínimos quadrados ou máxima verossimilhança. Aqui, o método utilizado para estimativa é baseado no Teorema de Bayes e algoritmos de MCMC, através dos quais estimamos a distribuição posterior dos coeficientes e seus intervalos de credibilidade.
@@ -336,7 +408,7 @@ conditional_effects(Modelo_Lin_Norm,
 ```
 O argumento "effect" aceita o preditor, ou preditores, cujo efeito queremos representar graficamente. O argumento conditions aceita os valores dos demais preditores para os quais queremos condicionar o efeito. No default (NULL), as variáveis numérias utilizam a média como valor e as categóricas utilizam o nível de referência.
 
-#### 2.3.9.3 Checagem preditiva posterior
+#### 2.3.9.4 Checagem preditiva posterior
 Já introduzimos o conceito de checagem preditiva posterior anteriormente. A ideia é simples: se um modelo é adequado para a descrição dos dados, devemos ser capazes de gerar novos dados através do modelo semelhantes aos dados observados.
 
 A função "pp_check" pode ser usada para criar diferentes tipos de checagem preditiva posterior graficamente.
