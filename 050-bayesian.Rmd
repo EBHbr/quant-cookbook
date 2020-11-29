@@ -12,6 +12,7 @@ install.packages("BEST")
 install.packages("rstan")
 install.packages("bayesplot")
 install.packages("brms")
+install.packages("car")
 ```
 
 ### 2.3.2 Introdução
@@ -62,11 +63,11 @@ Antes precisamos entender o teorema substituindo A e B por parâmetro (theta) e 
 
 Dito isso, vamos pensar na nossa situação-problema. Digamos que estamos testando a eficácia de um anticoncepcional oral X para o dia seguinte, tivemos 20 participantes e 4 delas engravidaram. Precisamos calcular as distribuições a priori, verossimilhança e posterior.
 
-Para isso temos que pensar da seguinte maneira, as probabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. Neste exemplo, trataremos probabilidade como uma variável discreta. Este é o nosso parâmetro theta, cuja distribuição posterior queremos calcular. 
+Para isso temos que pensar da seguinte maneira, as probabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. Neste exemplo, trataremos probabilidade como uma variável discreta. Este é o nosso parâmetro theta, cuja distribuição posterior queremos calcular.
 
 A verossimilhança deve ser baseada nos nossos dados, ou seja, a cada 20 mulheres que tomaram o anticoncepcional em média 4 ficam grávidas. Essa situação pode ser modelada por uma distribuição binominal com tamanho 20 (número de participantes) e uma probabilidade de sucesso baseada na variação do nosso parâmetro theta entre 0 e 1. Estamos interessados na probabilidade de encontrarmos 4 grávidas para cada valor que o parâmetro theta pode assumir.
 
-Como é uma situação hipotética, e podemos estabelecer nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1. 
+Como é uma situação hipotética, e podemos estabelecer nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1.
 
 Por fim, a probabilidade marginal, como na situação anterior, é igual à soma dos produtos priori * verossimilhança para cada possível valor de theta e equivale à probabilidade total de encontrarmos os dados X.
 
@@ -148,12 +149,24 @@ O que usamos aqui para calcular os nossos próximos modelos se baseia em uma sim
 
 Esse sistema parece, e é, complexo, mas não se incomode em focar em todos os detalhes o computador fará todo o trabalho "sujo" por você. O que precisamos entender para compreender o suficiente nossos modelos é que essa é uma simulação de cadeia, que baseia-se no modelo construído e utiliza "passos aleatórios" que vão ficando cada vez menos aleatórios com base nas (re)avaliação dos pontos que é baseada no encaixe do modelo. Desse modo a quantidade de passos que vamos dar (iter) são importantes para a simulação do modelo, bem como a quantidade de cadeias que teremos (chains), isto é, quantas vezes vamos repetir o número de passos e, por fim, precisamos sempre nos atentar com os primeiros passos dados, pois devido a aleatoriedade eles geralmente são poucos adequados ao modelo e caminham em pontos menos prováveis, por isso, geralmente eliminamos os primeiros passos (warmup).
 
-Além disso, é importante avaliar como o nosso modelo se comportou dentro dessa aleatoriedade e ele está adequada para tirarmos nossas conclusões para isso nós avaliamos a convergência do modelo.
+Além disso, é importante avaliar como o nosso modelo se comportou dentro dessa aleatoriedade e ele está adequada para tirarmos nossas conclusões para isso nós avaliamos a convergência do modelo. Vale ressaltar que medida, quase sempre necessária, é realizar um número suficiente de cadeias e de interações, geralmente acima de 3 e 1000, respectivamente, como um modo de aumentar a convergência e eficácia do modelo.
 
 Essa é uma explicação simplificada e usando pouca, ou nenhuma matemática, do que é uma MCMC e uma HCM, para entender mais desses dois conceitos recomendamos o capítulo 9 do livro "Statistical Rethinking" (MCELREATH, 2015).
 
 #### 2.3.5.2 Como analisar a convergência?
-ESSA PARTE TAMBÉM...
+
+Um passo muito importante em uma análise de inferência bayesiana é a avaliar a convergência do modelo. Como dissemos acima o método MCMC se utiliza de uma inicialização aleatória para construir a distribuição a posterior, como podemos garantir que essa inicialização tenha convergido para a distribuição buscada?
+
+Além disso, MCMC se utiliza do teorema do limite central, que em linhas gerais, afirma que quando amostras são suficientemente grandes elas terão uma distribuição normal, o que implica que as diferentes cadeias não podem estar correlacionadas, dessa forma também precisamos garantir isso para sustentar a eficácia de nosso modelo.
+
+Para verificar a convergência e a autocorrelação do modelo utilizamos um indicador gráfico e dois numéricos, o traceplot, Rhat e neff, respectivamente. Os dois primeiros são utilizados para analisar convergência e neff para autocorrelação.
+
+O traceplot é um gráfico traços que analisa as interações de cada cadeia de Monte Carlo, o gráfico se parece com um gráfico de frequência de rádio, ele demonstra por onde as interações da cadeia "andaram", por assim dizer. E um gráfico que aponte convergência vai ter traços bem condensados e mais ou menos na mesma faixa ao longo das interações, sobretudo após o warmup.
+
+O Rhat é um outro indicador de convergência que é resultado da variação de todas as cadeias combinadas divido pela variação intracadeia, assim se há convergência as diversas cadeias irão seguir a mesma distribuição e o Rhat será 1. Ao contrário se não houver convergência a variação de todas as cadeias será maior que a de cada cadeia individualmente e o Rhat será maior q 1. Em regras gerais buscamos um valor de Rhat menor que 1.1.
+
+Por fim, o neff, ou neff ratio, é um indicador para avaliar a autocorrelação das cadeias e representa, basicamente, a autoindependência das cadeias. Geralmente se está buscando um neff ratio maior que 0.01.
+
 
 ### 2.3.6 Baixando e ajustando nosso BD
 #### 2.3.5.1 Pacotes utilizados
@@ -242,6 +255,7 @@ No canto superior direito desse output, veremos também dois gráficos important
 ```{r}
 library(rstan)
 library(bayesplot)
+library(car)
 ```
 
 #### 2.3.8.2 Estimativa dos coeficientes do modelo
@@ -312,9 +326,9 @@ Além disso, perceba que uma outra parte surgiu no código em Stan, o "transform
 
 Para utilizar o Stan no R é preciso seguir alguns passos que vão além da lógica do código em Stan. Primeiro é preciso construir uma matriz que contenha somente os dados a serem utilizados no modelo. Depois transformar essa matriz em uma lista, pois o rstan só aceita dados em forma de lista. Por fim é preciso criar uma variável com as cadeias de Markov e para realizar as cadeis é preciso utilizar a função stan, presente no pacote rstan. Nos argumentos dessa função você deve indicar o código em Stan, os dados em forma de lista, o número de "passos" a serem dados, quantos passos iniciai serão descartados e quantas cadeias haverão, respectivamente.
 
-#### 2.3.8.3 Verificação dos pressupostos
+#### 2.3.8.3 Verificação dos convergência
 
-Como dito anteriormente, para realizar uma análise em inferência bayesiana, precisamos verificar algumas coisas antes, a convergência, a variância intracadeias e a independência entre as amostras.
+Como dito anteriormente, para realizar uma análise em inferência bayesiana, precisamos verificar algumas coisas antes, a convergência e a independência entre as cadeias.
 
 O pacote "bayesplot" nos permite fazer análises gráficas dos coeficientes. A função "mcmc_trace" é utilizada para realizar um trace plot que permite analisar a convergência do modelo, podemos utilizar argumentos para plotar os gráficos de todos os parâmetros ou de apenas alguns que selecionarmos, da seguinte forma:
 
@@ -323,20 +337,20 @@ mcmc_trace(Corr_Lin)
 mcmc_trace(Corr_Lin, pars = "rho")
 ```
 
-Para avaliar a variância intracadeias o pacote também oferece uma função com representação gráfica, a mcmc_rhats, contudo antes precisamos separar os Rhat's de cada parâmetro:
+Outro modo de avaliar a convergência é através do Rhat. Você pode observar esse indicador ao printar o modelo, ele estará na ultima coluna, ou pode separa-lo em uma nova variável:
 
 ```{r}
+print(Corr_Lin)
 rhats <- rhat(Corr_Lin)
 print(rhats)
-mcmc_rhat(rhats)
 ```
 
-Por fim, temos a verificação de independência das amostras, o neff, para isso utilizamos a função mcmc_reff e também precisamos separar os indicadores de cada parâmetro:
+Por fim, temos a verificação de independência das amostras, o neff ratio, ele também estará presente ao printar o modelo, dessa vez na penultima coluna, porém você continua podendo separar em uma outra variável
 
 ```{r}
+print(Corr_Lin)
 neff_r <- neff_ratio(Corr_Lin)
 print(neff_r)
-mcmc_neff(neff_r)
 ```
 
 #### 2.3.8.4 Análise gráfica dos parâmetros
@@ -353,15 +367,15 @@ Também recomendamos que plote o intervalo de confiaça dos parâmetros, para co
 stan_plot(fit_stan3, pars = c("rho"))
 ```
 #### 2.3.9.5 Checagem preditiva posterior
-Já introduzimos o conceito de checagem preditiva posterior anteriormente. A ideia é simples: se um modelo é adequado para a descrição dos dados, devemos ser capazes de gerar novos dados através do modelo semelhantes aos dados observados. para isso utilizamos uma função do bayesplot chamada pp_check.
+Já introduzimos o conceito de checagem preditiva posterior anteriormente. A ideia é simples: se um modelo é adequado para a descrição dos dados, devemos ser capazes de gerar novos dados através do modelo semelhantes aos dados observados, para isso precisaremos de alguns "truques". Primeiro criaremos uma matriz com nossos dados sem qualquer análise. Depois extrairemos de nosso modelo a variável gerada para a checagem preditiva do posterior a Z_rand. Por ultimo, plotaremos os dados da nossa matriz inicial e um elipse baseado no Z_rand, caso os pontos, ou boa parte deles, estejam dentro a área do elipse nosso modelo está adequado.
 
-A função "pp_check" pode ser usada para criar diferentes tipos de checagem preditiva posterior graficamente.
 
 ```{r}
-pp_check(Corr_Lin, type = "dens_overlay")
+Matriz_Dados <- matrix(data = c(X$a,X$b), ncol = 2, nrow = length(X))
+Z_rand <- extract(Corr_Lin, c("Z_rand"))[[1]]
+plot(Matriz_Dados, xlim = c(10, 120), ylim = c(0, 5200), pch = 16)
+dataEllipse(x_rand, levels = 0.95, fill = T, plot.points = F)
 ```
-
-O argumento "type" aceita diferentes tipos de gráficos para checagem preditiva posterior. O "dens_overlay" cria gráficos de densidade para os dados simulados através dos modelos gerados pela amostragem das distribuições posteriores dos parâmetros e os compara com o gráfico de densidade dos nossos dados observados. Dessa forma, podemos ver o quão bem estes modelos estão se adequando aos nossos dados.
 
 ### 2.3.9 Regressão linear
 A regressão linear possui o mesmo formato dos modelos lineares generalizados que estudamos anteriormente. A diferença básica é a forma de estimar os coeficientes. Anteriormente, estudamos modelos cujos coeficientes são estimados por métodos de mínimos quadrados ou máxima verossimilhança. Aqui, o método utilizado para estimativa é baseado no Teorema de Bayes e algoritmos de MCMC, através dos quais estimamos a distribuição posterior dos coeficientes e seus intervalos de credibilidade.
