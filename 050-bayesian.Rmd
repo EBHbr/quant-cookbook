@@ -4,7 +4,7 @@
 Nessa seção precisaremos de alguns pacotes para além dos nativos do R, por isso precisaremos baixar e instalar alguns. Além disso, para utilizar uma análise especifica é preciso baixar em seu computador um software chamado "JAGS". As bibliotecas serão carregada conforme uso.
 
 ```{r}
-install.packages("dplyr") 
+install.packages("dplyr")
 install.packages("ggplot2")
 install.packages("rjags")
 install.packages("runjags")
@@ -22,7 +22,7 @@ Um dos aspectos essenciais da estatística Bayesiana é a interpretação das pr
 
 O termo P(D|H), na estatística Bayesiana, é a verossimilhança, que representa o quão prováveis são os nossos dados considerando a hipótese em questão. A verossimilhança é utilizada para atualizar a nossa probabilidade a priori, transformando-a na probabilidade posterior.
 
-Vamos entender melhor esses conceitos com algumas situações-problema. 
+Vamos entender melhor esses conceitos com algumas situações-problema.
 
 ### 2.3.3 Hipóteses dicotômicas
 Vamos tratar da situação mais simples possível: uma hipótese dicotômica. Ou o sujeito está doente ou não está.
@@ -50,22 +50,22 @@ prob_IP <- (prob_I*prob_PI)/prob_P
 prob_IP
 ```
 
-Paremos agora para pensar. Qual seria a interpretação Bayesiana e a interpretação frequentista dessas probabilidades? 
+Paremos agora para pensar. Qual seria a interpretação Bayesiana e a interpretação frequentista dessas probabilidades?
 
 Pela perspectiva frequentista, o diagnóstico seria definido se a probabilidade de encontrarmos estes dados, sendo a hipótese nula verdadeira, for baixa. Ou seja, se a probabilidade de testar positivo dado que o indivíduo não está infectado, P(P|NI), é baixa, o diagnóstico é confirmado. Esse termo é o complemento da nossa especificidade, que é a taxa de falsos positivos. Na situação apresentada, considerando a P(P|NI) de 1%, o indivíduo seria diagnosticado.
 
 Pela perspectiva Bayesiana, o diagnóstico seria definido se a probabilidade da hipótese, considerando os nossos dados, for alta. Ou seja, se a probabilidade de estar infectado, dado que o indivíduo testou positivo, P(I|P), é alta, o diagnóstico é confirmado. Na situação apresentada, considerando a P(I|P) de 48,5%, o indivíduo não seria diagnosticado.
 
 ### 2.3.4 Parâmetros com distribuições discretas
-Vamos dar um passo adiante e pensar um hipótese um pouco mais complexa que nos permita ver mais claramente a influência de cada um dos fatores do teorema de Bayes. 
+Vamos dar um passo adiante e pensar um hipótese um pouco mais complexa que nos permita ver mais claramente a influência de cada um dos fatores do teorema de Bayes.
 
 Antes precisamos entender o teorema substituindo A e B por parâmetro (theta) e dados (X), ficando, portanto, da seguinte forma: P(theta|X) = (P(X|theta) * P(theta))/P(X).
 
 Dito isso, vamos pensar na nossa situação-problema. Digamos que estamos testando a eficácia de um anticoncepcional oral X para o dia seguinte, tivemos 20 participantes e 4 delas engravidaram. Precisamos calcular as distribuições a priori, verossimilhança e posterior.
 
-Para isso temos que pensar da seguinte maneira, as propabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. A verossimilhança deve ser baseada nós nossos dados, ou seja, a cada 20 mulheres que tomaram o anticoncepcional em média 4 ficam grávidas, isso significa dizer que a verossimilhança é uma distribuição binominal com tamanho 20 - número de participantes -, média 4 - número de grávidas - e uma probabilidade de sucesso baseada na variação da nossa probabilidade, ou seja entre 0 e 1.
+Para isso temos que pensar da seguinte maneira, as probabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. A verossimilhança deve ser baseada nós nossos dados, ou seja, a cada 20 mulheres que tomaram o anticoncepcional em média 4 ficam grávidas, isso significa dizer que a verossimilhança é uma distribuição binominal com tamanho 20 - número de participantes -, média 4 - número de grávidas - e uma probabilidade de sucesso baseada na variação da nossa probabilidade, ou seja entre 0 e 1.
 
-Como é uma situação hipotética podemos estabeler nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1. Por fim probabilidade marginal, como na situação anterior, é igual ao priori * verossimilhança. 
+Como é uma situação hipotética podemos estabelecer nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1. Por fim probabilidade marginal, como na situação anterior, é igual ao priori * verossimilhança.
 
 Quando levamos isso para o código e transformamos em um data.frame fica da seguinte maneira:
 
@@ -79,18 +79,18 @@ posterior <- prob_marginal/sum(prob_marginal)
 tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
 ```
 
-Se você plotar essa tabela vai ver um apanhado de número poucos intuitivos, para facilitar vamos colocar tudo isso em gráficos, antes tente pensar, se você estivesse realizando esse teste e tivesse um prior pouco significativo, onde colocaria sua confiança? Muito provavelmente nos dados, certo? Já que eles são sua fonte de contato com o fenômeno
+Se você plotar essa tabela vai ver um apanhado de número poucos intuitivos, para facilitar vamos colocar tudo isso em gráficos, antes tente pensar, se você estivesse realizando esse teste e tivesse um prior pouco significativo, onde colocaria sua confiança? Muito provavelmente nos dados, certo? Já que eles são sua fonte de contato com o fenômeno.
 
 ```{r}
 library(ggplot2)
 ggplot(tabela1, aes(x=rangep)) +
-  geom_line(y = vero, color = "black") + 
+  geom_line(y = vero, color = "black") +
   geom_line(y = priori, color = "red") +
   geom_line(y = posterior, color = "green") +
   labs(x = "P(gravida)", y = "Densidade")
 ```
 
-Veja que o teorema de Bayes realiza, matematicamente, justamente o que pensamos por inferência, isso é o posterior segue a tendência da verossimilhança, uma vez que o prior não tem significância. A curva do posterior está mais abaixo que a da verossimilhança pois esse é o que chamamos de posterior padronizado ou normalizado, uma vez que ele está sendo divido pela probabilidade marginal. Se tivessemos uma linha nesse gráfico para numerador da equação ela estaria exatamente sobre a linha da verossimilhança. Por fim a linha do posterior aparece constante e em cima justamente pois ele é um para todas as possibilidades.
+Veja que o teorema de Bayes realiza, matematicamente, justamente o que pensamos por inferência, isto é, o posterior segue a tendência da verossimilhança, uma vez que o prior não tem significância. A curva do posterior está mais abaixo que a da verossimilhança pois esse é o que chamamos de posterior padronizado ou normalizado, uma vez que ele está sendo divido pela probabilidade marginal. Se tivéssemos uma linha nesse gráfico para o numerador da equação ela estaria exatamente sobre a linha da verossimilhança. Por fim a linha do posterior aparece constante e em cima justamente pois ele é 1 para todas as possibilidades.
 
 Vamos prosseguir e mudar a situação um pouco, digamos que com os mesmos dados que obtivemos antes, ou seja, entre 20 participantes 4 ficaram gravidas, temos um priori significativo, confiável e que tem informações bem diferentes dos dados. Pensando que temos razões para confiar no priori e nos nossos dados, onde por intuição você colocaria sua distribuição a posterior? Se você pensou entre os dados e o priori você está entendendo a intuição do teorema.
 
@@ -103,15 +103,15 @@ posterior <- prob_marginal/sum(prob_marginal)
 tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
 
 ggplot(tabela1, aes(x=rangep)) +
-  geom_line(y = vero) + 
+  geom_line(y = vero) +
   geom_line(y = priori/20, color = "red") + #divido o priori por uma constante por fins de escala
-  geom_line(y = posterior, color = "green") + 
+  geom_line(y = posterior, color = "green") +
   labs(x = "P(gravida)", y = "Densidade")
 ```
 
-Veja como novamente o teorema ajustou a distribuição do posterior, justamnete como nós intuimos.
+Veja como novamente o teorema ajustou a distribuição do posterior, justamente como nós intuímos.
 
-Por fim, vamos ao último exemplo dessa situação problema, o que aconteceria se tivessemos dados poucos informativos, ou seja, se tivessemos poucas observações, por exemplo, três com duas grávidas e um priori mais condizente com observações anteriores, ou seja, que descrevesse uma probabilidade de 25% de se estar grávida?
+Por fim, vamos ao último exemplo dessa situação problema, o que aconteceria se tivéssemos dados poucos informativos, ou seja, se tivéssemos poucas observações, por exemplo, três com duas grávidas, e um priori mais condizente com observações anteriores, ou seja, que descrevesse uma probabilidade de 25% de se estar grávida?
 
 ```{r}
 priori <- dnorm(x = rangep, mean = .25, sd = .1)
@@ -121,23 +121,33 @@ posterior <- prob_marginal/sum(prob_marginal)
 tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
 
 ggplot(tabela1, aes(x=rangep)) +
-  geom_line(y = lik) + 
-  geom_line(y = priori/20, color = "red") + 
-  geom_line(y = posterior, color = "green") + 
+  geom_line(y = lik) +
+  geom_line(y = priori/20, color = "red") +
+  geom_line(y = posterior, color = "green") +
   labs(x = "P(gravida)", y = "Densidade")
 ```
 
-Mais uma vez, o teorema adequa a distribuição posterior conforme a intuição, ou seja o mais próximo de nosso conhecimento prévio que nesse caso é muito mais confiavel que nossos dados. Essa, inclusive é uma das vantagens de se usar a inferência bayesiana, que com observações muito pequenas, a utilização de um priori adequa a probabilidade posterior. Vale ressaltar que caso priori e verossimilhança sejam condizentes o posterior vai se comportar de forma muito semelhante a eles. 
+Mais uma vez, o teorema adequa a distribuição posterior conforme a intuição, ou seja o mais próximo de nosso conhecimento prévio que nesse caso é muito mais confiável que nossos dados. Essa, inclusive, é uma das vantagens de se usar a inferência bayesiana, com observações muito pequenas, a utilização de um priori adequa a probabilidade posterior. Vale ressaltar que caso o priori e a verossimilhança sejam condizentes o posterior vai se comportar de forma muito semelhante a eles.
 
 Em situações mais complexas novas ferramentas entram, mas o pensamento base e a intuição continuam os mesmos.
 
 ### 2.3.5 Parâmetros com distribuições contínuas e os algoritmos MCMC
 Inicialmente, discutimos uma situação em que só haveria duas opções no nossos espaço probabilístico: Ou o indivíduo estava infectado ou não estava infectado. Depois, discutimos uma situação na qual tínhamos um espaço probabilístico com um parâmetro discreto que variava de 1 a 100.  Mas e quando o espaço probabilístico é contínuo e o parâmetro pode assumir infinitos valores?
 
-Nesses casos, a nossa probabilidade marginal é calculada através de uma integral complexa e nós necessitamos de ferramentes alternativas para chegar à distribuição psoterior do nosso parâmetro de interesse. É aí que entram os algoritmos de Markov Chain Monte Carlo. 
+Nesses casos, a nossa probabilidade marginal é calculada através de uma integral complexa e nós necessitamos de ferramentas alternativas para chegar à distribuição posterior do nosso parâmetro de interesse. É aí que entram os algoritmos de Markov Chain Monte Carlo (MCMC).
 
 #### 2.3.5.1 Algoritmos MCMC
-VAMOS ESCREVER ESSA PARTES JUNTOS...
+Como dito anteriormente, em casos mais complexos a integral do denominador se torna muito complexa e dificulta a realização da equação, por esse motivo a inferência bayesiana só se tornou popular com o advento dos computadores pessoais de alto processamento, ou seja a partir do final do século XX.
+
+A saída que se tem para a resolução do problema é a utilização dos algoritmos de MCMC, lógica por trás desses cálculos é baseada no que chamamos de uma caminhada aleatória (random walk) que (re)avalia cada passo dado aleatoriamente de modo a identificar se ele é muito provável (portanto é aceito), se é menos provável mas próximo o suficiente do ponto anterior (também é aceito), ou se ele tem uma probabilidade baixa com uma alta margem, quando é rejeitado e se sorteia um novo ponto aleatório. Esse é o principio por trás da estratégia de MCMC chamada Metropolis-Hastings.
+
+O que usamos aqui para calcular os nossos próximos modelos se baseia em uma simulação de um sistema físico hamiltoninano, portanto usamos Hamiltonian Monte Carlo (HCM). O principio é um pouco parecido com o Metropolis-Hastings, mas utiliza uma simulação física de um sitema de energia total, tornando a (re)avaliação dos passos mais continua e menos limitada.
+
+Esse sistema parece, e é, complexo, mas não se incomode em focar em todos os detalhes o computador fará todo o trabalho "sujo" por você. O que precisamos entender para compreender o suficiente nossos modelos é que essa é uma simulação de cadeia, que baseia-se no modelo construído e utiliza "passos aleatórios" que vão ficando cada vez menos aleatórios com base nas (re)avaliação dos pontos que é baseada no encaixe do modelo. Desse modo a quantidade de passos que vamos dar (iter) são importantes para a simulação do modelo, bem como a quantidade de cadeias que teremos (chains), isto é, quantas vezes vamos repetir o número de passos e, por fim, precisamos sempre nos atentar com os primeiros passos dados, pois devido a aleatoriedade eles geralmente são poucos adequados ao modelo e caminham em pontos menos prováveis, por isso, geralmente eliminamos os primeiros passos (warmup).
+
+Além disso, é importante avaliar como o nosso modelo se comportou dentro dessa aleatoriedade e ele está adequada para tirarmos nossas conclusões para isso nós avaliamos a convergência do modelo.
+
+Essa é uma explicação simplificada e usando pouca, ou nenhuma matemática, do que é uma MCMC e uma HCM, para entender mais desses dois conceitos recomendamos o capítulo 9 do livro "Statistical Rethinking" (MCELREATH, 2015).
 
 #### 2.3.5.2 Como analisar a convergência?
 ESSA PARTE TAMBÉM...
@@ -204,12 +214,12 @@ Utilizaremos o mesmo pacote de análise Bayesiana, BEST. Por isso, para rodar es
 #### 2.3.7.2 Estimativa dos parâmetros do modelo
 Vamos comparar as médias de uma variável entre dois grupos. Para isso, vamos gerar as distribuições posteriores dos parâmetros média, desvio-padrão e grau de liberdade para cada grupo. O BEST utiliza distribuições t para modelar a distribuição da variável para a população da qual cada grupo foi amostrado.
 ```{r message=FALSE, warning=FALSE}
-Bayes_Y_X <- BESTmcmc(filter(BD, X == "Sim")$Y, 
-                              filter(BD, X == "Não")$Y, 
+Bayes_Y_X <- BESTmcmc(filter(BD, X == "Sim")$Y,
+                              filter(BD, X == "Não")$Y,
                               priors = NULL)
 Bayes_Y_X
 ```
-No exemplo, Y é a variável dependente do modelo, que será comparada entre os grupos. X é a variável independente dicotômica com valores "Sim" e "Não". 
+No exemplo, Y é a variável dependente do modelo, que será comparada entre os grupos. X é a variável independente dicotômica com valores "Sim" e "Não".
 
 No output desta função, teremos informações sobre as distribuições posteriores da média do grupo 1 (mu1), média do grupo 2 (mu2), grau de liberdade (nu), desvio padrão do grupo 1 (sigma1) e desvio padrão do grupo 2 (sigma2). Para todas essas distribuições, temos a média (mean), desvio padrão (sd), mediana (median), e limites inferior (HDIlo) e superior (HDIup) do intervalo de credibilidade.
 
@@ -224,59 +234,131 @@ No canto superior direito desse output, veremos também dois gráficos important
 
 ### 2.3.8 Correlação Linear
 
-Para realizar uma correlação linear segundo uma inferência Bayesiana é preciso compilar nosso modelo em uma outra linguagem de programação que não o R, é preciso codifica-lo em Stan. Stan é uma linguagem de programação que tem como foco principal análises estatisticas, por isso é adequada para realizarmos as cadeias de Markov.
+#### 2.3.8.1 Pacotes utilizados
 
-Primeiro é importante que entendamos como o Stan se estrutura. Um código em Stan tem quarto partes: data, parameters, model e generated quantities. A primeira, como o proprio nome sugere, se refere aos nossos dados, a segunda aos parametros, a terceira (model) são os priors e verossimilhança e na ultima dizemos o que queremos que o código gere, ou seja, o que estamos analisando. Em cada uma dessas partes precisamos declara variaveis ou atribuir suas distribuições, desse modo, por exemplo na parte data nós devemos declarar as variáveis de nossos que iremos usar, como N, nos parameters declaramos nosso desvio padrão e no model atribuimos uma distribuição a priori para esse desvio padrão.
+```{r}
+library(rstan)
+library(bayesplot)
+```
 
-Em Stan, nós atribuimos nossas variáveis segundo tipos númericos, como inteiro (int), real (real), vetor (vector), matriz, etc. Além disso ao final de cada linha deve haver um ponto e vírgula (;) e os comentários são feito com duas barras (//).
+#### 2.3.8.2 Estimativa dos coeficientes do modelo
+
+Para realizar uma correlação linear segundo uma inferência Bayesiana é preciso compilar nosso modelo em uma outra linguagem de programação que não o R, é preciso codifica-lo em Stan. Stan é uma linguagem de programação que tem como foco principal análises estatísticas, por isso é adequada para realizarmos as cadeias de Markov. Stan utiliza o modelo hamiltoninano do MCMC.
+
+Primeiro é importante que entendamos como o Stan se estrutura. Um código em Stan tem quarto partes: data, parameters, model e generated quantities. A primeira, como o nome sugere, se refere aos nossos dados, a segunda aos parâmetros, a terceira (model) são os prioris e verossimilhança e na ultima dizemos o que queremos que o código gere, ou seja, o que estamos analisando. Em cada uma dessas partes precisamos declara variáveis ou atribuir suas distribuições, desse modo, por exemplo na parte data nós devemos declarar as variáveis de nossos que iremos usar, como N, nos parameters declaramos nosso desvio padrão e no model atribuímos uma distribuição a priori para esse desvio padrão.
+
+Em Stan, nós atribuímos nossas variáveis segundo tipos numéricos, como inteiro (int), real (real), vetor (vector), matriz, etc. Além disso ao final de cada linha deve haver um ponto e vírgula (;) e os comentários são feito com duas barras (//).
 
 Não se preocupe se forem muitas informações agora, o importante é você entender que é uma outra linguagem de programação, portanto tem suas especificidades, na prática algumas dúvidas vão desaparecer.
 
-Vamos realizar uma correlação linear entre peso da mãe no ultimo ciclo menstrual e o peso do bebê ao nascer. Para isso utilizaremos uma código em Stan em funções do rstan para rodar as cadeias de Markov. Há duas maneiras de ncluir um código de Stan no R, através de um arquivo externo ou ao atribuir o código a uma variável string, utilizaremos aqui a segunda opção.
+Vamos realizar uma correlação linear, para isso, lembre-se, precisamos de duas variáveis continuas. Utilizaremos um código em Stan e funções do rstan para rodar as cadeias de Markov. Há duas maneiras de incluir um código de Stan no R, através de um arquivo externo ou ao atribuir o código a uma variável string, utilizaremos aqui a segunda opção.
 
 ```{r}
-scode_cor <- " data {
-        
-        int <lower=1> N;
-        vector[2] x[N];
-
+scode <- "data {
+  //dados
+    int<lower=1> N;  // cria uma variável N do tipo inteiro com o valor mínimo de um para o Número de observações
+    vector[2] Z[N];  // cria uma variável vetor Z de dois elementos (variável independente e dependente) de tamanho N
 }
 
 parameters {
-
-        vector [2] mu;
-        real<lower = 0> sigma[2];
-        real<lower=-1, upper=1> rho;
-        
+  // Parâmetros do modelo para os dados.
+  // Nosso modelo aceita os parâmetros mu (média), sigma (DP), nu (grau de liberdade) e rho (coeficiente de correlação).
+    vector[2] mu;                 // cria uma variável vetor de dois elementos para as médias
+    real<lower=0> sigma[2];       // cria uma variável do tipo real e valor mínimo de 0 e dois elementos para os desvios-padrão
+    real<lower=1> nu;             // cria uma variável do tipo real, com valor mínimo de 1, para o grau de liberdade
+    real<lower=-1, upper=1> rho;  // cria uma variável do tipo real, que varia entre -1 e 1, para o coeficiente de correlação (rho)
 }
 
 transformed parameters {
-//matriz de covariancia
-        cov_matrix[2] cov = [[ sigma[1] ^ 2, sigma[1] * sigma[2] * rho], [sigma[1] * sigma[2] * rho, sigma[2] ^ 2 ]];
-
+    // Matriz de covariância
+    cov_matrix[2] cov = [[      sigma[1] ^ 2       , sigma[1] * sigma[2] * rho],
+                         [sigma[1] * sigma[2] * rho,       sigma[2] ^ 2       ]];
 }
+
 model {
-//priors
-        sigma ~ normal(0,1);
-        mu[1] ~ normal(40, 100);
-        mu[2] ~ normal(3000, 10000);
-        
-//verossimilhança
-x ~ multi_normal_lpdf(mu, cov);
+// O modelo a ser estimado.
+// Nós estamos modelamos a saída Z como uma distribuição t de Student bivariada.
+// Uma vez que utiliza essa distribuição cria um modelo mais robusto, sobretudo, para presença de outliers
+
+  // Verossimilhança
+  Z ~ multi_student_t(nu, mu, cov);
+
+  // Prioris não informativos para todos os parâmetros
+  // médias desvios-padrão tem distribuição normal e grau de liberdade de distribuição gamma.
+  sigma ~ normal(0,100);
+  mu[1] ~ normal(0, 100);
+  mu[2] ~ normal(0, 100);
+  nu ~ gamma(2, 0.1);
 }
 
 generated quantities {
-
-vector[2] x_rand;
-x_rand =  multi_normal_rng(mu, cov);
+// Gera amostras aleatórias da distribuição t bivariada para fazer a checagem de predição posterior
+  vector[2] Z_rand;
+  Z_rand = multi_student_t_rng(nu, mu, cov);
 }"
 
-vec_2 <- matrix(data = c(BD$lwt,BD$bwt), ncol = 2, nrow = 189)
-lista <- list(N=nrow(BD), x = vec_2)
-Corr_Lin <- stan(model_code = scode_cor, data = lista, 
+vec_2 <- matrix(data = c(X$a,X$b), ncol = 2, nrow = length(X))
+lista <- list(N=nrow(X), Z = vec_2)
+Corr_Lin <- stan(model_code = scode, data = lista,
                  iter = 2000, warmup = 500, chains = 4)
 ```
-Perceba que uma outra parte surgiu no código em Stan, o "transformed parameters" isso acontece aqui, pois especificamente em relação a correlações lineares nós precisamos calcular a matriz de covariância, uma medida estatística que está "por trás" de qualquer análise de correlação, como Pearson e Spearman.
+
+Antes de tudo você deve ter notado que estamos utilizando um modelo que tem como saída parâmetros com distribuição t de Student, ao fazermos isso estamos seguindo uma recomendação de Kruschke (2015) para ter um exemplo mais robusto para diversos modelos possíveis, sobretudo aqueles que apresentam outliers. Contudo, você também deve ter percebido no código que é possível designar outras distribuições de modo bem simples com Stan, logo você pode escolher a que se adeque melhor a seu modelo.
+
+Além disso, perceba que uma outra parte surgiu no código em Stan, o "transformed parameters" isso acontece aqui, pois especificamente em relação a correlações lineares nós precisamos calcular a matriz de covariância, uma medida estatística que está "por trás" de qualquer análise de correlação, como Pearson e Spearman.
+
+Para utilizar o Stan no R é preciso seguir alguns passos que vão além da lógica do código em Stan. Primeiro é preciso construir uma matriz que contenha somente os dados a serem utilizados no modelo. Depois transformar essa matriz em uma lista, pois o rstan só aceita dados em forma de lista. Por fim é preciso criar uma variável com as cadeias de Markov e para realizar as cadeis é preciso utilizar a função stan, presente no pacote rstan. Nos argumentos dessa função você deve indicar o código em Stan, os dados em forma de lista, o número de "passos" a serem dados, quantos passos iniciai serão descartados e quantas cadeias haverão, respectivamente.
+
+#### 2.3.8.3 Verificação dos pressupostos
+
+Como dito anteriormente, para realizar uma análise em inferência bayesiana, precisamos verificar algumas coisas antes, a convergência, a variância intracadeias e a independência entre as amostras.
+
+O pacote "bayesplot" nos permite fazer análises gráficas dos coeficientes. A função "mcmc_trace" é utilizada para realizar um trace plot que permite analisar a convergência do modelo, podemos utilizar argumentos para plotar os gráficos de todos os parâmetros ou de apenas alguns que selecionarmos, da seguinte forma:
+
+```{r}
+mcmc_trace(Corr_Lin)
+mcmc_trace(Corr_Lin, pars = "rho")
+```
+
+Para avaliar a variância intracadeias o pacote também oferece uma função com representação gráfica, a mcmc_rhats, contudo antes precisamos separar os Rhat's de cada parâmetro:
+
+```{r}
+rhats <- rhat(Corr_Lin)
+print(rhats)
+mcmc_rhat(rhats)
+```
+
+Por fim, temos a verificação de independência das amostras, o neff, para isso utilizamos a função mcmc_reff e também precisamos separar os indicadores de cada parâmetro:
+
+```{r}
+neff_r <- neff_ratio(Corr_Lin)
+print(neff_r)
+mcmc_neff(neff_r)
+```
+
+#### 2.3.8.4 Análise gráfica dos parâmetros
+Chegamos então a avaliação das distribuições posteriores parâmetros, o que nos permite tirar conclusões de nosso modelo e, por conseguinte, verificar nossa hipótese. Para isso também realizaremos instrumentos gráficos, como fizemos com o BEST, através do pacote bayesplot. Comecemos pelo histograma:
+
+```{r}
+stan_hist(Corr_Lin, pars = c("rho", "mu", "sigma", "nu"))
+```
+Perceba que o argumento "pars" nos permite escolher quais parâmetros serão plotados, caso omitamos esse argumento serão plotados os histogramas de todos os parâmetros.
+
+Também recomendamos que plote o intervalo de confiaça dos parâmetros, para complementar o histograma plotado acima, vamos fazer isso com o rho, novamente utilizando o argumento "pars":
+
+```{r}
+stan_plot(fit_stan3, pars = c("rho"))
+```
+#### 2.3.9.5 Checagem preditiva posterior
+Já introduzimos o conceito de checagem preditiva posterior anteriormente. A ideia é simples: se um modelo é adequado para a descrição dos dados, devemos ser capazes de gerar novos dados através do modelo semelhantes aos dados observados. para isso utilizamos uma função do bayesplot chamada pp_check.
+
+A função "pp_check" pode ser usada para criar diferentes tipos de checagem preditiva posterior graficamente.
+
+```{r}
+pp_check(Corr_Lin, type = "dens_overlay")
+```
+
+O argumento "type" aceita diferentes tipos de gráficos para checagem preditiva posterior. O "dens_overlay" cria gráficos de densidade para os dados simulados através dos modelos gerados pela amostragem das distribuições posteriores dos parâmetros e os compara com o gráfico de densidade dos nossos dados observados. Dessa forma, podemos ver o quão bem estes modelos estão se adequando aos nossos dados.
 
 ### 2.3.9 Regressão linear
 A regressão linear possui o mesmo formato dos modelos lineares generalizados que estudamos anteriormente. A diferença básica é a forma de estimar os coeficientes. Anteriormente, estudamos modelos cujos coeficientes são estimados por métodos de mínimos quadrados ou máxima verossimilhança. Aqui, o método utilizado para estimativa é baseado no Teorema de Bayes e algoritmos de MCMC, através dos quais estimamos a distribuição posterior dos coeficientes e seus intervalos de credibilidade.
@@ -290,9 +372,9 @@ O pacote brms pode ser utilizado para desenvolver diversos modelos Bayesianos li
 
 #### 2.3.9.2 Estimativa dos coeficientes do modelo
 ```{r message=FALSE, warning=FALSE}
-Modelo_Lin_Norm <- brm(formula = Y ~ X1 + X2 + X3 + X4 + X5, 
-                 data = BD, 
-                 family = gaussian(link = "identity"), 
+Modelo_Lin_Norm <- brm(formula = Y ~ X1 + X2 + X3 + X4 + X5,
+                 data = BD,
+                 family = gaussian(link = "identity"),
                  prior = NULL)
 print(Modelo_Lin_Norm)
 ```
@@ -305,7 +387,7 @@ O pacote "bayesplot" nos permite fazer uma análise gráfica geral dos coeficien
 
 A função "mcmcplot" pode ser usada para fazer diferentes tipos de gráfico. Para um forest plot dos coeficientes do modelo, podemos utilizar:
 ```{r message=FALSE, warning=FALSE}
-mcmc_plot(Modelo_Lin_Norm, type = "intervals", 
+mcmc_plot(Modelo_Lin_Norm, type = "intervals",
           prob = 0.95, prob_outer = 0.99)
 ```
 O argumento "type" aceita os diferentes tipos de gráfico, sendo "intervals" para o gráfico de floresta. Os argumentos "prob" e "prob_outer" aceitam a densidade de probabilidade que deve ser abarcada pela linha de IC interno e externo no gráfico.
@@ -320,16 +402,16 @@ No argumento "pars", passamos as variáveis cujos coeficientes queremos plotar. 
 
 A função "conditional_effects" permite plotar os gráficos de efeitos de preditores específicos condicionados a valores predefinidos dos demais preditores.
 ```{r message=FALSE, warning=FALSE}
-conditional_effects(Modelo_Lin_Norm, 
+conditional_effects(Modelo_Lin_Norm,
                     effects = c("X1"),
                     conditions = NULL)
 ```
 O argumento "effect" aceita o preditor, ou preditores, cujo efeito queremos representar graficamente. O argumento conditions aceita os valores dos demais preditores para os quais queremos condicionar o efeito. No default (NULL), as variáveis numérias utilizam a média como valor e as categóricas utilizam o nível de referência.
 
-#### 2.3.9.3 Checagem preditiva posterior
+#### 2.3.9.4 Checagem preditiva posterior
 Já introduzimos o conceito de checagem preditiva posterior anteriormente. A ideia é simples: se um modelo é adequado para a descrição dos dados, devemos ser capazes de gerar novos dados através do modelo semelhantes aos dados observados.
 
-A função "pp_check" pode ser usada para criar diferentes tipos de checagem preditiva posterior graficamente. 
+A função "pp_check" pode ser usada para criar diferentes tipos de checagem preditiva posterior graficamente.
 ```{r message=FALSE, warning=FALSE}
 pp_check(Modelo_Lin_Norm, type = "dens_overlay")
 ```
