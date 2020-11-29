@@ -70,7 +70,7 @@ Como é uma situação hipotética podemos estabelecer nosso priori, comecemos c
 Quando levamos isso para o código e transformamos em um data.frame fica da seguinte maneira:
 
 ```{r}
-var-prob <- seq(0, 1, length.out = 100)
+varprob <- seq(0, 1, length.out = 100)
 priori <- 1
 vero <- dbinom(x = 4, prob = rangep, size = 20)
 prob_marginal <- vero * priori
@@ -83,7 +83,7 @@ Se você plotar essa tabela vai ver um apanhado de número poucos intuitivos, pa
 
 ```{r}
 library(ggplot2)
-ggplot(tabela1, aes(x=rangep)) +
+ggplot(tabela1, aes(x=varprob)) +
   geom_line(y = vero, color = "black") +
   geom_line(y = priori, color = "red") +
   geom_line(y = posterior, color = "green") +
@@ -97,12 +97,12 @@ Vamos prosseguir e mudar a situação um pouco, digamos que com os mesmos dados 
 Para realizar o cálculo dessa vez precisamos ter o priori em forma de distribuição, digamos que nosso a priori diz que em média 80% das mulheres engravidam para isso teremos uma distribuição normal com média 0.8 e desvio-padrão 0.1, o código ficará da seguinte maneira:
 
 ```{r}
-priori <- dnorm(x = rangep, mean = .8, sd = .1)
+priori <- dnorm(x = varprob, mean = .8, sd = .1)
 prob_marginal <- vero * priori
 posterior <- prob_marginal/sum(prob_marginal)
-tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
+tabela1 <- data.frame(varprob, priori, lik, prob_marginal, posterior)
 
-ggplot(tabela1, aes(x=rangep)) +
+ggplot(tabela1, aes(x=varprob)) +
   geom_line(y = vero) +
   geom_line(y = priori/20, color = "red") + #divido o priori por uma constante por fins de escala
   geom_line(y = posterior, color = "green") +
@@ -114,13 +114,13 @@ Veja como novamente o teorema ajustou a distribuição do posterior, justamente 
 Por fim, vamos ao último exemplo dessa situação problema, o que aconteceria se tivéssemos dados poucos informativos, ou seja, se tivéssemos poucas observações, por exemplo, três com duas grávidas, e um priori mais condizente com observações anteriores, ou seja, que descrevesse uma probabilidade de 25% de se estar grávida?
 
 ```{r}
-priori <- dnorm(x = rangep, mean = .25, sd = .1)
-vero <- dbinom(x = 2, prob = rangep, size = 3)
+priori <- dnorm(x = varprob, mean = .25, sd = .1)
+vero <- dbinom(x = 2, prob = varprob, size = 3)
 prob_marginal <- lik * priori
 posterior <- prob_marginal/sum(prob_marginal)
-tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
+tabela1 <- data.frame(varprob, priori, lik, prob_marginal, posterior)
 
-ggplot(tabela1, aes(x=rangep)) +
+ggplot(tabela1, aes(x=varprob)) +
   geom_line(y = lik) +
   geom_line(y = priori/20, color = "red") +
   geom_line(y = posterior, color = "green") +
