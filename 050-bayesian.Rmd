@@ -11,7 +11,6 @@ install.packages("runjags")
 install.packages("BEST")
 install.packages("rstan")
 install.packages("bayesplot")
-install.packages("shinystan")
 install.packages("brms")
 ```
 
@@ -63,27 +62,31 @@ Antes precisamos entender o teorema substituindo A e B por parâmetro (theta) e 
 
 Dito isso, vamos pensar na nossa situação-problema. Digamos que estamos testando a eficácia de um anticoncepcional oral X para o dia seguinte, tivemos 20 participantes e 4 delas engravidaram. Precisamos calcular as distribuições a priori, verossimilhança e posterior.
 
-Para isso temos que pensar da seguinte maneira, as probabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. A verossimilhança deve ser baseada nós nossos dados, ou seja, a cada 20 mulheres que tomaram o anticoncepcional em média 4 ficam grávidas, isso significa dizer que a verossimilhança é uma distribuição binominal com tamanho 20 - número de participantes -, média 4 - número de grávidas - e uma probabilidade de sucesso baseada na variação da nossa probabilidade, ou seja entre 0 e 1.
+Para isso temos que pensar da seguinte maneira, as probabilidades de se estar grávida tomando o anticoncepcional devem variar de 0 a 1, isto é, de 0% a 100%. Neste exemplo, trataremos probabilidade como uma variável discreta. Este é o nosso parâmetro theta, cuja distribuição posterior queremos calcular. 
 
-Como é uma situação hipotética podemos estabelecer nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1. Por fim probabilidade marginal, como na situação anterior, é igual ao priori * verossimilhança.
+A verossimilhança deve ser baseada nos nossos dados, ou seja, a cada 20 mulheres que tomaram o anticoncepcional em média 4 ficam grávidas. Essa situação pode ser modelada por uma distribuição binominal com tamanho 20 (número de participantes) e uma probabilidade de sucesso baseada na variação do nosso parâmetro theta entre 0 e 1. Estamos interessados na probabilidade de encontrarmos 4 grávidas para cada valor que o parâmetro theta pode assumir.
+
+Como é uma situação hipotética, e podemos estabelecer nosso priori, comecemos com um prior não significativo que tenha a mesma probabilidade para todas as possibilidades, ou seja, que seja 1. 
+
+Por fim, a probabilidade marginal, como na situação anterior, é igual à soma dos produtos priori * verossimilhança para cada possível valor de theta e equivale à probabilidade total de encontrarmos os dados X.
 
 Quando levamos isso para o código e transformamos em um data.frame fica da seguinte maneira:
 
 ```{r}
-varprob <- seq(0, 1, length.out = 100)
+var_prob <- seq(0, 1, length.out = 101)
 priori <- 1
-vero <- dbinom(x = 4, prob = rangep, size = 20)
+vero <- dbinom(x = 4, prob = var_prob, size = 20)
 prob_marginal <- vero * priori
 posterior <- prob_marginal/sum(prob_marginal)
 
-tabela1 <- data.frame(rangep, priori, lik, prob_marginal, posterior)
+tabela1 <- data.frame(var_prob, priori, vero, prob_marginal, posterior)
 ```
 
 Se você plotar essa tabela vai ver um apanhado de número poucos intuitivos, para facilitar vamos colocar tudo isso em gráficos, antes tente pensar, se você estivesse realizando esse teste e tivesse um prior pouco significativo, onde colocaria sua confiança? Muito provavelmente nos dados, certo? Já que eles são sua fonte de contato com o fenômeno.
 
 ```{r}
 library(ggplot2)
-ggplot(tabela1, aes(x=varprob)) +
+ggplot(tabela1, aes(x=var_prob)) +
   geom_line(y = vero, color = "black") +
   geom_line(y = priori, color = "red") +
   geom_line(y = posterior, color = "green") +
@@ -97,12 +100,12 @@ Vamos prosseguir e mudar a situação um pouco, digamos que com os mesmos dados 
 Para realizar o cálculo dessa vez precisamos ter o priori em forma de distribuição, digamos que nosso a priori diz que em média 80% das mulheres engravidam para isso teremos uma distribuição normal com média 0.8 e desvio-padrão 0.1, o código ficará da seguinte maneira:
 
 ```{r}
-priori <- dnorm(x = varprob, mean = .8, sd = .1)
+priori <- dnorm(x = var_prob, mean = .8, sd = .1)
 prob_marginal <- vero * priori
 posterior <- prob_marginal/sum(prob_marginal)
-tabela1 <- data.frame(varprob, priori, lik, prob_marginal, posterior)
+tabela1 <- data.frame(var_prob, priori, vero, prob_marginal, posterior)
 
-ggplot(tabela1, aes(x=varprob)) +
+ggplot(tabela1, aes(x=var_prob)) +
   geom_line(y = vero) +
   geom_line(y = priori/20, color = "red") + #divido o priori por uma constante por fins de escala
   geom_line(y = posterior, color = "green") +
@@ -114,14 +117,14 @@ Veja como novamente o teorema ajustou a distribuição do posterior, justamente 
 Por fim, vamos ao último exemplo dessa situação problema, o que aconteceria se tivéssemos dados poucos informativos, ou seja, se tivéssemos poucas observações, por exemplo, três com duas grávidas, e um priori mais condizente com observações anteriores, ou seja, que descrevesse uma probabilidade de 25% de se estar grávida?
 
 ```{r}
-priori <- dnorm(x = varprob, mean = .25, sd = .1)
-vero <- dbinom(x = 2, prob = varprob, size = 3)
-prob_marginal <- lik * priori
+priori <- dnorm(x = var_prob, mean = .25, sd = .1)
+vero <- dbinom(x = 2, prob = var_prob, size = 3)
+prob_marginal <- vero * priori
 posterior <- prob_marginal/sum(prob_marginal)
-tabela1 <- data.frame(varprob, priori, lik, prob_marginal, posterior)
+tabela1 <- data.frame(var_prob, priori, vero, prob_marginal, posterior)
 
-ggplot(tabela1, aes(x=varprob)) +
-  geom_line(y = lik) +
+ggplot(tabela1, aes(x=var_prob)) +
+  geom_line(y = vero) +
   geom_line(y = priori/20, color = "red") +
   geom_line(y = posterior, color = "green") +
   labs(x = "P(gravida)", y = "Densidade")
@@ -132,14 +135,14 @@ Mais uma vez, o teorema adequa a distribuição posterior conforme a intuição,
 Em situações mais complexas novas ferramentas entram, mas o pensamento base e a intuição continuam os mesmos.
 
 ### 2.3.5 Parâmetros com distribuições contínuas e os algoritmos MCMC
-Inicialmente, discutimos uma situação em que só haveria duas opções no nossos espaço probabilístico: Ou o indivíduo estava infectado ou não estava infectado. Depois, discutimos uma situação na qual tínhamos um espaço probabilístico com um parâmetro discreto que variava de 1 a 100.  Mas e quando o espaço probabilístico é contínuo e o parâmetro pode assumir infinitos valores?
+Inicialmente, discutimos uma situação em que só haveria duas opções no nossos espaço probabilístico: Ou o indivíduo estava infectado ou não estava infectado. Depois, discutimos uma situação na qual tínhamos um espaço probabilístico com um parâmetro discreto que variava de 0 a 100.  Mas e quando o espaço probabilístico é contínuo e o parâmetro pode assumir infinitos valores?
 
 Nesses casos, a nossa probabilidade marginal é calculada através de uma integral complexa e nós necessitamos de ferramentas alternativas para chegar à distribuição posterior do nosso parâmetro de interesse. É aí que entram os algoritmos de Markov Chain Monte Carlo (MCMC).
 
 #### 2.3.5.1 Algoritmos MCMC
-Como dito anteriormente, em casos mais complexos a integral do denominador se torna muito complexa e dificulta a realização da equação, por esse motivo a inferência bayesiana só se tornou popular com o advento dos computadores pessoais de alto processamento, ou seja a partir do final do século XX.
+Como dito anteriormente, em casos com parâmetros contínuos a integral do denominador se torna muito complexa e dificulta a realização da equação. Esse é um dos principais motivos pelo qual a inferência bayesiana só se tornou popular com o advento dos computadores pessoais de alto processamento, ou seja a partir do final do século XX.
 
-A saída que se tem para a resolução do problema é a utilização dos algoritmos de MCMC, lógica por trás desses cálculos é baseada no que chamamos de uma caminhada aleatória (random walk) que (re)avalia cada passo dado aleatoriamente de modo a identificar se ele é muito provável (portanto é aceito), se é menos provável mas próximo o suficiente do ponto anterior (também é aceito), ou se ele tem uma probabilidade baixa com uma alta margem, quando é rejeitado e se sorteia um novo ponto aleatório. Esse é o principio por trás da estratégia de MCMC chamada Metropolis-Hastings.
+A saída que se tem para a resolução do problema é a utilização dos algoritmos de MCMC. A ideia básica é reconstruir a distribuição posterior através de simulações de amostragem dela mesma. A lógica por trás desses cálculos é baseada no que chamamos de uma caminhada aleatória (random walk) que (re)avalia cada passo dado aleatoriamente de modo a identificar se ele é muito provável (portanto é aceito); se é menos provável, mas próximo o suficiente do ponto anterior (também é aceito); ou se ele tem uma probabilidade baixa com uma alta margem, quando é rejeitado e se sorteia um novo ponto aleatório. Esse é o principio por trás da estratégia de MCMC chamada Metropolis-Hastings.
 
 O que usamos aqui para calcular os nossos próximos modelos se baseia em uma simulação de um sistema físico hamiltoninano, portanto usamos Hamiltonian Monte Carlo (HCM). O principio é um pouco parecido com o Metropolis-Hastings, mas utiliza uma simulação física de um sitema de energia total, tornando a (re)avaliação dos passos mais continua e menos limitada.
 
