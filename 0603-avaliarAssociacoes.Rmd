@@ -1,0 +1,75 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+## Kata - Avaliar correlação linear entre variáveis e construir modelo de predição linear.
+
+https://www.kaggle.com/uciml/pima-indians-diabetes-database
+
+Material do artigo "Using the ADAP Learning Algorithm to Forecast the Onset of Diabetes Mellitus", publicado na  Proceedings of the Annual Symposium on Computer Application in Medical Care, 1988
+
+### Objetivo
+Usar o dataset disponibilizado para verificar associação entre as variáveis "Concentração de glicose plasmática a 2 horas em um teste oral de tolerância à glicose"(glucose) e "Índice de massa corporal - peso em kg / altura em m ^2"(BMI).  
+
+### Bibliotecas e dados
+
+``` {r}
+library(tidyverse) #diversas funções, incluindo gráficos
+# library(readr) é usada pontualmente
+
+diabetes_df <- read_csv("~/UFBA/LAC/2020/Capacitação em R/Correlação e regressão/diabetes.csv")
+```
+
+### Análise visual
+
+Analisamos visualmente a relação entre as variáveis pelo gráfico de dispersão. Essa avaliação inicial é importante para testar alguns pressupostos: Homocedasticidade, ausência de outliers, ausência de subgrupos e ausência de relação não linear entre variáveis.
+
+``` {r}
+ggplot(diabetes_df , aes(Glucose,BMI))+
+geom_point(size=2, position="identity", stat="identity")+
+theme_classic()
+```
+Notamos a presença de outlier que não são compatíveis com a vida, BMI = 0 e Glucose=0. Por isso, filtramos os valores acima de 0 de modo a refinar nosso dados. Os outliers impactam muito no resultado da correlação e da regressão linear, porém deve-se ter motivos claros para oculta-los, como o que foi observado aqui anteriormente.
+
+``` {r}
+diabetes_df2<-subset(diabetes_df, BMI > 0, Glucose > 0) #retirada de outliers
+
+ggplot(data=diabetes_df2, aes(Glucose,BMI))+
+geom_point(size=2, position="identity", stat="identity")+
+theme_classic()
+```
+Além disso, vamos considerar que o modelo possui homocedasticidade, que não há uma relação não linear aparente e que não há subgrupos isolados que possam estar superestimando os resultados.
+
+### Correlação
+
+Existem 3 testes de correlações, para escolher qual usaremos será necessário uma análise das nossas variáveis. Consideraremos "Glucose" e "BMI" como variáveis contínuas. Em seguida, vamos verificar a normalidade dos dados.
+Faremos isso estatisticamente e pelo teste de shapiro-wilk
+
+```{r}
+hist(diabetes_df2$Glucose, breaks = 100) #histograma para análise visual
+shapiro.test(diabetes_df2$Glucose) # Teste de shapiro-Wilk
+hist(diabetes_df2$BMI, breaks = 100) # histograma para análise visual   
+shapiro.test(diabetes_df2$BMI) # Teste de Shapiro-wilk
+```
+      OBS para RAFA e FELIPE: visualmente, confesso que consideraria distribuições normais, mas os teste deram muito significativos o que a fala a favor de distribuições não normais. Minha intuição visual está equivocada?  
+
+A Análise visual deixa dúvida, mas o teste estatístico sugere que os dados não são normalmente distribuídos. Além disso, há muitos valores sobrepostos, portanto, avaliaremos a correlação utilizando o Tau de Kendall.
+
+```{r}
+cor.test(diabetes_df2$Glucose, diabetes_df2$BMI, method = "kendall")
+```
+Observamos uma fraca, porem significativa, correlação linear positiva entre as variáveis
+
+### Regressão linear
+
+Examinamos qual melhor modelo linear em que "BMI" prediz "Glucose"
+
+```{r}
+ggplot(data=diabetes_df2, aes(BMI,Glucose))+
+geom_point(size=2, position="identity", stat="identity")+
+theme_classic()+  geom_smooth(method = "lm") # Análise visual do modelo
+
+reg_diabetes <- lm(diabetes_df2$Glucose ~ diabetes_df2$BMI) #atribuição do modelo a um objeto
+summary(reg_diabetes) #Obteção do B0 e B1 que permite obter a equação da reta que descreve o modelo    
+```
