@@ -1,160 +1,228 @@
 ## Associações
 
 ### Correlações Lineares
-#### O que são: 
-Verificação de relação entre duas variáveis (se alterações em uma variável gera alterção em outra)
-OBS: um ponto é formado por duas coordenadas (X, Y)
-A correlação pode ser positiva ou negativa -> se +, quando x aumenta, y aumenta
-Erros aleatórios existem porque NÃO conhecemos todas as variáveis
+#### O que são?
+Correlações lineares são estratégias para verificar a força de correlação entre
+duas variáveis. Uma correlação indica que a alteração de um valor na variável x
+tem relação com alteração no valor em outra variável y.
 
-#### Quando são utilizadas: 
-Quando objetiva-se correlacionar duas variáveis contínuas
+Um ponto é formado por duas coordenadas (x e y). Cada coordenada é o valor de
+uma variável. Assim, o ponto descreve simultaneamente duas variáveis.
+A correlação é fruto da análise da distribuição de vários pontos.
+
+A força de uma correlação mostra o quanto uma variável é associada a outra.
+Quando a correlação for 0, não há correlação - a distribuição dos dados é
+aleatória. Quando a correlação é 1, valor máximo que pode ser obtido, entende-se
+que alterações em x sempre estão associadas a alterações em y. Usualmente,
+correlações em fenômenos biológicos não são perfeitas, ou seja, igual a 1. Na
+verdade, quando há uma correlação, a força de correlação é entre 0 e 1.
+
+Correlações podem ter sentido positivo ou negativo. Quando positiva, x e y são
+diretamente proporcionais, ou seja, o aumento em x é associado ao aumento de y.
+Quando negativa, x e y são inversamente proporcionais, ou seja, o aumento em x
+é associado a redução de y.
+
+Correlações, portanto, podem indicar a presença de associações. Não é possível
+inferir causalidade usando este método de análise de dados. Além disso, para
+fenômenos biológicos, erros aleatórios serão observados em correlações. Tais
+erros ocorrem pois não conhecemos todas as variáveis que influenciam a associação.
+
+Testes de hipóteses e intervalos de confiança podem ser aplicados ao valor de
+correlação para inferir se a força encontrada é diferente de zero. O r^2, por sua
+vez, descreve o quanto a alteração em uma variável explica a alteração em outra.
+
+#### Quando são utilizadas?
+Quando o objetivo é:
+  A. Verificar a existência de correlação
+  B. Verificar a magnitude da força de correlação
+  c. Verificar o sentido da correlação.
+
+#### Qual tipo de variável pode ser analisada?
+As duas variáveis devem ser numéricas contínuas ou ordinais.
 
 #### 3.1.3.3.Tipos:
 ##### PEARSON
-        a - versão paramétrica (baseado nos desvios em relação à média)
-        b - variáveis preditora deve ser contínua normal
-        c - variável desfecho deve ser contínua normal
+        a - versão paramétrica;
+        b - variáveis preditora deve ser contínua normal;
+        c - variável desfecho deve ser contínua normal.
 
 ##### SPEARMAN
-        a - versão não-paramétrica (Pearson aplicado aos ranks)
-        b - variável preditora deve ser contínua
-        c - variável desfecho deve ser contínua
-    
-#### 3.1.3.4.Correlação de Pearson no R:
+        a - versão não-paramétrica, que toma como base o ranqueamento;
+        b - adequado para amostras maiores e sem empate no ranqueamento;
+        b - variável preditora deve ser contínua;
+        c - variável desfecho deve ser contínua.
+
+##### KENDALL
+        a - versão não-paramétrica, que toma como base o ranqueamento;
+        b - adequado para amostras menores e com empate no ranqueamento;
+        b - variável preditora deve ser contínua;
+        c - variável desfecho deve ser contínua.
+
+#### 3.1.3.4.Correlação no R:
 ##### Comando
 ``` {r,eval=F}
-        cor.test(x,y, method = "pearson")
+        cor.test(x,y, method = "a")
 ```
 ##### Inputs
         # x -> variável preditora
-        # y -> desfecho
+        # y -> variável desfecho
+        # a -> pearson, spearman ou kendall
 
 ##### Otputs
-        #cor -> índice de correlação -> pode ir de -1 a + 1
-        #intervalo de confiança
-        #p-value
+        # cor -> índice de correlação, indicando magnitude (0 a 1) e sentido (+ ou -)
+        # intervalo de confiança
+        # p-value
+        # r^2
 
-##### Exemplo prático
-Teste de normalidade
-``` {r}
-shapiro.test(BD$age) #não normal
-qqnorm(BD$age);qqline(BD$age)
-hist(BD$age) 
-
-shapiro.test(BD$lwt) #não normal
-qqnorm(BD$lwt);qqline(BD$lwt)
-hist(BD$lwt)
-
-shapiro.test(BD$bwt) #normal
-qqnorm(BD$bwt);qqline(BD$bwt)
-hist(BD$bwt)
-``` 
-Aplicando
-``` {r}
-cor.test(BD$age, BD$bwt, method = "pearson")
-``` 
-*Uso de BD$age apenas como exemplo, visto que esta variável não possui distribuição normal. 
-       
 ##### Visualização gráfica
-Faça um gráfico com os pontos
 ``` {r}
 library(ggplot2)
-ggplot(BD, aes(age, bwt)) + geom_point()
+ggplot(bd, aes(x, y)) + geom_point()
 ```         
-Produza
+Aqui, os inputs são o banco de dados (bd), a variável preditora (x) e a variável
+desfecho (y). O output será um gráfico com todos os pontos. Através dele, você
+poderá analisar a existência, força e sentido de uma correlação.
+
+Acrescente o final do segundo comando para acrecentar uma linha a este gráfico
+que auxiliará sua análise.
+
 ``` {r}
 ggplot(BD, aes(age, bwt)) + geom_point() + geom_smooth(method = "lm")
-``` 
+```
 
-#### 3.1.3.5.Correlação de Spearman no R:
-##### Comando
-``` {r,eval=F}
-cor.test(x,y, method = "spearman")
-```        
-##### Inputs
-        # x -> variável preditora
-        # y -> desfecho
-        
-##### Otputs
-        #cor
-        #intervalo de confiança
-        #p-value
-        
-##### Aplicando
-``` {r}
-cor.test(BD$lwt, BD$bwt, method = "spearman")
-```  
-Como tem empates, usar método de kendall
-``` {r}        
-cor.test(BD$lwt, BD$bwt, method = "kendall")
-```       
-##### Visualização gráfica
-Faça um gráfico com os pontos
-``` {r} 
-        ggplot(BD, aes(lwt, bwt)) + geom_point()
-```          
-Produza
-``` {r}
-ggplot(BD, aes(lwt, bwt)) + geom_point() + geom_smooth(method = "lm")
-``` 
-#### 3.1.3.6.O que representa o índice de correlação: 
-O ÍNDICE DE CORRELAÇÃO representa a MAGNITUDE  e o SENTIDO de uma relação.
-Se X aumenta 10%, quanto muda Y?
-Se índice de correlação  = +1, Y aumenta 10% pela mudança de X
-Se índice de correlação  = -1, Y diminui 10% pela mudança de X
-Se índice de correlação  = 0, Y não muda pela mudança de X
+##### Opção mais simples, menos informativa
+
+Caso queira como output apenas o índice de correlação (magnitude e sentido), sem
+intervalo de confiança, valor de p ou r^2, você pode optar pelo comando abaixo.
+Neste caso, os inputs são o baco de dados (bd), a variável preditora (x) e a
+variável desfecho (y). Como dito, o único output é o índice de correlação.
+
 ``` {r}    
-cor(BD$age, BD$bwt, use = "complete.obs")  #sem executar teste estátistico
+cor(bd$x, bd$y, use = "complete.obs")
 ```         
-#### 3.1.3.6.O que representa o valor de p: 
-Mensurar o quão improváveis são as observações em um cenário hipotético na vigência da hipótese nula (ARGOLO, 2020) - dada a hipótese nula de que o índice de correlação = 0 e que a hipótese alternativa de que o índice de correlação é diferente de 0.
-
 
 ### 3.1.4.Regressões
-#### 3.1.4.1.O que são: 
-???????????
-#### 3.1.4.2.Quando são utilizadas: 
-Busca-se saber magnitude das causas para o efeito (causalidade) para PREDIZER "advinhar uma medida com base na outra" ARGOLO, F. 2020
-#### 3.1.3.3.Tipos:
-##### Linear
-        a - variável preditora contínua, categórica dicotômica, categórica policotômica
-        b - variável desfecho contínua
-        c - 5 pressupostos:
-            1. Independência
-            2. Normalidade dos resíduos
-            2. Homocedasticidade - resíduos simétricos
-            3. Colinearidade - modelo melhor explicado por linear
-            5. Aditividade - efeito aditivo (modificadores de efeito)
+#### 3.1.4.1.O que são:
+Regressões são métodos de análise de dados que buscam quantificar a influência
+de variáveis preditoras em relação ao desfecho. Na verdade, o termo variável
+preditora não poderia ser mais adequado. Regressões tem como objetivo predizer,
+advinhar o quanto uma medida inicial influência em outra posterior.De certa forma,
+a regressão é o passo seguinte a correlação quando se explora a possibilidade
+de causa e efeito.
 
-##### Logística
-    a - variável preditora contínua, categórica, etc
-    b - variável desfecho categórica binária
-    c - pressupostos:
-        1 - Colinearidade
-        2 - Independência
-        3 - Modificador de efeito
+A possibilidade de a variável preditora ser de qualquer tipo, seja categórica,
+contínua normal, não-normal ou ordinal, e a possibilidade de ser usar mais de
+um preditor, como em regressões múltiplas, torna o uso de regressões atrativo.
 
-##### Outras
-Regressão mediana -> não normal e contínua
-Regressão ordinal ligística -> ordinal categórica
-Regressão multinominal -> não-ordinal categórica
-Regressão de Poisson ou negativa binominal -> números inteiros
-Regressão de Cox -> tempo até o evento
+Para regressões múltiplas, confira o próximo capítulo.
 
-#### 3.1.4.4.Regressão Linear no R:
+Existem diversos tipos de regressões. Para pesquisa biomédica, frequentemente
+encontramos regressão linear, logística e de Cox, que podem ser exploradas a
+seguir. A necessidade da variedade de regressões é reflexo da variedade de
+desfechos. Para cada tipo de desfecho, há um tipo de regressão mais adequado.
+Por exemplo, a regressão linear tem como desfecho uma variável contínua enquanto
+a regressão logística, uma variável categórica binária, e de Cox, tempo até o
+evento. Além destas, existe a regressão mediana (desfecho: variável não normal e
+contínua), regressão ordinal logística (desfecho: variável ordinal categórica),
+regressão multinominal (desfecho: variável não-ordinal categórica) e regressão
+de Poisson (desfecho: variável de números inteiros).
+
+A estrutura básica de uma regressão linear é:
+
+    y = B0 + x * B1 + e
+
+Nesta equação, y é a variável desfecho e x é variável preditora. B0 é chamado de
+intercepto e B1 indica a angulação da reta. O intercepto pode ser interpretado
+como o valor da variável desfecho na ausência da variável preditora. Já B1 reflete
+o quanto se somará ou subtrairá da variável desfecho na presença de uma unidade
+da variável preditora. O símbolo "e" representa o resíduo - diferença entre
+observado e esperado.
+
+Como exemplo, imagine as variáveis peso (x) e largura (y). Quando o paciente tem
+peso 0, a largura é 10 cm. Quando o paciente tem 1kg, a largura é de 50 cm.
+Assim, para este exemplo, a equação seria:
+
+   largura = 10 + peso * 40
+
+Em uma regressão logística, o raciocínio é semelhante, com exceção do desfecho
+que deve ser categórico binário (sim ou não, morrer ou viver, ter ou não ter).
+O resultado da regressão logística é de difícil interpretação. Entretanto,
+quando o B1 é exponenciado pelo logarítimo natural, transforma-se em razão de
+chances (odds ratio), que pode ser interpretada como as chances de o preditor
+prever o desfecho.
+
+O desfecho da regressão de Cox, por sua vez, é tempo até o evento. Por isso,
+é possível segmentar o desfecho em ocorrência do evento (categórico binário) e
+tempo até categoria tida como evento. Por exemplo, primeiro avaia-se se pacientes
+com um AVC tiveram ou não um segundo AVC e, depois, quanto tempo melhor descreve
+o tempo até este segundo AVC. Neste tipo de regressão, B1 é interpretado como
+risco relativo de contribuição com  o desfecho. Para sabem mais sobre este tipo
+de análise, consulte bibliografia especializada em análise de sobrevivência.
+
+Para as regressões, assim como nas correlações, é possível o cálculo do valor
+de p e intervalo de confiança para verificar se os coeficientes B são diferentes
+de 0. Já o R^2, coeficiente de determinação, indica o quão apropriado é modelo
+desenvolvido para explicar modificações em x e seus efeitos em y. Resultados
+próximos de 1 indicam resíduos, ou seja, diferença entre predito e observado,
+próximo a 0.
+
+#### 3.1.3.3..Regressão Linear no R:
 ##### Comando
 ``` {r,eval=F}
-nome <- lm (y ~ x1 + x2 + x3, data = a)
+regressao <- lm (y ~ x, data = a)
+summary(regressao)
 ```                             
 ##### Inputs
-x1, x2, x3 -> variáveis preditoras
-y -> desfecho contínuo
-a -> banco de dados
-                            
+      x -> variável preditora
+      y -> desfecho contínuo
+      a -> banco de dados
+
 ##### Otputs
-Distribuição dos resíduos
-Coeficientes:
-      a. Estimate = Beta
-      b. Pr(>|t|) = Valor de P
-Multiple R-squared -> coeficiente de determinação -> próximo a 1 indica resíduos próximos a 0
+      a. Distribuição dos resíduos (mínimo, máximo, mediana e quartis)
+      b. Estimate = Beta
+      c. Erro padrão (o que torna possível calcular o intervalo de confiança)
+      d. Pr(>|t|) = Valor de p
+      e. Coeficiente de determinação
+
+#### 3.1.3.3..Regressão Logística no R:
+##### Comando
+``` {r,eval=F}
+regressao <- glm (y ~ x, data = a, family = "binomial" (link = "logit"))
+summary(regressao)
+
+exp(cbind(OR = coef(regressao), confint(regressao))) #exponenciar para interpretar
+```    
+##### Inputs
+      x -> variável preditora
+      y -> desfecho categórico binário
+      a -> banco de dados
+
+##### Otputs
+      a. Distribuição dos resíduos (mínimo, máximo, mediana e quartis)
+      b. Estimate = Beta
+      c. Erro padrão
+      d. Pr(>|t|) = Valor de p
+
+O segundo comando terá como output:
+      a. Beta como expoente (odds ratio)
+      b. Intervalo de confiança
+
+#### 3.1.3.3..Regressão Logística no R:
+##### Comando
+``` {r,eval=F}
+library(survival)
+regressao <- coxph(Surv(t,y) ~ x, data = a)
+summary(regressao)
+```    
+##### Inputs
+      x -> variável preditora
+      y -> desfecho categórico binário (evento)
+      t -> tempo até o evento
+      a -> banco de dados
+
+##### Otputs
+      a. n, eventos e exclusões por missing data
+      b. Estimate = Beta
+      c. Beta como expoente (risco relativo)
+      b. Intervalo de confiança
+      c. Pr(>|t|) = Valor de P
